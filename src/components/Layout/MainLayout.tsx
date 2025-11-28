@@ -1,0 +1,121 @@
+"use client";
+
+import React, { useMemo } from "react";
+import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { Layout, Grid } from "antd";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/store/store";
+import { clearUser } from "@/store/userSlice";
+import { signOut } from "next-auth/react";
+import { MenuItems } from "@/components/Layout/MenuItems";
+import Sidebar from "@/components/Layout/Sidebar";
+import AppHeader from "@/components/Layout/AppHeader";
+import AppFooter from "@/components/Layout/AppFooter";
+import { findMenuItemByPath } from "@/components/Layout/Sidebar"; // or move to utils
+
+const { Content } = Layout;
+const { useBreakpoint } = Grid;
+
+type Props = {
+    children: React.ReactNode;
+    isDark: boolean;
+    setIsDark: (value: boolean) => void;
+};
+
+export default function MainLayout({ children, isDark, setIsDark }: Props) {
+    const pathname = usePathname() || "/";
+    const router = useRouter();
+       const screens = useBreakpoint();
+    const [collapsed, setCollapsed] = useState(false);
+    const [hasClicked, setHasClicked] = useState(false);
+    const dispatch = useDispatch();
+    const user = useSelector((state: RootState) => state.user);
+    const [currentPageTitle, setCurrentPageTitle] = useState(() => {
+        const item = findMenuItemByPath(MenuItems, pathname);
+        return item?.label || "Dashboard";
+    });
+
+    // Memoize for performance
+    // const currentPageTitle = useMemo(() => {
+    //     const item = MenuItems.find((item) => item.key === pathname);
+    //     return item?.label || "Dashboard";
+    // }, [pathname]);
+
+    const handleLogout = async () => {
+        dispatch(clearUser());
+        await signOut({ redirect: true, callbackUrl: "/auth/login" });
+    };
+
+    const handleClick = () => {
+        setHasClicked(true);
+        setCollapsed(!collapsed);
+    };
+
+    return (
+        <>
+            <Layout style={{ minHeight: "100vh" }}>
+                {/* LEFT SIDE: SIDEBAR + HEADER + CONTENT */}
+                <Layout style={{ flex: 1, display: "flex" }}>
+                    <Sidebar
+                        collapsed={collapsed}
+                        setCollapsed={setCollapsed}
+                        hasClicked={hasClicked}
+                        setHasClicked={setHasClicked}
+                        isDark={isDark}
+                        pathname={pathname}
+                        onClick={handleClick}
+                        setCurrentPageTitle={setCurrentPageTitle}
+                    />
+
+                    <Layout
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            flex: 1,
+                        }}
+                    >
+                        <AppHeader
+                            currentPageTitle={currentPageTitle}
+                            isDark={isDark}
+                            setIsDark={setIsDark}
+                            user={user}
+                            handleLogout={handleLogout}
+                            router={router}
+                        />
+
+                        <Content
+                            style={{
+                               margin: screens.xs ? "0px 6px 0px 6px" :"0px 16px 0px 16px",
+                                display: "flex",
+                                flexDirection: "column",
+                                flex: 1,
+                            }}
+                        >
+                            <div
+                                style={{
+                                    background: isDark ? "#1f1f1f" : "#fff",
+                                    padding: 8,
+                                    flex: 1,
+                                    borderRadius: 12,
+                                    boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
+                                    border: isDark
+                                        ? "1px solid #333"
+                                        : "1px solid #f0f0f0",
+                                    transition: "all 0.3s ease",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                }}
+                            >
+                                {children}
+                            </div>
+                        </Content>
+                    </Layout>
+                </Layout>
+
+                {/* FOOTER ALWAYS AT THE BOTTOM */}
+                <AppFooter isDark={isDark} />
+            </Layout>
+        </>
+    );
+}
