@@ -101,3 +101,5 @@ select:-webkit-autofill:focus {
     padding: 0 12 !important;
     min-height: 40 !important;
 }
+
+.ant-form-item-vertical .ant-form-item-label {padding: 0;}
