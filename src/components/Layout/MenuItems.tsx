@@ -5,6 +5,7 @@ import {
     InfoCircleOutlined,
     TeamOutlined,
     LockOutlined,
+    ExperimentOutlined,
 } from "@ant-design/icons";
 
 export interface MenuItemType {
@@ -52,6 +53,23 @@ export const MenuItems: MenuItemType[] = [
                 key: "secret4",
                 label: "Public Chamber",
                 path: "/public/chambers/public-chamber",
+            },
+        ],
+    },
+    {
+        key: "viscorion",
+        label: "Oil Monitoring",
+        icon: <ExperimentOutlined />,
+        children: [
+            {
+                key: "vicosrion1",
+                label: "Oil Changes",
+                path: "/public/oil-monitoring/oil-changes",
+            },
+            {
+                key: "viscorion2",
+                label: "Oil Details",
+                path: "/public/oil-monitoring/oil-details",
             },
         ],
     },
