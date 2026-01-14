@@ -2,8 +2,10 @@
 
 import React from "react";
 import { Layout, Card, Table, Statistic, Row, Col,Grid, Tag } from "antd";
-import { ArrowUpOutlined, ArrowDownOutlined, UserOutlined, DollarOutlined, ExperimentOutlined, LockOutlined } from "@ant-design/icons";
+import { ArrowUpOutlined, ArrowDownOutlined, UserOutlined, DollarOutlined, ExperimentOutlined, LockOutlined, DeploymentUnitOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
+import type { RootState } from "@/store/store";
+import { useSelector } from "react-redux"
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -50,6 +52,13 @@ const MainLayout: React.FC = () => {
   ];
 
   const screens = useBreakpoint();
+const firstName = useSelector(
+  (state: RootState) => state.user.firstName
+);
+
+const lastName = useSelector(
+  (state: RootState) => state.user.lastName
+);
 
   return (
     <Layout style={{ minHeight: "100vh", background: "#fff" }}>
@@ -105,7 +114,7 @@ const MainLayout: React.FC = () => {
         letterSpacing: 0.2,
       }}
     >
-      Welcome Mahesa!
+     Welcome{firstName ? ` ${firstName}` : ""}!
     </span>
 
     <span
@@ -298,7 +307,7 @@ const MainLayout: React.FC = () => {
   }}
 >
   {/* Background Icon */}
-  <UserOutlined
+  <DollarOutlined
     style={{
       position: "absolute",
       right: screens.xs ? 8 : 12,
@@ -339,11 +348,11 @@ const MainLayout: React.FC = () => {
         lineHeight: 1.2,
       }}
     >
-      Viscorion
+      Moneypulate
     </span>
 
     <Tag
-      color="green"
+      color="red"
       style={{
         fontSize: 10,
         lineHeight: "18px",
@@ -352,7 +361,7 @@ const MainLayout: React.FC = () => {
         marginTop: 10,
       }}
     >
-      ONLINE
+      OFFLINE
     </Tag>
   </div>
 </Card>
@@ -375,7 +384,7 @@ const MainLayout: React.FC = () => {
   }}
 >
   {/* Background Icon */}
-  <UserOutlined
+  <DeploymentUnitOutlined
     style={{
       position: "absolute",
       right: screens.xs ? 8 : 12,
@@ -416,11 +425,11 @@ const MainLayout: React.FC = () => {
         lineHeight: 1.2,
       }}
     >
-      Viscorion
+      Gallery
     </span>
 
     <Tag
-      color="green"
+      color="red"
       style={{
         fontSize: 10,
         lineHeight: "18px",
@@ -429,7 +438,7 @@ const MainLayout: React.FC = () => {
         marginTop: 10,
       }}
     >
-      ONLINE
+      OFFLINE
     </Tag>
   </div>
 </Card>
