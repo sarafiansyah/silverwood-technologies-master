@@ -1,11 +1,13 @@
 "use client"; // Required for client-side components in Next.js App Router
 
 import React from "react";
-import { Layout, Card, Table, Statistic, Row, Col } from "antd";
-import { ArrowUpOutlined, ArrowDownOutlined, UserOutlined, DollarOutlined } from "@ant-design/icons";
+import { Layout, Card, Table, Statistic, Row, Col,Grid, Tag } from "antd";
+import { ArrowUpOutlined, ArrowDownOutlined, UserOutlined, DollarOutlined, ExperimentOutlined, LockOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 
 const { Header, Content, Footer, Sider } = Layout;
+
+const { useBreakpoint } = Grid;
 
 // Define types for data
 interface DashboardData {
@@ -47,67 +49,393 @@ const MainLayout: React.FC = () => {
     },
   ];
 
+  const screens = useBreakpoint();
+
   return (
     <Layout style={{ minHeight: "100vh", background: "#fff" }}>
+<Row gutter={[24, 24]} style={{ marginBottom: 16 }}>
+  <Col span={24}>
+<Card
+  hoverable
+  style={{
+    position: "relative",
+    borderRadius: 14,
+    overflow: "hidden",
+    background: "linear-gradient(135deg, #6C7CF5 0%, #8FA6FF 100%)",
+    boxShadow: "0 10px 24px rgba(108, 124, 245, 0.35)",
+        border: "1px solid rgba(255, 255, 255, 0.6)",
+    color: "#fff",
+  }}
+  styles={{
+    body: {
+      padding: "16px",
+      height: screens.xs ? 130 : 160,
+      minHeight: screens.xs ? "auto" : 100,
+    },
+  }}
+>
+  {/* Soft background icon */}
+  <UserOutlined
+    style={{
+      position: "absolute",
+      right: screens.xs ? 8 : 8,
+      top: "50%",
+      transform: "translateY(-50%)",
+      fontSize: screens.xs ? 96 : 96,
+      opacity: 0.18,
+      color: "#ffffff",
+      pointerEvents: "none",
+    }}
+  />
 
-      <Layout>
-             {/* Content */}
-        <Content style={{ margin: "16px" }}>
-          {/* Metrics Cards */}
-          <Row gutter={16} style={{ marginBottom: "16px" }}>
-            <Col span={6}>
-              <Card>
-                <Statistic
-                  title="Total Users"
-                  value={1128}
-                  prefix={<UserOutlined />}
-                  valueStyle={{ color: "#3f8600" }}
-                />
-              </Card>
-            </Col>
-            <Col span={6}>
-              <Card>
-                <Statistic
-                  title="Revenue"
-                  value={9324}
-                  prefix={<DollarOutlined />}
-                  valueStyle={{ color: "#cf1322" }}
-                />
-              </Card>
-            </Col>
-            <Col span={6}>
-              <Card>
-                <Statistic
-                  title="Sales"
-                  value={456}
-                  prefix={<ArrowUpOutlined />}
-                  valueStyle={{ color: "#1890ff" }}
-                />
-              </Card>
-            </Col>
-            <Col span={6}>
-              <Card>
-                <Statistic
-                  title="Growth"
-                  value={78}
-                  suffix="%"
-                  valueStyle={{ color: "#52c41a" }}
-                />
-              </Card>
-            </Col>
-          </Row>
+  {/* Content */}
+  <div
+    style={{
+      position: "relative",
+      zIndex: 1,
+      display: "flex",
+      flexDirection: "column",
+      gap: screens.xs ? 4 : 6,
+    }}
+  >
+    <span
+      style={{
+        fontSize: screens.xs ? 16 : 20,
+        fontWeight: 600,
+        letterSpacing: 0.2,
+      }}
+    >
+      Welcome Mahesa!
+    </span>
 
-          {/* Data Table */}
-          <Card title="Recent Data">
-            <Table<DashboardData>
-              columns={columns}
-              dataSource={data}
-              pagination={false}
-              size="small"
-            />
-          </Card>
-        </Content>
-      </Layout>
+    <span
+      style={{
+        fontSize: screens.xs ? 10 : 15,
+        lineHeight: 1.4,
+        opacity: 0.9,
+        maxWidth: "80%",
+      }}
+    >
+      Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+    </span>
+  </div>
+</Card>
+
+  </Col>
+</Row>
+
+
+<Row gutter={[12, 12]} style={{ marginBottom: 16 }}>
+<Col xs={12} md={6}>
+ <Card
+  hoverable
+  style={{
+    position: "relative",
+    borderRadius: 12,
+    overflow: "hidden",
+    boxShadow: "0 6px 16px rgba(0,0,0,0.08)",
+  }}
+  styles={{
+    body: {
+      padding: "10px 12px",
+      minHeight: screens.xs ? 0 : 90,
+    },
+  }}
+>
+  {/* Background Icon */}
+  <ExperimentOutlined
+    style={{
+      position: "absolute",
+      right: screens.xs ? 8 : 12,
+      top: "50%",
+      transform: "translateY(-50%)",
+      fontSize: screens.xs ? 48 : 72,
+      opacity: 0.5,
+      color: "#999",
+      pointerEvents: "none",
+    }}
+  />
+
+  {/* Content */}
+  <div
+    style={{
+      position: "relative",
+      zIndex: 1,
+      display: "flex",
+      flexDirection: "column",
+      gap:  screens.xs? 2 : 4,
+    }}
+  >
+    <span
+      style={{
+        fontSize: screens.xs? 10 : 12,
+        fontWeight: 500,
+        opacity: 0.7,
+        lineHeight: 1.2,
+      }}
+    >
+      Rafiansyah
+    </span>
+
+    <span
+      style={{
+        fontSize:  screens.xs? 15 : 22,
+        fontWeight: 600,
+        lineHeight: 1.2,
+      }}
+    >
+      Viscorion
+    </span>
+
+    <Tag
+      color="green"
+      style={{
+        fontSize: 10,
+        lineHeight: "18px",
+        padding: "0 6px",
+        width: "fit-content",
+        marginTop: 10,
+      }}
+    >
+      ONLINE
+    </Tag>
+  </div>
+</Card>
+
+</Col>
+
+  <Col xs={12} md={6}>
+  <Card
+  hoverable
+  style={{
+    position: "relative",
+    borderRadius: 12,
+    overflow: "hidden",
+    boxShadow: "0 6px 16px rgba(0,0,0,0.08)",
+  }}
+  styles={{
+    body: {
+      padding: "10px 12px",
+      minHeight: screens.xs ? 0 : 90,
+    },
+  }}
+>
+  {/* Background Icon */}
+  <LockOutlined
+    style={{
+      position: "absolute",
+      right: screens.xs ? 8 : 12,
+      top: "50%",
+      transform: "translateY(-50%)",
+      fontSize: screens.xs ? 48 : 72,
+      opacity: 0.5,
+      color: "#999",
+      pointerEvents: "none",
+    }}
+  />
+
+  {/* Content */}
+  <div
+    style={{
+      position: "relative",
+      zIndex: 1,
+      display: "flex",
+      flexDirection: "column",
+      gap:  screens.xs? 2 : 4,
+    }}
+  >
+    <span
+      style={{
+        fontSize: screens.xs? 10 : 12,
+        fontWeight: 500,
+        opacity: 0.7,
+        lineHeight: 1.2,
+      }}
+    >
+      Rafiansyah
+    </span>
+
+    <span
+      style={{
+        fontSize:  screens.xs? 15 : 22,
+        fontWeight: 600,
+        lineHeight: 1.2,
+      }}
+    >
+      Chambers
+    </span>
+
+    <Tag
+      color="green"
+      style={{
+        fontSize: 10,
+        lineHeight: "18px",
+        padding: "0 6px",
+        width: "fit-content",
+        marginTop: 10,
+      }}
+    >
+      ONLINE
+    </Tag>
+  </div>
+</Card>
+  </Col>
+
+  <Col xs={12} md={6}>
+ <Card
+  hoverable
+  style={{
+    position: "relative",
+    borderRadius: 12,
+    overflow: "hidden",
+    boxShadow: "0 6px 16px rgba(0,0,0,0.08)",
+  }}
+  styles={{
+    body: {
+      padding: "10px 12px",
+      minHeight: screens.xs ? 0 : 90,
+    },
+  }}
+>
+  {/* Background Icon */}
+  <UserOutlined
+    style={{
+      position: "absolute",
+      right: screens.xs ? 8 : 12,
+      top: "50%",
+      transform: "translateY(-50%)",
+      fontSize: screens.xs ? 48 : 72,
+      opacity: 0.5,
+      color: "#999",
+      pointerEvents: "none",
+    }}
+  />
+
+  {/* Content */}
+  <div
+    style={{
+      position: "relative",
+      zIndex: 1,
+      display: "flex",
+      flexDirection: "column",
+      gap:  screens.xs? 2 : 4,
+    }}
+  >
+    <span
+      style={{
+        fontSize: screens.xs? 10 : 12,
+        fontWeight: 500,
+        opacity: 0.7,
+        lineHeight: 1.2,
+      }}
+    >
+      Rafiansyah
+    </span>
+
+    <span
+      style={{
+        fontSize:  screens.xs? 15 : 22,
+        fontWeight: 600,
+        lineHeight: 1.2,
+      }}
+    >
+      Viscorion
+    </span>
+
+    <Tag
+      color="green"
+      style={{
+        fontSize: 10,
+        lineHeight: "18px",
+        padding: "0 6px",
+        width: "fit-content",
+        marginTop: 10,
+      }}
+    >
+      ONLINE
+    </Tag>
+  </div>
+</Card>
+  </Col>
+
+  <Col xs={12} md={6}>
+ <Card
+  hoverable
+  style={{
+    position: "relative",
+    borderRadius: 12,
+    overflow: "hidden",
+    boxShadow: "0 6px 16px rgba(0,0,0,0.08)",
+  }}
+  styles={{
+    body: {
+      padding: "10px 12px",
+      minHeight: screens.xs ? 0 : 90,
+    },
+  }}
+>
+  {/* Background Icon */}
+  <UserOutlined
+    style={{
+      position: "absolute",
+      right: screens.xs ? 8 : 12,
+      top: "50%",
+      transform: "translateY(-50%)",
+      fontSize: screens.xs ? 48 : 72,
+      opacity: 0.5,
+      color: "#999",
+      pointerEvents: "none",
+    }}
+  />
+
+  {/* Content */}
+  <div
+    style={{
+      position: "relative",
+      zIndex: 1,
+      display: "flex",
+      flexDirection: "column",
+      gap:  screens.xs? 2 : 4,
+    }}
+  >
+    <span
+      style={{
+        fontSize: screens.xs? 10 : 12,
+        fontWeight: 500,
+        opacity: 0.7,
+        lineHeight: 1.2,
+      }}
+    >
+      Rafiansyah
+    </span>
+
+    <span
+      style={{
+        fontSize:  screens.xs? 15 : 22,
+        fontWeight: 600,
+        lineHeight: 1.2,
+      }}
+    >
+      Viscorion
+    </span>
+
+    <Tag
+      color="green"
+      style={{
+        fontSize: 10,
+        lineHeight: "18px",
+        padding: "0 6px",
+        width: "fit-content",
+        marginTop: 10,
+      }}
+    >
+      ONLINE
+    </Tag>
+  </div>
+</Card>
+  </Col>
+</Row>
+
     </Layout>
   );
 };
