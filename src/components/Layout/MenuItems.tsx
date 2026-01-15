@@ -1,5 +1,5 @@
 import {
-    HomeOutlined,
+    AppstoreOutlined,
     UserOutlined,
     SettingOutlined,
     InfoCircleOutlined,
@@ -19,7 +19,7 @@ export interface MenuItemType {
 export const MenuItems: MenuItemType[] = [
     {
         key: "/",
-        icon: <HomeOutlined />,
+        icon: <AppstoreOutlined />,
         label: "Dashboard",
         path: "/",
     },
@@ -37,21 +37,25 @@ export const MenuItems: MenuItemType[] = [
             {
                 key: "secret1",
                 label: "Master Chamber",
+                icon: <LockOutlined />,
                 path: "/chambers/master-chamber",
             },
             {
                 key: "secret2",
                 label: "Super Chamber",
+                icon: <LockOutlined />,
                 path: "/chambers/super-chamber",
             },
             {
                 key: "secret3",
                 label: "Private Chamber",
+                icon: <LockOutlined />,
                 path: "/public/chambers/private-chamber",
             },
             {
                 key: "secret4",
                 label: "Public Chamber",
+                icon: <LockOutlined />,
                 path: "/public/chambers/public-chamber",
             },
         ],
@@ -62,13 +66,15 @@ export const MenuItems: MenuItemType[] = [
         icon: <ExperimentOutlined />,
         children: [
             {
-                key: "vicosrion1",
+                key: "viscorion1",
                 label: "Oil Changes",
+                icon: <ExperimentOutlined />,
                 path: "/public/oil-monitoring/oil-changes",
             },
             {
                 key: "viscorion2",
                 label: "Oil Details",
+                icon: <ExperimentOutlined />,
                 path: "/public/oil-monitoring/oil-details",
             },
         ],

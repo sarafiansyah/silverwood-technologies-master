@@ -13,6 +13,7 @@ import Sidebar from "@/components/Layout/Sidebar";
 import AppHeader from "@/components/Layout/AppHeader";
 import AppFooter from "@/components/Layout/AppFooter";
 import { findMenuItemByPath } from "@/components/Layout/Sidebar"; // or move to utils
+import { AppstoreOutlined } from "@ant-design/icons";
 
 const { Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -26,7 +27,7 @@ type Props = {
 export default function MainLayout({ children, isDark, setIsDark }: Props) {
     const pathname = usePathname() || "/";
     const router = useRouter();
-       const screens = useBreakpoint();
+    const screens = useBreakpoint();
     const [collapsed, setCollapsed] = useState(false);
     const [hasClicked, setHasClicked] = useState(false);
     const dispatch = useDispatch();
@@ -34,6 +35,10 @@ export default function MainLayout({ children, isDark, setIsDark }: Props) {
     const [currentPageTitle, setCurrentPageTitle] = useState(() => {
         const item = findMenuItemByPath(MenuItems, pathname);
         return item?.label || "Dashboard";
+    });
+    const [currentPageIcon, setCurrentPageIcon] = useState(() => {
+        const item = findMenuItemByPath(MenuItems, pathname);
+        return item?.icon || <AppstoreOutlined />;
     });
 
     // Memoize for performance
@@ -66,6 +71,7 @@ export default function MainLayout({ children, isDark, setIsDark }: Props) {
                         pathname={pathname}
                         onClick={handleClick}
                         setCurrentPageTitle={setCurrentPageTitle}
+                        setCurrentPageIcon={setCurrentPageIcon}
                     />
 
                     <Layout
@@ -76,6 +82,7 @@ export default function MainLayout({ children, isDark, setIsDark }: Props) {
                         }}
                     >
                         <AppHeader
+                            currentPageIcon={currentPageIcon}
                             currentPageTitle={currentPageTitle}
                             isDark={isDark}
                             setIsDark={setIsDark}
@@ -86,7 +93,9 @@ export default function MainLayout({ children, isDark, setIsDark }: Props) {
 
                         <Content
                             style={{
-                               margin: screens.xs ? "0px 6px 0px 6px" :"0px 16px 0px 16px",
+                                margin: screens.xs
+                                    ? "0px 6px 0px 6px"
+                                    : "0px 16px 0px 16px",
                                 display: "flex",
                                 flexDirection: "column",
                                 flex: 1,

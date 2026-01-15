@@ -13,6 +13,7 @@ const { useBreakpoint } = Grid;
 
 interface AppHeaderProps {
     currentPageTitle: string;
+        currentPageIcon: any;
     isDark: boolean;
     setIsDark: (value: boolean) => void;
     user: {
@@ -28,6 +29,7 @@ interface AppHeaderProps {
 
 export default function AppHeader({
     currentPageTitle,
+     currentPageIcon,
     isDark,
     setIsDark,
     user,
@@ -99,13 +101,15 @@ export default function AppHeader({
                     style={{
                         display: "flex",
                         alignItems: "center",
-                        gap: 12,
+                        gap: 8,
                     }}
                 >
+                    <span style={{fontSize:"20px",color:"#6C7CF5"}}>{currentPageIcon}</span>
                     <Title
                         level={screens.xs ? 5 : 4}
                         style={{
                             margin: 0,
+                            color:"#6C7CF5",
                             textTransform: "capitalize",
                             fontSize: screens.xs ? "13px" : "18px",
                             lineHeight: screens.xs ? "20px" : "26px",

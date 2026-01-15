@@ -1,13 +1,14 @@
 "use client"; // Required for client-side components in Next.js App Router
 
 import React from "react";
-import { Layout, Card, Table, Statistic, Row, Col,Grid, Tag } from "antd";
+import { Layout, Card, Table, Statistic, Row, Col,Grid, Tag, Typography  } from "antd";
 import { ArrowUpOutlined, ArrowDownOutlined, UserOutlined, DollarOutlined, ExperimentOutlined, LockOutlined, DeploymentUnitOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import type { RootState } from "@/store/store";
 import { useSelector } from "react-redux"
 
 const { Header, Content, Footer, Sider } = Layout;
+const { Title, Paragraph, Text } = Typography;
 
 const { useBreakpoint } = Grid;
 
@@ -61,7 +62,7 @@ const lastName = useSelector(
 );
 
   return (
-    <Layout style={{ minHeight: "100vh", background: "#fff" }}>
+    <>
 <Row gutter={[24, 24]} style={{ marginBottom: 16 }}>
   <Col span={24}>
 <Card
@@ -72,7 +73,7 @@ const lastName = useSelector(
     overflow: "hidden",
     background: "linear-gradient(135deg, #6C7CF5 0%, #8FA6FF 100%)",
     boxShadow: "0 10px 24px rgba(108, 124, 245, 0.35)",
-        border: "1px solid rgba(255, 255, 255, 0.6)",
+   
     color: "#fff",
   }}
   styles={{
@@ -132,8 +133,20 @@ const lastName = useSelector(
 
   </Col>
 </Row>
+<div style={{ padding: "4px 10px", display: "flex", alignItems: "center", gap: 8 }}>
+  <Title style={{ color: "#787878", fontSize: "14px", fontWeight: 500, margin: 0 }}>
+    Integrated Modules
+  </Title>
+  <div
+    style={{
+      flex: 1,              // line fills remaining space
+      height: "1px",        // line thickness
+      backgroundColor: "#d9d9d9", // line color
+    }}
+  />
+</div>
 
-
+  
 <Row gutter={[12, 12]} style={{ marginBottom: 16 }}>
 <Col xs={12} md={6}>
  <Card
@@ -160,7 +173,7 @@ const lastName = useSelector(
       transform: "translateY(-50%)",
       fontSize: screens.xs ? 48 : 72,
       opacity: 0.5,
-      color: "#999",
+      color: "#6C7CF5",
       pointerEvents: "none",
     }}
   />
@@ -191,6 +204,7 @@ const lastName = useSelector(
         fontSize:  screens.xs? 15 : 22,
         fontWeight: 600,
         lineHeight: 1.2,
+             color: "#6C7CF5",
       }}
     >
       Viscorion
@@ -238,7 +252,7 @@ const lastName = useSelector(
       transform: "translateY(-50%)",
       fontSize: screens.xs ? 48 : 72,
       opacity: 0.5,
-      color: "#999",
+      color: "#6C7CF5",
       pointerEvents: "none",
     }}
   />
@@ -269,6 +283,7 @@ const lastName = useSelector(
         fontSize:  screens.xs? 15 : 22,
         fontWeight: 600,
         lineHeight: 1.2,
+        color:"#6C7CF5"
       }}
     >
       Chambers
@@ -314,8 +329,8 @@ const lastName = useSelector(
       top: "50%",
       transform: "translateY(-50%)",
       fontSize: screens.xs ? 48 : 72,
-      opacity: 0.5,
-      color: "#999",
+      opacity: 0.2,
+      color: "#7370c5",
       pointerEvents: "none",
     }}
   />
@@ -445,7 +460,7 @@ const lastName = useSelector(
   </Col>
 </Row>
 
-    </Layout>
+    </>
   );
 };
 

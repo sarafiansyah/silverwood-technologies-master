@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Layout, Menu, Grid } from "antd";
 const { useBreakpoint } = Grid;
 import { MenuItems, MenuItemType } from "@/components/Layout/MenuItems";
+import { AppstoreOutlined } from "@ant-design/icons";
 
 const { Sider } = Layout;
 
@@ -34,6 +35,7 @@ interface SidebarProps {
     pathname: string;
     onClick: () => void;
     setCurrentPageTitle: (title: string) => void;
+    setCurrentPageIcon: (title: any) => void;
 }
 
 export default function Sidebar({
@@ -45,19 +47,23 @@ export default function Sidebar({
     pathname,
     onClick,
     setCurrentPageTitle,
+    setCurrentPageIcon,
 }: SidebarProps) {
     const screens = useBreakpoint();
     const router = useRouter();
-    const convertItems = (items: MenuItemType[]): any[] => {
+    const convertItems = (items: MenuItemType[], isChild = false): any[] => {
         return items.map((item) => ({
             key: item.path,
-            icon: item.icon,
+            // Only show icon if it's not a child
+            icon: isChild ? null : item.icon,
             label: item.path ? (
                 <Link href={item.path}>{item.label}</Link>
             ) : (
                 item.label
             ),
-            children: item.children ? convertItems(item.children) : undefined,
+            children: item.children
+                ? convertItems(item.children, true) // mark children so their icons are hidden
+                : undefined,
         }));
     };
 
@@ -78,7 +84,9 @@ export default function Sidebar({
                         ? "1px solid #333333ff"
                         : "1px solid #f0f0f0",
                     borderRadius: 12,
-                    margin: screens.xs ? "8px 0px 0px 8px" :"10px 0px 0px 10px",
+                    margin: screens.xs
+                        ? "8px 0px 0px 8px"
+                        : "10px 0px 0px 10px",
                     boxShadow: "0 4px 16px rgba(0, 0, 0, 0.08)",
                     overflow: "hidden",
                     zIndex: 999,
@@ -161,7 +169,9 @@ export default function Sidebar({
                         );
                         const title =
                             clickedItem?.label || (info.key as string);
-                        setCurrentPageTitle(title); // update header
+                        const icon = clickedItem?.icon || <AppstoreOutlined />;
+                        setCurrentPageTitle(title);
+                        setCurrentPageIcon(icon);
                         router.push(info.key as string);
                     }}
                     items={convertItems(MenuItems)}
