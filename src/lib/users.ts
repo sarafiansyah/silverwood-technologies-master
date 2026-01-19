@@ -8,9 +8,17 @@ export interface UserData {
   password: string;
   roles: string[];
   phoneNumber: string;
+  dateJoined?: string;    // e.g., "2026-01-19"
+  memberType?: string;    // e.g., "Premium", "Basic"
+  instagram?: string;
+  twitter?: string;
+  github?: string;
+  facebook?: string;
+  threads?: string;
+  status?: string;        // e.g., "Online", "Offline"
 }
 
-//  You can add more users here later easily
+// You can add more users here easily
 export const users: UserData[] = [
   {
     id: "1",
@@ -20,6 +28,14 @@ export const users: UserData[] = [
     password: "MahesaMita",
     roles: ["Administrator"],
     phoneNumber: "+62 812-3456-7890",
+    dateJoined: "2023-01-01",
+    memberType: "Premium",
+    instagram: "@mahesa",
+    twitter: "@mahesa",
+    github: "mahesaGH",
+    facebook: "mahesaFB",
+    threads: "@mahesaThreads",
+    status: "Online",
   },
   {
     id: "2",
@@ -29,8 +45,16 @@ export const users: UserData[] = [
     password: "pass123",
     roles: ["Support"],
     phoneNumber: "+62 811-2222-3333",
+    dateJoined: "2024-03-15",
+    memberType: "Basic",
+    instagram: "@sara",
+    twitter: "@sara",
+    github: "saraGH",
+    facebook: "saraFB",
+    threads: "@saraThreads",
+    status: "Offline",
   },
-    {
+  {
     id: "3",
     firstName: "Michelle",
     lastName: "Aurelia",
@@ -38,6 +62,14 @@ export const users: UserData[] = [
     password: "michellePass",
     roles: ["Finance"],
     phoneNumber: "+62 813-9988-1122",
+    dateJoined: "2022-07-20",
+    memberType: "Premium",
+    instagram: "@michelle",
+    twitter: "@michelle",
+    github: "michelleGH",
+    facebook: "michelleFB",
+    threads: "@michelleThreads",
+    status: "Online",
   },
   {
     id: "4",
@@ -47,6 +79,14 @@ export const users: UserData[] = [
     password: "raraCute",
     roles: ["HR"],
     phoneNumber: "+62 815-6677-2211",
+    dateJoined: "2023-06-10",
+    memberType: "Basic",
+    instagram: "@rara",
+    twitter: "@rara",
+    github: "raraGH",
+    facebook: "raraFB",
+    threads: "@raraThreads",
+    status: "Offline",
   },
   {
     id: "5",
@@ -56,6 +96,14 @@ export const users: UserData[] = [
     password: "ninaSecure",
     roles: ["Support"],
     phoneNumber: "+62 819-5544-7788",
+    dateJoined: "2024-01-05",
+    memberType: "Premium",
+    instagram: "@nina",
+    twitter: "@nina",
+    github: "ninaGH",
+    facebook: "ninaFB",
+    threads: "@ninaThreads",
+    status: "Online",
   },
   {
     id: "6",
@@ -65,6 +113,14 @@ export const users: UserData[] = [
     password: "linaStrong",
     roles: ["Marketing"],
     phoneNumber: "+62 817-4400-2233",
+    dateJoined: "2022-11-12",
+    memberType: "Basic",
+    instagram: "@lina",
+    twitter: "@lina",
+    github: "linaGH",
+    facebook: "linaFB",
+    threads: "@linaThreads",
+    status: "Offline",
   },
   {
     id: "7",
@@ -74,6 +130,14 @@ export const users: UserData[] = [
     password: "johanPass",
     roles: ["Administrator"],
     phoneNumber: "+62 812-9900-5566",
+    dateJoined: "2021-12-01",
+    memberType: "Premium",
+    instagram: "@johan",
+    twitter: "@johan",
+    github: "johanGH",
+    facebook: "johanFB",
+    threads: "@johanThreads",
+    status: "Online",
   },
   {
     id: "8",
@@ -83,5 +147,13 @@ export const users: UserData[] = [
     password: "kevinSecure",
     roles: ["Developer"],
     phoneNumber: "+62 818-2211-9944",
+    dateJoined: "2023-08-22",
+    memberType: "Premium",
+    instagram: "@kevin",
+    twitter: "@kevin",
+    github: "kevinGH",
+    facebook: "kevinFB",
+    threads: "@kevinThreads",
+    status: "Online",
   },
 ];

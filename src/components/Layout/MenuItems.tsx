@@ -24,10 +24,10 @@ export const MenuItems: MenuItemType[] = [
         path: "/",
     },
     {
-        key: "/users",
+        key: "/profile",
         icon: <UserOutlined />,
-        label: "User Management",
-        path: "/users",
+        label: "Profile",
+        path: "/profile",
     },
     {
         key: "chambers",
@@ -80,10 +80,10 @@ export const MenuItems: MenuItemType[] = [
         ],
     },
     {
-        key: "/structural",
+        key: "/users",
         icon: <TeamOutlined />,
-        label: "Structural",
-        path: "/structural",
+        label: "Users",
+        path: "/users",
     },
 
     {

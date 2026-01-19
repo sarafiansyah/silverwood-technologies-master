@@ -6,6 +6,7 @@ import { ArrowUpOutlined, ArrowDownOutlined, UserOutlined, DollarOutlined, Exper
 import type { ColumnsType } from "antd/es/table";
 import type { RootState } from "@/store/store";
 import { useSelector } from "react-redux"
+import DashboardCard from "@/components/Card/DashboardCard";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { Title, Paragraph, Text } = Typography;
@@ -148,315 +149,41 @@ const lastName = useSelector(
 
   
 <Row gutter={[12, 12]} style={{ marginBottom: 16 }}>
-<Col xs={12} md={6}>
- <Card
-  hoverable
-  style={{
-    position: "relative",
-    borderRadius: 12,
-    overflow: "hidden",
-    boxShadow: "0 6px 16px rgba(0,0,0,0.08)",
-  }}
-  styles={{
-    body: {
-      padding: "10px 12px",
-      minHeight: screens.xs ? 0 : 90,
-    },
-  }}
->
-  {/* Background Icon */}
-  <ExperimentOutlined
-    style={{
-      position: "absolute",
-      right: screens.xs ? 8 : 12,
-      top: "50%",
-      transform: "translateY(-50%)",
-      fontSize: screens.xs ? 48 : 72,
-      opacity: 0.5,
-      color: "#6C7CF5",
-      pointerEvents: "none",
-    }}
-  />
-
-  {/* Content */}
-  <div
-    style={{
-      position: "relative",
-      zIndex: 1,
-      display: "flex",
-      flexDirection: "column",
-      gap:  screens.xs? 2 : 4,
-    }}
-  >
-    <span
-      style={{
-        fontSize: screens.xs? 10 : 12,
-        fontWeight: 500,
-        opacity: 0.7,
-        lineHeight: 1.2,
-      }}
-    >
-      Rafiansyah
-    </span>
-
-    <span
-      style={{
-        fontSize:  screens.xs? 15 : 22,
-        fontWeight: 600,
-        lineHeight: 1.2,
-             color: "#6C7CF5",
-      }}
-    >
-      Viscorion
-    </span>
-
-    <Tag
-      color="green"
-      style={{
-        fontSize: 10,
-        lineHeight: "18px",
-        padding: "0 6px",
-        width: "fit-content",
-        marginTop: 10,
-      }}
-    >
-      ONLINE
-    </Tag>
-  </div>
-</Card>
-
-</Col>
-
   <Col xs={12} md={6}>
-  <Card
-  hoverable
-  style={{
-    position: "relative",
-    borderRadius: 12,
-    overflow: "hidden",
-    boxShadow: "0 6px 16px rgba(0,0,0,0.08)",
-  }}
-  styles={{
-    body: {
-      padding: "10px 12px",
-      minHeight: screens.xs ? 0 : 90,
-    },
-  }}
->
-  {/* Background Icon */}
-  <LockOutlined
-    style={{
-      position: "absolute",
-      right: screens.xs ? 8 : 12,
-      top: "50%",
-      transform: "translateY(-50%)",
-      fontSize: screens.xs ? 48 : 72,
-      opacity: 0.5,
-      color: "#6C7CF5",
-      pointerEvents: "none",
-    }}
-  />
-
-  {/* Content */}
-  <div
-    style={{
-      position: "relative",
-      zIndex: 1,
-      display: "flex",
-      flexDirection: "column",
-      gap:  screens.xs? 2 : 4,
-    }}
-  >
-    <span
-      style={{
-        fontSize: screens.xs? 10 : 12,
-        fontWeight: 500,
-        opacity: 0.7,
-        lineHeight: 1.2,
-      }}
-    >
-      Rafiansyah
-    </span>
-
-    <span
-      style={{
-        fontSize:  screens.xs? 15 : 22,
-        fontWeight: 600,
-        lineHeight: 1.2,
-        color:"#6C7CF5"
-      }}
-    >
-      Chambers
-    </span>
-
-    <Tag
-      color="green"
-      style={{
-        fontSize: 10,
-        lineHeight: "18px",
-        padding: "0 6px",
-        width: "fit-content",
-        marginTop: 10,
-      }}
-    >
-      ONLINE
-    </Tag>
-  </div>
-</Card>
+    <DashboardCard
+      title="Viscorion"
+      subtitle="Rafiansyah"
+      status="ONLINE"
+      statusColor="green"
+      icon={<ExperimentOutlined />}
+    />
   </Col>
-
   <Col xs={12} md={6}>
- <Card
-  hoverable
-  style={{
-    position: "relative",
-    borderRadius: 12,
-    overflow: "hidden",
-    boxShadow: "0 6px 16px rgba(0,0,0,0.08)",
-  }}
-  styles={{
-    body: {
-      padding: "10px 12px",
-      minHeight: screens.xs ? 0 : 90,
-    },
-  }}
->
-  {/* Background Icon */}
-  <DollarOutlined
-    style={{
-      position: "absolute",
-      right: screens.xs ? 8 : 12,
-      top: "50%",
-      transform: "translateY(-50%)",
-      fontSize: screens.xs ? 48 : 72,
-      opacity: 0.2,
-      color: "#7370c5",
-      pointerEvents: "none",
-    }}
-  />
-
-  {/* Content */}
-  <div
-    style={{
-      position: "relative",
-      zIndex: 1,
-      display: "flex",
-      flexDirection: "column",
-      gap:  screens.xs? 2 : 4,
-    }}
-  >
-    <span
-      style={{
-        fontSize: screens.xs? 10 : 12,
-        fontWeight: 500,
-        opacity: 0.7,
-        lineHeight: 1.2,
-      }}
-    >
-      Rafiansyah
-    </span>
-
-    <span
-      style={{
-        fontSize:  screens.xs? 15 : 22,
-        fontWeight: 600,
-        lineHeight: 1.2,
-      }}
-    >
-      Moneypulate
-    </span>
-
-    <Tag
-      color="red"
-      style={{
-        fontSize: 10,
-        lineHeight: "18px",
-        padding: "0 6px",
-        width: "fit-content",
-        marginTop: 10,
-      }}
-    >
-      OFFLINE
-    </Tag>
-  </div>
-</Card>
+    <DashboardCard
+      title="Chambers"
+      subtitle="Rafiansyah"
+      status="ONLINE"
+      statusColor="green"
+      icon={<LockOutlined />}
+    />
   </Col>
-
   <Col xs={12} md={6}>
- <Card
-  hoverable
-  style={{
-    position: "relative",
-    borderRadius: 12,
-    overflow: "hidden",
-    boxShadow: "0 6px 16px rgba(0,0,0,0.08)",
-  }}
-  styles={{
-    body: {
-      padding: "10px 12px",
-      minHeight: screens.xs ? 0 : 90,
-    },
-  }}
->
-  {/* Background Icon */}
-  <DeploymentUnitOutlined
-    style={{
-      position: "absolute",
-      right: screens.xs ? 8 : 12,
-      top: "50%",
-      transform: "translateY(-50%)",
-      fontSize: screens.xs ? 48 : 72,
-      opacity: 0.5,
-      color: "#999",
-      pointerEvents: "none",
-    }}
-  />
-
-  {/* Content */}
-  <div
-    style={{
-      position: "relative",
-      zIndex: 1,
-      display: "flex",
-      flexDirection: "column",
-      gap:  screens.xs? 2 : 4,
-    }}
-  >
-    <span
-      style={{
-        fontSize: screens.xs? 10 : 12,
-        fontWeight: 500,
-        opacity: 0.7,
-        lineHeight: 1.2,
-      }}
-    >
-      Rafiansyah
-    </span>
-
-    <span
-      style={{
-        fontSize:  screens.xs? 15 : 22,
-        fontWeight: 600,
-        lineHeight: 1.2,
-      }}
-    >
-      Gallery
-    </span>
-
-    <Tag
-      color="red"
-      style={{
-        fontSize: 10,
-        lineHeight: "18px",
-        padding: "0 6px",
-        width: "fit-content",
-        marginTop: 10,
-      }}
-    >
-      OFFLINE
-    </Tag>
-  </div>
-</Card>
+    <DashboardCard
+      title="Moneypulate"
+      subtitle="Rafiansyah"
+      status="OFFLINE"
+      statusColor="red"
+      icon={<DollarOutlined />}
+    />
+  </Col>
+  <Col xs={12} md={6}>
+    <DashboardCard
+      title="Gallery"
+      subtitle="Rafiansyah"
+      status="OFFLINE"
+      statusColor="red"
+      icon={<DeploymentUnitOutlined />}
+    />
   </Col>
 </Row>
 

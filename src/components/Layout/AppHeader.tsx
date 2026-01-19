@@ -101,7 +101,7 @@ export default function AppHeader({
                     style={{
                         display: "flex",
                         alignItems: "center",
-                        gap: 8,
+                        gap: 6,
                     }}
                 >
                     <span style={{fontSize:"20px",color:"#6C7CF5"}}>{currentPageIcon}</span>

@@ -8,7 +8,14 @@ export interface UserState {
   email?: string;
   roles?: string[];
   phoneNumber?: string;
-  // add any other fields you returned from authorize()
+  dateJoined?: string; // e.g., "2026-01-19"
+  memberType?: string; // e.g., "Premium", "Basic"
+  instagram?: string;
+  twitter?: string;
+  github?: string;
+  facebook?: string;
+  threads?: string;
+  status?: string; // e.g., "Online", "Offline"
   isAuthenticated: boolean;
 }
 
@@ -24,7 +31,6 @@ const userSlice = createSlice({
       Object.assign(state, action.payload, { isAuthenticated: true });
     },
     clearUser(state) {
-      // reset to initial state
       return { ...initialState };
     },
   },
