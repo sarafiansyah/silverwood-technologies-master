@@ -100,7 +100,7 @@ const MainLayout: React.FC = () => {
                             perspective: 1000,
                             width: screens.xs ? 300 : "100vw", // small on XS, full width otherwise
                             height: screens.xs ? 460 : 650, // small on XS, full height otherwise
-                            maxWidth: screens.xs ? undefined : "80%", // optional: limit max width on large screens
+                            maxWidth: screens.xs ? "100%" : "80%", // optional: limit max width on large screens
                             margin: screens.xs ? 0 : "0 auto", // center horizontally when full width
                         }}
                     >
@@ -133,8 +133,9 @@ const MainLayout: React.FC = () => {
                                 <div
                                     style={{
                                         height: 190,
-                                        background:
-                                            "linear-gradient(135deg, #6C7CF5 0%, #8FA6FF 100%)",
+                                           backgroundImage: `url("/assets/images/background/bg-profile.jpg")`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
                                         display: "flex",
                                         justifyContent: "center",
                                         alignItems: "flex-end",
@@ -174,10 +175,10 @@ const MainLayout: React.FC = () => {
                                     {/* Avatar */}
                                     <Avatar
                                         size={80}
-                                        src="https://i.pravatar.cc/150?img=3"
+                                        src="/assets/images/avatar/00.png"
                                         style={{
                                             position: "relative",
-                                            border: "3px solid #fff",
+                                          
                                             zIndex: 2,
                                         }}
                                     />

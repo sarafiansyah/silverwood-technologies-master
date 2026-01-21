@@ -49,6 +49,7 @@ export default function SystemVersionCard({
                     alignItems: "center",
                     justifyContent: "center",
                     marginBottom: 12,
+                    marginLeft:-2,
                     padding: 10,
                 }}
             >

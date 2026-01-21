@@ -13,7 +13,7 @@ const { useBreakpoint } = Grid;
 
 interface AppHeaderProps {
     currentPageTitle: string;
-        currentPageIcon: any;
+    currentPageIcon: any;
     isDark: boolean;
     setIsDark: (value: boolean) => void;
     user: {
@@ -29,7 +29,7 @@ interface AppHeaderProps {
 
 export default function AppHeader({
     currentPageTitle,
-     currentPageIcon,
+    currentPageIcon,
     isDark,
     setIsDark,
     user,
@@ -104,12 +104,14 @@ export default function AppHeader({
                         gap: 2,
                     }}
                 >
-                    <span style={{fontSize:"20px",color:"#6C7CF5"}}>{currentPageIcon}</span>
+                    <span style={{ fontSize: "20px", color: "#6C7CF5" }}>
+                        {currentPageIcon}
+                    </span>
                     <Title
                         level={screens.xs ? 5 : 4}
                         style={{
                             margin: 0,
-                            color:"#6C7CF5",
+                            color: "#6C7CF5",
                             textTransform: "capitalize",
                             fontSize: screens.xs ? "13px" : "18px",
                             lineHeight: screens.xs ? "20px" : "26px",
@@ -166,16 +168,15 @@ export default function AppHeader({
                                                         size={
                                                             isMobile ? 28 : 36
                                                         }
+                                                        src="/assets/images/avatar/00.png"
                                                         style={{
-                                                            backgroundColor:
-                                                                "#b5b5b5ff",
-                                                            color: "#fff",
                                                             fontSize: isMobile
                                                                 ? 16
                                                                 : 22,
                                                             textAlign: "center",
                                                         }}
                                                     >
+                                                        {/* Fallback in case image doesn't load */}
                                                         {userInitial !== "?" ? (
                                                             userInitial
                                                         ) : (
@@ -296,64 +297,62 @@ export default function AppHeader({
                                 ],
                             }}
                         >
-                            <div
-                                style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: isMobile ? 4 : 8,
-                                    cursor: "pointer",
-                                }}
-                            >
-                                <Avatar
-                                    size={isMobile ? 28 : 36}
-                                    style={{
-                                        backgroundColor: "#b5b5b5ff",
-                                        color: "#fff",
-                                        fontSize: isMobile ? 16 : 22,
-                                        textAlign: "center",
-                                    }}
-                                >
-                                    {userInitial !== "?" ? (
-                                        userInitial
-                                    ) : (
-                                        <UserOutlined />
-                                    )}
-                                </Avatar>
+                         <Button
+    type="text"
+    style={{
+        display: "flex",
+        alignItems: "center",
+        gap: isMobile ? 4 : 8,
+        padding: 0,
+        cursor: "pointer",
+    }}
+    onClick={() => {
+        // your click handler here
+        console.log("Avatar button clicked");
+    }}
+>
+    <Avatar
+        size={isMobile ? 28 : 36}
+        src="/assets/images/avatar/00.png"
+        style={{
+            fontSize: isMobile ? 16 : 22,
+            textAlign: "center",
+        }}
+    >
+        {userInitial !== "?" ? userInitial : <UserOutlined />}
+    </Avatar>
 
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        justifyContent: "center",
-                                        lineHeight: 1.2,
-                                    }}
-                                >
-                                    <Text
-                                        style={{
-                                            fontSize: isMobile
-                                                ? "10px"
-                                                : "14px",
-                                            fontWeight: 600,
-                                            margin: 0,
-                                            lineHeight: 1.2,
-                                        }}
-                                    >
-                                        {isMobile
-                                            ? userFirstNameOnly
-                                            : userDisplayName}
-                                    </Text>
+    <div
+        style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            textAlign:"left",
+            lineHeight: 1.2,
+        }}
+    >
+        <Text
+            style={{
+                fontSize: isMobile ? "10px" : "14px",
+                fontWeight: 600,
+                margin: 0,
+                lineHeight: 1.2,
+            }}
+        >
+            {isMobile ? userFirstNameOnly : userDisplayName}
+        </Text>
 
-                                    <Text
-                                        style={{
-                                            fontSize: isMobile ? "8px" : "12px",
-                                            fontWeight: 400,
-                                            lineHeight: 1.2,
-                                        }}
-                                    >
-                                        {userRolesDisplay}
-                                    </Text>
-                                </div>
-                            </div>
+        <Text
+            style={{
+                fontSize: isMobile ? "8px" : "12px",
+                fontWeight: 400,
+                lineHeight: 1.2,
+            }}
+        >
+            {userRolesDisplay}
+        </Text>
+    </div>
+</Button>
                         </Dropdown>
                     )}
                 </div>
