@@ -10,7 +10,6 @@
     },
     "dependencies": {
         "@ant-design/icons": "^6.1.0",
-        "@ant-design/nextjs-registry": "^1.2.0",
         "@reduxjs/toolkit": "^2.10.1",
         "antd": "^6.2.1",
         "bcryptjs": "^3.0.3",
