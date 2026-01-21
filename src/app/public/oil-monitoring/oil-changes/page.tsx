@@ -16,6 +16,7 @@ import {
     Col,
     Upload,
     Modal,
+    Space,
 } from "antd";
 import type { UploadProps } from "antd";
 import type { UploadFile } from "antd/es/upload/interface";
@@ -354,7 +355,6 @@ export default function DashboardPage() {
                                     onFinish={handleFinish}
                                     style={{
                                         marginTop: 0,
-                                        background: "#fff",
                                         padding: 0,
                                         borderRadius: 8,
                                     }}
@@ -596,13 +596,14 @@ export default function DashboardPage() {
 
                                     {/* Buttons */}
                                     <Form.Item>
-                                        <Button
-                                            type="primary"
-                                            htmlType="submit"
-                                            style={{ marginRight: 6 }}
-                                        >
-                                            Summarize
-                                        </Button>
+                                        <Space >   <Button
+    type="primary"
+    htmlType="submit"
+    className="liquid-btn"
+>
+    Summarize
+</Button>
+
                                         <Button
                                             danger
                                             icon={<ReloadOutlined />}
@@ -615,7 +616,7 @@ export default function DashboardPage() {
                                         ></Button>
                                         <Button
                                             icon={<UploadOutlined />}
-                                            style={{ marginRight: 6 }}
+                                         
                                             onClick={() => {
                                                 setModalUploadOilDetailsProperties(
                                                     true
@@ -625,8 +626,8 @@ export default function DashboardPage() {
                                         <Button
                                             icon={<DownloadOutlined />}
                                             onClick={handleDownload}
-                                            style={{ marginRight: 6 }}
-                                        ></Button>
+                                          
+                                        ></Button></Space>
                                     </Form.Item>
                                 </Form>
 

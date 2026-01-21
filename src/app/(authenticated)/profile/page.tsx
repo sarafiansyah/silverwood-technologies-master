@@ -373,11 +373,14 @@ const MainLayout: React.FC = () => {
                                     size="small"
                                     onClick={() => setFlipped(!flipped)}
                                     style={{
-                                        position: "absolute",
-                                        top: 8,
-                                        right: 8,
-                                        zIndex: 10,
-                                    }}
+                                            position: "absolute",
+                                            top: 8,
+                                            right: 8,
+                                            zIndex: 10,
+                                            gap: 2,
+                                            fontSize: 10,
+                                            padding:"0 8px",
+                                        }}
                                 >
                                     <RetweetOutlined /> FLIP
                                 </Button>
