@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Libre+Barcode+39&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Libre+Barcode+39&display=swap");
 :root {
     --background: #ffffff;
     --foreground: #171717;
@@ -73,29 +73,29 @@ select:-webkit-autofill:focus {
 
 /* Berlaku hanya ketika sider collapsed dan bukan di mobile */
 @media (min-width: 576px) {
-  /* only when sider is expanded */
-  .sider-expanded .ant-menu-item,
-  .sider-expanded .ant-menu-submenu-title {
-    padding: 0 16px !important;
-  }
+    /* only when sider is expanded */
+    .sider-expanded .ant-menu-item,
+    .sider-expanded .ant-menu-submenu-title {
+        padding: 0 16px !important;
+    }
 
-  /* children padding */
-  .sider-expanded .ant-menu-sub .ant-menu-item,
-  .sider-expanded .ant-menu-sub .ant-menu-submenu-title {
-    padding-left: 32px !important;
-  }
+    /* children padding */
+    .sider-expanded .ant-menu-sub .ant-menu-item,
+    .sider-expanded .ant-menu-sub .ant-menu-submenu-title {
+        padding-left: 32px !important;
+    }
 }
 
 /* Parent menu (biar tetap normal) */
- .sider-expanded .ant-menu-item,  .sider-expanded
-.ant-menu-submenu-title {
-  padding: 0 16px !important; /* padding X only */
+.sider-expanded .ant-menu-item,
+.sider-expanded .ant-menu-submenu-title {
+    padding: 0 16px !important; /* padding X only */
 }
 
 /* Children (submenu items) → extra left indent */
- .sider-expanded .ant-menu-sub .ant-menu-item,
- .sider-expanded .ant-menu-sub .ant-menu-submenu-title {
-  padding-left: 32px !important; /* adjust as you like */
+.sider-expanded .ant-menu-sub .ant-menu-item,
+.sider-expanded .ant-menu-sub .ant-menu-submenu-title {
+    padding-left: 32px !important; /* adjust as you like */
 }
 
 .ant-card-head {
@@ -103,4 +103,43 @@ select:-webkit-autofill:focus {
     min-height: 40 !important;
 }
 
-.ant-form-item-vertical .ant-form-item-label {padding: 0;}
+.ant-form-item-vertical .ant-form-item-label {
+    padding: 0;
+}
+
+.liquid-btn {
+    position: relative;
+    overflow: hidden;
+    border: none !important;
+    background: linear-gradient(
+        120deg,
+        #6a5af9,
+        #8e8bff,
+        #5fd1ff,
+        #6a5af9
+    );
+    background-size: 300% 300%;
+    animation: liquidFlow 6s ease infinite;
+    box-shadow: 0 8px 24px rgba(106, 90, 249, 0.35);
+    transition: transform 0.2s ease;
+}
+
+.liquid-btn:hover {
+    transform: translateY(-1px);
+}
+
+.liquid-btn:active {
+    transform: translateY(0);
+}
+
+@keyframes liquidFlow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
