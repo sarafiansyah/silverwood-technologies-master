@@ -173,6 +173,9 @@ export default function Sidebar({
                         setCurrentPageTitle(title);
                         setCurrentPageIcon(icon);
                         router.push(info.key as string);
+                        setTimeout(() => {
+                            setCollapsed(true);
+                        }, 1000);
                     }}
                     items={convertItems(MenuItems)}
                     style={{

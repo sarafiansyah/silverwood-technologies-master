@@ -104,7 +104,7 @@ export default function LoginPage() {
                         }}
                     >
                         <Image
-                            src="/assets/logo/rd_silverwood_trans.svg"
+                            src="/assets/logo/rd_silverwood.png"
                             alt="Logo"
                             width={180}
                             height={50}
