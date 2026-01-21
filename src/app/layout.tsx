@@ -3,7 +3,6 @@ import { Poppins } from "next/font/google";
 import SessionProviderWrapper from "@/components/Providers/SessionProvider";
 import ReduxProvider from "@/components/Providers/ReduxProvider";
 import AppLoadingOverlay from "@/app/layout-loading";
-import "@ant-design/v5-patch-for-react-19";
 import MainLayout from "@/components/Layout/MainLayout";
 import ClientConditionalLayout from "@/components/Providers/AuthClientLayout";
 
