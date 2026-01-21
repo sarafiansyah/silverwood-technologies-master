@@ -11,8 +11,8 @@ import {
 import Image from "next/image";
 
 const { Footer } = Layout;
-const { useBreakpoint } = Grid;
 const { Text, Link } = Typography;
+const { useBreakpoint } = Grid;
 
 interface AppFooterProps {
     isDark: boolean;
@@ -20,98 +20,196 @@ interface AppFooterProps {
 
 export default function AppFooter({ isDark }: AppFooterProps) {
     const screens = useBreakpoint();
+    const isXs = screens.xs;
+
+    const textColor = isDark ? "#aaa" : "#6d6d6d";
+    const mutedColor = isDark ? "#777" : "#888";
+    const iconColor = isDark ? "#777" : "#7d7d7d";
 
     return (
         <Footer
             style={{
-                margin: screens.xs? "6px 6px 6px 6px" : "12px 12px 12px 12px",
+                margin: isXs ? 8: 12,
                 background: isDark ? "#141414" : "#fff",
-                color: isDark ? "#aaa" : "#555",
                 borderRadius: 12,
-                boxShadow: "0 4px 16px rgba(0, 0, 0, 0.08)",
                 border: isDark ? "1px solid #333" : "1px solid #f0f0f0",
-                padding: screens.xs ? "12px 12px" : "12px 18px",
+                boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
+                padding: isXs ? "16px" : "20px",
             }}
         >
+            {/* TOP CONTENT */}
             <div
                 style={{
                     display: "flex",
-                    flexDirection: screens.xs ? "row" : "row",
+                    flexDirection: isXs ? "column" : "row",
                     justifyContent: "space-between",
-                    alignItems: screens.xs ? "flex-start" : "center",
-                    gap: screens.xs ? 0 : 0,
+                    gap: isXs ? 16 : 32,
                 }}
             >
-                {/* LEFT: Logo + Description */}
-                <div style={{ display: "flex", flexDirection: "row", gap: 8 }}>
-                    {screens.xs ? null : (
-                        <Image
-                            src="/assets/logo/rd_silverwood.svg"
-                            alt="Logo"
-                            width={86}
-                            height={24}
-                        />
-                    )}
-                    <Text
+                {/* LEFT */}
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: isXs ? 16 : 16,
+                        maxWidth: isXs ? "100%" : "100%",
+                        width: "100%",
+                    }}
+                >
+                    <div
                         style={{
-                            display: "block",
-                            textAlign: "center",
-                            color: isDark ? "#777" : "#888",
-                            fontSize: 12,
-                            marginTop: 2,
+                            display: "flex",
+                            flexDirection: "row",
+                            width: "100%", // 👈 take full width
+                            justifyContent: "space-between", // 👈 spread left & right
+                            alignItems: "center",
+                            textAlign: isXs ? "left" : "right",
                         }}
                     >
-                        © {new Date().getFullYear()} Rafiansyah Silverwood.
-                    </Text>
-                </div>
+                        <Image
+                            src={
+                                isDark
+                                    ? "/assets/logo/rd_silverwood_dark.svg"
+                                    : "/assets/logo/rd_silverwood.svg"
+                            }
+                            alt="Logo"
+                            width={isXs ? 96 : 180}
+                            height={isXs ? 28 : 48}
+                        />
 
-                {/* RIGHT TOP: Social Icons */}
-                <Space size="middle" style={{}}>
-                    <a
-                        href="https://github.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        {/* SOCIALS */}
+                        <Space size={12}>
+                            <GithubOutlined
+                                style={{
+                                    fontSize: isXs ? 20 : 24,
+                                    color: iconColor,
+                                }}
+                            />
+                            <TwitterOutlined
+                                style={{
+                                    fontSize: isXs ? 20 : 24,
+                                    color: iconColor,
+                                }}
+                            />
+                            <LinkedinOutlined
+                                style={{
+                                    fontSize: isXs ? 20 : 24,
+                                    color: iconColor,
+                                }}
+                            />
+                            <MailOutlined
+                                style={{
+                                    fontSize: isXs ? 20 : 24,
+                                    color: iconColor,
+                                }}
+                            />
+                        </Space>
+                    </div>
+                    {/* RIGHT */}
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            gap: isXs ? 14 : 10,
+                            justifyContent: "left",
+                            textAlign: isXs ? "left" : "right",
+                        }}
                     >
-                        <GithubOutlined
+                        <Link
                             style={{
-                                fontSize: 20,
-                                color: isDark ? "#aaa" : "#555",
+                                color: textColor,
+                                fontSize: isXs ? 12 : 16,
+                                fontWeight: 600,
                             }}
-                        />
-                    </a>
-                    <a
-                        href="https://twitter.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        <TwitterOutlined
+                        >
+                            About
+                        </Link>
+                        <Link
                             style={{
-                                fontSize: 20,
-                                color: isDark ? "#aaa" : "#555",
+                                color: textColor,
+                                fontSize: isXs ? 12 : 16,
+                                fontWeight: 600,
                             }}
-                        />
-                    </a>
-                    <a
-                        href="https://linkedin.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        <LinkedinOutlined
+                        >
+                            Projects
+                        </Link>
+                        <Link
                             style={{
-                                fontSize: 20,
-                                color: isDark ? "#aaa" : "#555",
+                                color: textColor,
+                                fontSize: isXs ? 12 : 16,
+                                fontWeight: 600,
                             }}
-                        />
-                    </a>
-                    <a href="mailto:contact@silverwood.com">
-                        <MailOutlined
+                        >
+                            Blog
+                        </Link>
+                        <Link
                             style={{
-                                fontSize: 20,
-                                color: isDark ? "#aaa" : "#555",
+                                color: textColor,
+                                fontSize: isXs ? 12 : 16,
+                                fontWeight: 600,
                             }}
-                        />
-                    </a>
-                </Space>
+                        >
+                            Contact
+                        </Link>
+                    </div>
+
+                    {isXs ? (
+                        <Text
+                            style={{
+                                fontSize: isXs ? 12 : 16,
+                                color: mutedColor,
+                                marginTop: -8,
+                                textAlign: "left",
+                            }}
+                        >
+                            <span style={{ fontWeight: 500 }}>
+                                Silverwood Technologies
+                            </span>{" "}
+                            Master App is an unofficial portfolio web
+                            application by{" "}
+                            <span style={{ fontWeight: 500 }}>
+                                Mahesa Rafiansyah
+                            </span>
+                            , featuring projects built with modern React.js
+                            technology, specifically Next.js, focused on refined
+                            user experience.
+                        </Text>
+                    ) : (
+                        <Text
+                            style={{
+                                width: isXs ? "100%" : "90%",
+                                fontSize: isXs ? 12 : 16,
+                                color: mutedColor,
+                                marginTop: -8,
+                                textAlign: "left",
+                            }}
+                        >
+                            <span style={{ fontWeight: 500 }}>
+                                Silverwood Technologies
+                            </span>{" "}
+                            Master App is an unofficial portfolio web
+                            application created by Mahesa Rafiansyah,
+                            integrating Rafiansyah Design and its custom-built
+                            projects. Each project under Rafiansyah Design is
+                            developed using modern, up-to-date React.js
+                            technologies—specifically Next.js—with a strong
+                            focus on performance, structure, and refined user
+                            experience.
+                        </Text>
+                    )}
+                </div>
+            </div>
+
+            {/* BOTTOM */}
+            <div
+                style={{
+                    marginTop: isXs ? 12 : 18,
+                    textAlign: isXs ? "center" : "left",
+                }}
+            >
+                <Text style={{ fontSize: isXs ? 10 : 14, color: mutedColor }}>
+                    © 2026 Rafiansyah Silverwood. All rights reserved.
+                </Text>
             </div>
         </Footer>
     );
