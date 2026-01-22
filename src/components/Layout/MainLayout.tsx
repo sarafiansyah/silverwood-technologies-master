@@ -59,7 +59,7 @@ export default function MainLayout({ children, isDark, setIsDark }: Props) {
 
     return (
         <>
-            <Layout style={{ minHeight: screens.xs? "120vh": "126vh" }}>
+            <Layout style={{ minHeight: screens.xs ? "120vh" : "126vh" }}>
                 {/* LEFT SIDE: SIDEBAR + HEADER + CONTENT */}
                 <Layout style={{ flex: 1, display: "flex" }}>
                     <Sidebar

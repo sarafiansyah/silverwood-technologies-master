@@ -70,14 +70,14 @@ const Profile: React.FC = () => {
     const [editUser, setEditUser] = useState<UserState>({
         ...userDataDetails,
     });
-const [saving, setSaving] = useState(false);
+    const [saving, setSaving] = useState(false);
     const [flipped, setFlipped] = useState(false);
     const [onEditMode, setOnEditMode] = useState(false);
     const [avatarModalOpen, setAvatarModalOpen] = useState(false);
     const [avatarList, setAvatarList] = useState<string[]>([]);
-   const [avatarUnsaved, setAvatarUnsaved] = useState<string | undefined>(
-  userAvatar
-);
+    const [avatarUnsaved, setAvatarUnsaved] = useState<string | undefined>(
+        userAvatar
+    );
     const [api, contextHolder] = notification.useNotification();
 
     useEffect(() => {
@@ -89,20 +89,20 @@ const [saving, setSaving] = useState(false);
     }, [avatarModalOpen]);
 
     useEffect(() => {
-  if (onEditMode) {
-    setEditUser(userDataDetails);
-    setAvatarUnsaved(userDataDetails.avatarId);
-  }
-}, [onEditMode]);
+        if (onEditMode) {
+            setEditUser(userDataDetails);
+            setAvatarUnsaved(userDataDetails.avatarId);
+        }
+    }, [onEditMode]);
 
-const handleSave = () => {
-  setSaving(true);
-  setTimeout(() => {
-    dispatch(setUser(editUser)); 
-    setSaving(false);
-    setOnEditMode(false);
-  }, 2000);
-};
+    const handleSave = () => {
+        setSaving(true);
+        setTimeout(() => {
+            dispatch(setUser(editUser));
+            setSaving(false);
+            setOnEditMode(false);
+        }, 2000);
+    };
 
     const openNotificationWithIcon = (type: NotificationType) => {
         api[type]({
@@ -156,8 +156,9 @@ const handleSave = () => {
                                 >
                                     <Avatar
                                         size={96}
-                                     
-                                        src={`/assets/images/avatar/${avatarUnsaved??userAvatar}.png`}
+                                        src={`/assets/images/avatar/${
+                                            avatarUnsaved ?? userAvatar
+                                        }.png`}
                                     />
                                     <Button
                                         size="small"
@@ -266,23 +267,22 @@ const handleSave = () => {
                                         display: "flex",
                                         justifyContent: "center",
                                         marginTop: 8,
-                                        gap:12
+                                        gap: 12,
                                     }}
                                 >
                                     <Button
                                         onClick={() => setOnEditMode(false)}
                                     >
-                                 
                                         Cancel
                                     </Button>
-                               <Button
-  type="primary"
-  loading={saving}
-  disabled={saving}
-  onClick={handleSave}
->
-  {saving ? "Saving..." : "Save"}
-</Button>
+                                    <Button
+                                        type="primary"
+                                        loading={saving}
+                                        disabled={saving}
+                                        onClick={handleSave}
+                                    >
+                                        {saving ? "Saving..." : "Save"}
+                                    </Button>
                                 </div>
                             </motion.div>
                         </>
@@ -398,12 +398,12 @@ const handleSave = () => {
                                         </Title>
                                         <Text
                                             style={{
-                                                display:"flex",
-                                                textAlign:'center',
-                                                    justifyContent:'center',
+                                                display: "flex",
+                                                textAlign: "center",
+                                                justifyContent: "center",
 
                                                 fontSize: screens.xs ? 12 : 16,
-                                                 margin:  screens.xs ? -2 : 0,
+                                                margin: screens.xs ? -2 : 0,
                                             }}
                                         >
                                             {userDataDetails.roles
@@ -569,7 +569,7 @@ const handleSave = () => {
                                     }}
                                 >
                                     {/* Flip Button - top right corner */}
-                                                                    <Image
+                                    <Image
                                         src="/assets/logo/rd_silverwood02.svg"
                                         alt="Logo"
                                         width={180}
@@ -598,31 +598,65 @@ const handleSave = () => {
                         </div>
                     )}
 
-                    <div style={{ padding: 20 }}>
-                        <Button
-                            size="small"
-                            onClick={() => setFlipped(!flipped)}
-                            // style={{
-                            //     position: "absolute",
-                            //     top: 8,
-                            //     right: 8,
-                            //     zIndex: 10,
-                            //     gap: 2,
-                            //     fontSize: 10,
-                            //     padding:"0 8px",
-                            // }}
-                        >
-                            <RetweetOutlined /> FLIP
-                        </Button>
-                        <Button
-                            size="small"
-                            onClick={() => {
-                                setOnEditMode(true);
-                                openNotificationWithIcon("info");
-                            }}
-                        >
-                            <RetweetOutlined /> EDIT
-                        </Button>
+                    <div
+                        style={{
+                            padding: 20,
+                            display: "flex",
+                            justifyContent: "center",
+                        }}
+                    >
+                        {!onEditMode && (
+                            <div
+                                style={{
+                                    padding: 20,
+                                    display: "flex",
+                                    justifyContent: "center",
+                                }}
+                            >
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        gap: 8,
+                                        padding: 6,
+                                        borderRadius: 50,
+                                        background: "#f5f5f5",
+                                        boxShadow:
+                                            "0 4px 12px rgba(0,0,0,0.08)",
+                                    }}
+                                >
+                                    <Button
+                                        size="middle"
+                                        icon={<RetweetOutlined />}
+                                        onClick={() => setFlipped(!flipped)}
+                                        style={{
+                                            borderRadius: 50,
+                                            background: "#1677ff",
+                                            color: "#fff",
+                                            border: "none",
+                                        }}
+                                    >
+                                        FLIP
+                                    </Button>
+
+                                    <Button
+                                        size="middle"
+                                        icon={<RetweetOutlined />}
+                                        onClick={() => {
+                                            setOnEditMode(true);
+                                            openNotificationWithIcon("info");
+                                        }}
+                                        style={{
+                                            borderRadius: 50,
+                                            background: "#52c41a",
+                                            color: "#fff",
+                                            border: "none",
+                                        }}
+                                    >
+                                        EDIT
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </Col>
             </Row>
@@ -655,19 +689,18 @@ const handleSave = () => {
                                     display: "flex",
                                     justifyContent: "center",
                                 }}
-                               onClick={() => {
-  setAvatarUnsaved(avatarName); // 👈 preview only
-}}
-
+                                onClick={() => {
+                                    setAvatarUnsaved(avatarName); // 👈 preview only
+                                }}
                             >
                                 <Avatar
                                     size={64}
                                     src={`/assets/images/avatar/${file}`}
                                     style={{
-                                     border:
-  avatarUnsaved === avatarName
-    ? "2px solid #1677ff"
-    : "2px solid transparent",
+                                        border:
+                                            avatarUnsaved === avatarName
+                                                ? "2px solid #1677ff"
+                                                : "2px solid transparent",
 
                                         transition: "border 0.2s ease",
                                     }}
@@ -675,28 +708,57 @@ const handleSave = () => {
                             </div>
                         );
                     })}
-              <Button
-  size="small"
-  onClick={() => {
-    setAvatarUnsaved(editUser.avatarId); // revert preview
-    setAvatarModalOpen(false);
-  }}
->
-  CANCEL
-</Button>
-                         <Button
-  size="small"
-  type="primary"
-  onClick={() => {
-    setEditUser((prev) => ({
-      ...prev,
-      avatarId: avatarUnsaved,
-    }));
-    setAvatarModalOpen(false);
-  }}
->
-  SAVE
-</Button>
+                </div>
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        alignContent: "center",
+                        gap: 10,
+                        marginTop: 16,
+                        padding: 6,
+                        borderRadius: 50,
+                        background: "#f5f5f5",
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+                    }}
+                >
+                    <Button
+                        size="middle"
+                        onClick={() => {
+                            setAvatarUnsaved(editUser.avatarId); // revert preview
+                            setAvatarModalOpen(false);
+                        }}
+                        style={{
+                            borderRadius: 50,
+                            background: "#ff4d4f",
+                            color: "#fff",
+                            border: "none",
+                            padding: "0 18px",
+                        }}
+                    >
+                        CANCEL
+                    </Button>
+
+                    <Button
+                        size="middle"
+                        type="primary"
+                        onClick={() => {
+                            setEditUser((prev) => ({
+                                ...prev,
+                                avatarId: avatarUnsaved,
+                            }));
+                            setAvatarModalOpen(false);
+                        }}
+                        style={{
+                            borderRadius: 50,
+                            background: "#1677ff",
+                            border: "none",
+                            padding: "0 20px",
+                        }}
+                    >
+                        SAVE
+                    </Button>
                 </div>
             </AnimatedModal>
         </>

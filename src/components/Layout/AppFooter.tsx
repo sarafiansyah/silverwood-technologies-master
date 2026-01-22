@@ -29,7 +29,7 @@ export default function AppFooter({ isDark }: AppFooterProps) {
     return (
         <Footer
             style={{
-                margin: isXs ? 8: 12,
+                margin: isXs ? 8 : 12,
                 background: isDark ? "#141414" : "#fff",
                 borderRadius: 12,
                 border: isDark ? "1px solid #333" : "1px solid #f0f0f0",

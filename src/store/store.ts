@@ -4,23 +4,23 @@ import { persistReducer, persistStore } from "redux-persist";
 import userReducer from "./userSlice";
 
 const persistConfig = {
-  key: "root",
-  storage,
-  whitelist: ["user"], // only user slice will be persisted
+    key: "root",
+    storage,
+    whitelist: ["user"], // only user slice will be persisted
 };
 
 const rootReducer = combineReducers({
-  user: userReducer,
+    user: userReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-  reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: false, // needed for redux-persist
-    }),
+    reducer: persistedReducer,
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: false, // needed for redux-persist
+        }),
 });
 
 export const persistor = persistStore(store);

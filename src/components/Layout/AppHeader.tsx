@@ -57,7 +57,7 @@ export default function AppHeader({
         return user.phoneNumber || "";
     }, [user.phoneNumber]);
 
-        const userAvatar = useMemo(() => {
+    const userAvatar = useMemo(() => {
         return user.avatarId || "";
     }, [user.avatarId]);
 
@@ -173,7 +173,7 @@ export default function AppHeader({
                                                         size={
                                                             isMobile ? 28 : 36
                                                         }
-                                                           src={`/assets/images/avatar/${userAvatar}.png`}
+                                                        src={`/assets/images/avatar/${userAvatar}.png`}
                                                         style={{
                                                             fontSize: isMobile
                                                                 ? 16
@@ -302,62 +302,70 @@ export default function AppHeader({
                                 ],
                             }}
                         >
-                         <Button
-    type="text"
-    style={{
-        display: "flex",
-        alignItems: "center",
-        gap: isMobile ? 4 : 8,
-        padding: 0,
-        cursor: "pointer",
-    }}
-    onClick={() => {
-        // your click handler here
-        console.log("Avatar button clicked");
-    }}
->
-    <Avatar
-        size={isMobile ? 28 : 36}
-        src={`/assets/images/avatar/${userAvatar}.png`}
-        style={{
-            fontSize: isMobile ? 16 : 22,
-            textAlign: "center",
-        }}
-    >
-        {userInitial !== "?" ? userInitial : <UserOutlined />}
-    </Avatar>
+                            <Button
+                                type="text"
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: isMobile ? 4 : 8,
+                                    padding: 0,
+                                    cursor: "pointer",
+                                }}
+                                onClick={() => {
+                                    // your click handler here
+                                    console.log("Avatar button clicked");
+                                }}
+                            >
+                                <Avatar
+                                    size={isMobile ? 28 : 36}
+                                    src={`/assets/images/avatar/${userAvatar}.png`}
+                                    style={{
+                                        fontSize: isMobile ? 16 : 22,
+                                        textAlign: "center",
+                                    }}
+                                >
+                                    {userInitial !== "?" ? (
+                                        userInitial
+                                    ) : (
+                                        <UserOutlined />
+                                    )}
+                                </Avatar>
 
-    <div
-        style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            textAlign:"left",
-            lineHeight: 1.2,
-        }}
-    >
-        <Text
-            style={{
-                fontSize: isMobile ? "10px" : "14px",
-                fontWeight: 600,
-                margin: 0,
-                lineHeight: 1.2,
-            }}
-        >
-            {isMobile ? userFirstNameOnly : userDisplayName}
-        </Text>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        justifyContent: "center",
+                                        textAlign: "left",
+                                        lineHeight: 1.2,
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontSize: isMobile
+                                                ? "10px"
+                                                : "14px",
+                                            fontWeight: 600,
+                                            margin: 0,
+                                            lineHeight: 1.2,
+                                        }}
+                                    >
+                                        {isMobile
+                                            ? userFirstNameOnly
+                                            : userDisplayName}
+                                    </Text>
 
-        <Text
-            style={{
-                fontSize: isMobile ? "8px" : "12px",
-                fontWeight: 400,
-                lineHeight: 1.2,
-            }}
-        >
-            {userRolesDisplay}
-        </Text>
-    </div>
-</Button>
+                                    <Text
+                                        style={{
+                                            fontSize: isMobile ? "8px" : "12px",
+                                            fontWeight: 400,
+                                            lineHeight: 1.2,
+                                        }}
+                                    >
+                                        {userRolesDisplay}
+                                    </Text>
+                                </div>
+                            </Button>
                         </Dropdown>
                     )}
                 </div>
