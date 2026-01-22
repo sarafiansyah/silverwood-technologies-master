@@ -8,14 +8,15 @@ export interface UserState {
   email?: string;
   roles?: string[];
   phoneNumber?: string;
-  dateJoined?: string; // e.g., "2026-01-19"
-  memberType?: string; // e.g., "Premium", "Basic"
+  dateJoined?: string;
+  memberType?: string;
   instagram?: string;
   twitter?: string;
   github?: string;
   facebook?: string;
   threads?: string;
-  status?: string; // e.g., "Online", "Offline"
+  status?: string;
+  avatarId?: string; 
   isAuthenticated: boolean;
 }
 

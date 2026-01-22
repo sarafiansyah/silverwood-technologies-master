@@ -22,6 +22,7 @@ interface AppHeaderProps {
         email?: string;
         phoneNumber?: string;
         roles?: string[];
+        avatarId?: string;
     }; // Replace with your actual user type if available
     handleLogout: () => void;
     router: any; // Replace with proper router type if available
@@ -55,6 +56,10 @@ export default function AppHeader({
     const userPhone = useMemo(() => {
         return user.phoneNumber || "";
     }, [user.phoneNumber]);
+
+        const userAvatar = useMemo(() => {
+        return user.avatarId || "";
+    }, [user.avatarId]);
 
     const userRolesDisplay = useMemo(() => {
         return (
@@ -168,7 +173,7 @@ export default function AppHeader({
                                                         size={
                                                             isMobile ? 28 : 36
                                                         }
-                                                        src="/assets/images/avatar/00.png"
+                                                           src={`/assets/images/avatar/${userAvatar}.png`}
                                                         style={{
                                                             fontSize: isMobile
                                                                 ? 16
@@ -313,7 +318,7 @@ export default function AppHeader({
 >
     <Avatar
         size={isMobile ? 28 : 36}
-        src="/assets/images/avatar/00.png"
+        src={`/assets/images/avatar/${userAvatar}.png`}
         style={{
             fontSize: isMobile ? 16 : 22,
             textAlign: "center",

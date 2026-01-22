@@ -9,6 +9,7 @@ interface AnimatedModalProps {
     children: ReactNode;
     width?: number;
     title?: string;
+    topOffset?: string | number;
 }
 
 export default function AnimatedModal({
@@ -17,6 +18,7 @@ export default function AnimatedModal({
     children,
     width = 500,
     title,
+    topOffset = "10vh",
 }: AnimatedModalProps) {
     return (
         <AnimatePresence>
@@ -35,7 +37,7 @@ export default function AnimatedModal({
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "flex-start",
-                        paddingTop: "10vh",
+                        paddingTop: topOffset,
                         zIndex: 1000,
                     }}
                     onClick={onClose}

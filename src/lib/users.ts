@@ -1,5 +1,3 @@
-// lib/users.ts
-
 export interface UserData {
   id: string;
   firstName: string;
@@ -16,6 +14,7 @@ export interface UserData {
   facebook?: string;
   threads?: string;
   status?: string;        // e.g., "Online", "Offline"
+  avatarId?: string;      // <-- added avatarId
 }
 
 // You can add more users here easily
@@ -36,6 +35,7 @@ export const users: UserData[] = [
     facebook: "mahesaFB",
     threads: "@mahesaThreads",
     status: "Online",
+    avatarId: "00",
   },
   {
     id: "2",
@@ -53,6 +53,7 @@ export const users: UserData[] = [
     facebook: "saraFB",
     threads: "@saraThreads",
     status: "Offline",
+    avatarId: "01",
   },
   {
     id: "3",
@@ -70,6 +71,7 @@ export const users: UserData[] = [
     facebook: "michelleFB",
     threads: "@michelleThreads",
     status: "Online",
+    avatarId: "02",
   },
   {
     id: "4",
@@ -87,6 +89,7 @@ export const users: UserData[] = [
     facebook: "raraFB",
     threads: "@raraThreads",
     status: "Offline",
+    avatarId: "03",
   },
   {
     id: "5",
@@ -104,6 +107,7 @@ export const users: UserData[] = [
     facebook: "ninaFB",
     threads: "@ninaThreads",
     status: "Online",
+    avatarId: "04",
   },
   {
     id: "6",
@@ -121,6 +125,7 @@ export const users: UserData[] = [
     facebook: "linaFB",
     threads: "@linaThreads",
     status: "Offline",
+    avatarId: "05",
   },
   {
     id: "7",
@@ -138,6 +143,7 @@ export const users: UserData[] = [
     facebook: "johanFB",
     threads: "@johanThreads",
     status: "Online",
+    avatarId: "06",
   },
   {
     id: "8",
@@ -155,5 +161,6 @@ export const users: UserData[] = [
     facebook: "kevinFB",
     threads: "@kevinThreads",
     status: "Online",
+    avatarId: "07",
   },
 ];
