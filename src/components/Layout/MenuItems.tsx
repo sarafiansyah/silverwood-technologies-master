@@ -90,7 +90,7 @@ export const MenuItems: MenuItemType[] = [
         key: "/about",
         icon: <InfoCircleOutlined />,
         label: "About",
-        path: "/about",
+        path: "/public/about",
     },
     {
         key: "/settings",
