@@ -6,6 +6,7 @@ import {
     TeamOutlined,
     LockOutlined,
     ExperimentOutlined,
+    DollarCircleOutlined,
 } from "@ant-design/icons";
 
 export interface MenuItemType {
@@ -76,6 +77,43 @@ export const MenuItems: MenuItemType[] = [
                 label: "Oil Details",
                 icon: <ExperimentOutlined />,
                 path: "/public/oil-monitoring/oil-details",
+            },
+        ],
+    },
+     {
+        key: "moneypulate",
+        label: "Finance",
+        icon: <DollarCircleOutlined />,
+        children: [
+            {
+                key: "moneypulate1",
+                label: "Overview",
+                icon: <DollarCircleOutlined />,
+                path: "/finance/overview",
+            },
+            {
+                key: "moneypulate2",
+                label: "Balance",
+                icon: <DollarCircleOutlined />,
+                path: "/finance/balance",
+            },
+            {
+                key: "moneypulate3",
+                label: "Account",
+                icon: <DollarCircleOutlined />,
+                path: "/finance/account",
+            },
+            {
+                key: "moneypulate4",
+                label: "Heirlooms",
+                icon: <DollarCircleOutlined />,
+                path: "/finance/heirlooms",
+            },
+               {
+                key: "moneypulate5",
+                label: "Transaction",
+                icon: <DollarCircleOutlined />,
+                path: "/finance/transactions",
             },
         ],
     },
