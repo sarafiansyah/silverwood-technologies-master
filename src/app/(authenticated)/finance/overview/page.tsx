@@ -646,6 +646,7 @@ export default function Page() {
                                         flexDirection: "column",
                                         alignItems: "center",
                                         marginTop: "-22px",
+                                        marginLeft:"-20px"
                                     }}
                                 >
                                     <div
@@ -656,7 +657,7 @@ export default function Page() {
                                         }}
                                     >
                                         <GaugeChart
-                                            key={width} // force re-render on resize
+                                         
                                             target={gaugeValue}
                                             total={total}
                                             title=""
@@ -682,7 +683,7 @@ export default function Page() {
                                             style={{
                                                 color: "#777",
                                                 fontSize: "12px",
-                                                marginTop: "-10px",
+                                                marginTop: "0px",
                                             }}
                                         >
                                             <span
@@ -739,7 +740,7 @@ export default function Page() {
                                             }}
                                         >
                                             Self Rewards{" "}
-                                            <Tooltip title="This is your current available balance">
+                                            {/* <Tooltip title="This is your current available balance">
                                                 <span
                                                     style={{
                                                         color:
@@ -780,7 +781,7 @@ export default function Page() {
                                                               )
                                                           )}`}
                                                 </span>
-                                            </Tooltip>
+                                            </Tooltip> */}
                                         </Title>
                                         <Space size={4}>
                                             <Tooltip title="Details">
@@ -937,7 +938,7 @@ export default function Page() {
                         </motion.div>
                     </Col>
 
-                    <Col xs={24} md={6} xl={6}>
+                       <Col xs={24} md={6} xl={6}>
                         <motion.div
                             variants={cardVariants}
                             initial="hidden"
@@ -963,16 +964,23 @@ export default function Page() {
                             >
                                 <div
                                     style={{
-                                        marginTop: -20,
-                                        height: "100%",
                                         display: "flex",
+                                        flexDirection: "column",
                                         alignItems: "center",
-                                        justifyContent: "center",
+                                        marginTop: "-18px",
+                                        marginLeft:"0px"
                                     }}
                                 >
-                                    {pieChartData && pieChartData.length > 0 ? (
+                                    <div
+                                        style={{
+                                            height: 190,
+                                            width: "100%",
+                                            margin: "0 auto",
+                                        }}
+                                    >
+                                       {pieChartData ? (
                                         <PieChart
-                                            key={width}
+                        
                                             data={pieChartData}
                                             title="SalesReturn"
                                         />
@@ -986,6 +994,9 @@ export default function Page() {
                                             />
                                         </div>
                                     )}
+                                    </div>
+
+                                 
                                 </div>
                             </Card>
                         </motion.div>
