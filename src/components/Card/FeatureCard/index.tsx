@@ -28,8 +28,8 @@ const FeatureCard = () => {
                     borderRadius: 16,
                     maxWidth: screens.xs ? 640 : 1200,
                     fontSize: screens.xs ? 12 : 16,
-                    padding: screens.xs ? 16 : 24, // 👈 Card padding replacement
-                    background: "#fff", // 👈 Card background
+                    padding: screens.xs ? 16 : 24,
+                    background: "#fff", 
                 }}
             >
                 {/* Application */}
@@ -71,7 +71,7 @@ const FeatureCard = () => {
                     style={{
                         margin: "20px 0px",
                         minWidth: 0,
-                        borderTop: "2px solid rgba(172, 172, 172, 0.35)", // 👈 visible AF
+                        borderTop: "2px solid rgba(172, 172, 172, 0.35)",
                     }}
                 />
 
@@ -168,7 +168,7 @@ const FeatureCard = () => {
                     style={{
                         margin: "20px 0px",
                         minWidth: 0,
-                        borderTop: "2px solid rgba(172, 172, 172, 0.35)", // 👈 visible AF
+                        borderTop: "2px solid rgba(172, 172, 172, 0.35)", 
                     }}
                 />
 
@@ -205,7 +205,7 @@ const FeatureCard = () => {
                     style={{
                         margin: "20px 0px",
                         minWidth: 0,
-                        borderTop: "2px solid rgba(172, 172, 172, 0.35)", // 👈 visible AF
+                        borderTop: "2px solid rgba(172, 172, 172, 0.35)",
                     }}
                 />
 

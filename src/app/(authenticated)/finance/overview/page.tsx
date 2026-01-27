@@ -263,7 +263,7 @@ export default function Page() {
             key: "action",
             width: screens.xs ? 18 : 50,
             align: "center" as "center",
-            fixed: "right" as "right", //  right-aligned
+            fixed: "right" as "right",
             render: (_: any, record: Heirloom) => (
                 <Space>
                     <Button
@@ -294,8 +294,8 @@ export default function Page() {
             align: "center",
             width: 10,
             render: (_: any, __: any, index: number) => {
-                const currentPage = tablePagination.current || 1; // current page
-                const pageSize = tablePagination.pageSize || 50; // current page size
+                const currentPage = tablePagination.current || 1; 
+                const pageSize = tablePagination.pageSize || 50; 
                 const number = (currentPage - 1) * pageSize + index + 1;
 
                 return (
@@ -325,7 +325,7 @@ export default function Page() {
             title: "Price",
             dataIndex: "price",
             key: "price",
-            width: 80, // slightly bigger for readability
+            width: 80, 
             align: "right",
             sorter: (a, b) => a.price - b.price,
             render: (val: number) =>
@@ -339,7 +339,7 @@ export default function Page() {
             title: "Date",
             dataIndex: "date",
             key: "date",
-            width: 80, // a bit wider for readability
+            width: 80, 
             align: "center",
             sorter: (a, b) =>
                 new Date(a.date).getTime() - new Date(b.date).getTime(),
@@ -705,7 +705,7 @@ export default function Page() {
                                                         totalPrice >
                                                         currentBalance
                                                             ? "#F5222D"
-                                                            : "#434343ff", // 🔥 red if over, blue if within
+                                                            : "#434343ff", 
                                                     fontWeight: 600,
                                                 }}
                                             >

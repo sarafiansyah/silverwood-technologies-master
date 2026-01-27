@@ -141,7 +141,7 @@ export default function AboutPage() {
                             margin: 0,
                             flex: 1,
                             minWidth: 0,
-                            borderTop: "2px solid rgba(125, 125, 125, 0.35)", // 👈 visible AF
+                            borderTop: "2px solid rgba(125, 125, 125, 0.35)",
                         }}
                     />
                 </div>
@@ -253,7 +253,7 @@ export default function AboutPage() {
                             margin: 0,
                             flex: 1,
                             minWidth: 0,
-                            borderTop: "2px solid rgba(125, 125, 125, 0.35)", // 👈 visible AF
+                            borderTop: "2px solid rgba(125, 125, 125, 0.35)",
                         }}
                     />
                 </div>
@@ -313,14 +313,14 @@ export default function AboutPage() {
                                         style={{
                                             display: "flex",
                                             flexDirection: "column",
-                                            gap: 0, // 👈 controls vertical tightness
+                                            gap: 0,
                                         }}
                                     >
                                         <Title
                                             style={{
                                                 fontSize: isMobile ? 10 : 20,
                                                 color: "#fff",
-                                                margin: 0, // 🔥 kill default spacing
+                                                margin: 0,
                                                 lineHeight: "12px",
                                             }}
                                         >
@@ -343,7 +343,7 @@ export default function AboutPage() {
                                         <div
                                             style={{
                                                 display: "flex",
-                                                gap: 4, // 👈 tighter icon spacing
+                                                gap: 4,
                                                 marginTop: 4,
                                             }}
                                         >
