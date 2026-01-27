@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useBalanceStore } from "@/store/useBalanceStore";
-import { useHeirloomStore, Heirloom } from "@/store/useHeirloomStore";
+import { useBalanceStore } from "@/store/zustand/useBalanceStore";
+import { useHeirloomStore, Heirloom } from "@/store/zustand/useHeirloomStore";
 import {
     Card,
     InputNumber,

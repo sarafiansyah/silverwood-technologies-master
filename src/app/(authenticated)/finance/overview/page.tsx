@@ -18,6 +18,7 @@ import {
     Empty,
     Select,
     Form,
+    Grid,
     Tooltip,
 } from "antd";
 import type { UploadFile, UploadProps } from "antd";
@@ -40,16 +41,18 @@ import GaugeChart from "@/components/Finance/chart/GaugeChart";
 import PieChart from "@/components/Finance//chart/DonutChart";
 import ColumnChart from "@/components/Finance/chart/ColumnChart";
 import { typeOptions } from "@/components//Finance/heirloom/HeirloomType";
-import { useBalanceStore } from "@/store/useBalanceStore";
-import { useHeirloomStore, Heirloom } from "@/store/useHeirloomStore";
-import { useRewardHistoryStore } from "@/store/useRewardHistoryStore";
+import { useBalanceStore } from "@/store/zustand/useBalanceStore";
+import { useHeirloomStore, Heirloom } from "@/store/zustand/useHeirloomStore";
+import { useRewardHistoryStore } from "@/store/zustand/useRewardHistoryStore";
 import { motion, AnimatePresence, Variants, easeOut } from "framer-motion";
 import AnimatedModal from "@/components/Modal/Animated";
 
 const { Dragger } = Upload;
+const { useBreakpoint } = Grid;
 const { Title, Text } = Typography;
 const { Option } = Select;
 const { confirm, success } = Modal;
+
 const cardVariants: Variants = {
     hidden: { opacity: 0, y: 40 },
     visible: {
@@ -95,7 +98,7 @@ export default function Page() {
     const [pieChartData, setPieChartData] = useState<PieChartItem[]>([]);
     const [form] = Form.useForm();
     const rewardHistoryData = useRewardHistoryStore(
-        (state) => state.rewardHistoryData
+        (state) => state.rewardHistoryData,
     );
     const { clearRewardHistoryData } = useRewardHistoryStore();
     const [tablePagination, setTablePagination] = useState({
@@ -104,6 +107,7 @@ export default function Page() {
     });
     const heirloomArray = Array.isArray(heirlooms) ? [...heirlooms] : [];
     const [messageApi, contextHolder] = message.useMessage();
+    const screens = useBreakpoint();
 
     // heirloomArray.forEach((item) => console.log(item.name));
 
@@ -126,7 +130,7 @@ export default function Page() {
             ([type, totalPrice]) => ({
                 type,
                 totalPrice,
-            })
+            }),
         );
 
         const totalPrice = grouped.reduce((sum, g) => sum + g.totalPrice, 0);
@@ -209,17 +213,27 @@ export default function Page() {
         {
             title: "No",
             key: "index",
-            width: 30,
+            width: screens.xs ? 8 : 30,
             align: "center" as "center", //  type-safe literal
             render: (_: any, __: any, index: number) => index + 1,
         },
-        { title: "Name", dataIndex: "name", key: "name", width: 110 },
-        { title: "Type", dataIndex: "type", key: "type", width: 80 },
+        {
+            title: "Name",
+            dataIndex: "name",
+            key: "name",
+            width: screens.xs ? 30 : 110,
+        },
+        {
+            title: "Type",
+            dataIndex: "type",
+            key: "type",
+            width: screens.xs ? 20 : 80,
+        },
         {
             title: "Price",
             dataIndex: "price",
             key: "price",
-            width: 90,
+            width: screens.xs ? 24 : 90,
             render: (val: number) =>
                 new Intl.NumberFormat("id-ID", {
                     style: "currency",
@@ -231,7 +245,7 @@ export default function Page() {
             title: "Date",
             dataIndex: "date",
             key: "date",
-            width: 110,
+            width: screens.xs ? 30 : 110,
             align: "left" as "left",
             render: (val: string | Date) => {
                 const d = new Date(val);
@@ -247,7 +261,7 @@ export default function Page() {
         {
             title: "Action",
             key: "action",
-            width: 50,
+            width: screens.xs ? 18 : 50,
             align: "center" as "center",
             fixed: "right" as "right", //  right-aligned
             render: (_: any, record: Heirloom) => (
@@ -340,7 +354,7 @@ export default function Page() {
 
     const totalPrice = useMemo(
         () => heirlooms.reduce((sum, item) => sum + item.price, 0),
-        [heirlooms]
+        [heirlooms],
     );
 
     const rowSelection = {
@@ -531,8 +545,8 @@ export default function Page() {
                 const newUniqueData = parsedData.filter(
                     (newItem) =>
                         !rewardHistoryData.some((oldItem) =>
-                            isDuplicate(newItem, oldItem)
-                        )
+                            isDuplicate(newItem, oldItem),
+                        ),
                 );
 
                 if (newUniqueData.length === 0) {
@@ -551,7 +565,7 @@ export default function Page() {
             } catch (err) {
                 console.error(err);
                 message.error(
-                    "Failed to parse Excel file. Please check the format."
+                    "Failed to parse Excel file. Please check the format.",
                 );
             }
         };
@@ -626,7 +640,7 @@ export default function Page() {
                                 title={
                                     <span
                                         style={{
-                                            fontSize: "14px",
+                                            fontSize: screens.xs? "12px":"14px",
                                             fontWeight: 600,
                                         }}
                                     >
@@ -646,7 +660,7 @@ export default function Page() {
                                         flexDirection: "column",
                                         alignItems: "center",
                                         marginTop: "-22px",
-                                        marginLeft:"-20px"
+                                        marginLeft: "-20px",
                                     }}
                                 >
                                     <div
@@ -657,7 +671,6 @@ export default function Page() {
                                         }}
                                     >
                                         <GaugeChart
-                                         
                                             target={gaugeValue}
                                             total={total}
                                             title=""
@@ -698,14 +711,14 @@ export default function Page() {
                                             >
                                                 Rp.
                                                 {new Intl.NumberFormat(
-                                                    "id-ID"
+                                                    "id-ID",
                                                 ).format(totalPrice)}
                                             </span>
                                             {" / "}
                                             <span>
                                                 Rp.
                                                 {new Intl.NumberFormat(
-                                                    "id-ID"
+                                                    "id-ID",
                                                 ).format(currentBalance)}
                                             </span>
                                         </p>
@@ -734,7 +747,7 @@ export default function Page() {
                                         <Title
                                             level={5}
                                             style={{
-                                                fontSize: "14px",
+                                               fontSize: screens.xs? "12px":"14px",
                                                 margin: 0,
                                                 fontWeight: "bold",
                                             }}
@@ -786,19 +799,21 @@ export default function Page() {
                                         <Space size={4}>
                                             <Tooltip title="Details">
                                                 <Button
+                                                size="small"
                                                     type="primary"
                                                     icon={
                                                         <InfoCircleOutlined />
                                                     }
                                                     onClick={() =>
                                                         router.push(
-                                                            "/heirlooms"
+                                                            "/heirlooms",
                                                         )
                                                     }
                                                 ></Button>
                                             </Tooltip>
                                             <Tooltip title="Download Excel">
                                                 <Button
+                                                   size="small"
                                                     type="primary"
                                                     icon={<DownloadOutlined />}
                                                     onClick={downloadExcel}
@@ -807,6 +822,7 @@ export default function Page() {
 
                                             <Tooltip title="Add New Heirlooms">
                                                 <Button
+                                                   size="small"
                                                     type="primary"
                                                     icon={<PlusOutlined />}
                                                     onClick={() => openModal()}
@@ -825,6 +841,11 @@ export default function Page() {
                                     scrollbarWidth: "none", // Firefox
                                     msOverflowStyle: "none", // IE/Edge
                                 }}
+                                styles={{
+                                    body: {
+                                        padding: 8,
+                                    },
+                                }}
                             >
                                 {/* Add new heirloom */}
                                 <Table<Heirloom>
@@ -833,8 +854,45 @@ export default function Page() {
                                     columns={columnsHeirloom}
                                     dataSource={heirlooms}
                                     pagination={{ pageSize: 5 }}
-                                    scroll={{ x: 800 }}
+                                    scroll={{ x: 600 }}
                                     bordered
+                                    components={
+                                        screens.xs
+                                            ? {
+                                                  header: {
+                                                      cell: (props: any) => (
+                                                          <th
+                                                              {...props}
+                                                              style={{
+                                                                  padding:
+                                                                      "4px 6px",
+                                                                  fontSize:
+                                                                      "10px",
+                                                                  fontWeight: 600,
+                                                                  borderColor:
+                                                                      "#e8e8e8",
+                                                              }}
+                                                          />
+                                                      ),
+                                                  },
+                                                  body: {
+                                                      cell: (props: any) => (
+                                                          <td
+                                                              {...props}
+                                                              style={{
+                                                                  padding:
+                                                                      "2px 6px",
+                                                                  fontSize:
+                                                                      "10px",
+                                                                  borderColor:
+                                                                      "#e8e8e8",
+                                                              }}
+                                                          />
+                                                      ),
+                                                  },
+                                              }
+                                            : undefined
+                                    }
                                     summary={(pageData) => {
                                         let totalPrice = 0;
                                         pageData.forEach(({ price }) => {
@@ -854,91 +912,147 @@ export default function Page() {
                                                         1
                                                     }
                                                 >
-                                                    {/* <div
+                                                     <div
                                                     style={{
+                                                        fontSize:screens.xs? 10:14,
+                                                        display:"flex",
                                                         fontWeight: "bold",
-                                                        color: "#555",
+                                                        color: "#ff4d4f",
+                                                        gap:8
                                                     }}
                                                 >
-                                                    Total Price: Rp.{" "}
+                                                   - Rp.{" "}
                                                     {new Intl.NumberFormat(
                                                         "id-ID"
-                                                    ).format(totalPrice)}
-                                                </div> */}
+                                                    ).format(totalPrice)} {" "}    <Tooltip title="This is your current available balance">
+                                                <Text
+                                                    style={{
+                                                                  fontSize:screens.xs? 10:14,
+                                                        color:
+                                                            currentBalance -
+                                                                totalPrice >=
+                                                            0
+                                                                ? "#0da84d"
+                                                                : "#ff4d4f", // green if positive, red if negative
+                                                    }}
+                                                >
+                                                    {currentBalance -
+                                                        totalPrice >=
+                                                    0
+                                                        ? `+${new Intl.NumberFormat(
+                                                              "id-ID",
+                                                              {
+                                                                  style: "currency",
+                                                                  currency:
+                                                                      "IDR",
+                                                                  minimumFractionDigits: 0,
+                                                              }
+                                                          ).format(
+                                                              currentBalance -
+                                                                  totalPrice
+                                                          )}`
+                                                        : `-${new Intl.NumberFormat(
+                                                              "id-ID",
+                                                              {
+                                                                  style: "currency",
+                                                                  currency:
+                                                                      "IDR",
+                                                                  minimumFractionDigits: 0,
+                                                              }
+                                                          ).format(
+                                                              Math.abs(
+                                                                  currentBalance -
+                                                                      totalPrice
+                                                              )
+                                                          )}`}
+                                                </Text>
+                                            </Tooltip> 
+                                                </div> 
                                                 </Table.Summary.Cell>
                                             </Table.Summary.Row>
                                         );
                                     }}
                                 />
 
-                            <AnimatedModal
-    open={isModalOpen}
-    onClose={closeModal}
-    title={editingItem ? "Edit Heirloom" : "Add Heirloom"}
-    width={400}
-    topOffset={96}
->
-    <Form form={form} layout="vertical">
-        <Form.Item
-            name="name"
-            label="Name"
-            rules={[{ required: true }]}
-        >
-            <Input placeholder="Heirloom Name" />
-        </Form.Item>
+                                <AnimatedModal
+                                    open={isModalOpen}
+                                    onClose={closeModal}
+                                    title={
+                                        editingItem
+                                            ? "Edit Heirloom"
+                                            : "Add Heirloom"
+                                    }
+                                    width={screens.xs? 300:400}
+                                    topOffset={96}
+                                >
+                                    <Form form={form} layout="vertical">
+                                        <Form.Item
+                                            name="name"
+                                            label="Name"
+                                            rules={[{ required: true }]}
+                                        >
+                                            <Input placeholder="Heirloom Name" />
+                                        </Form.Item>
 
-        <Form.Item
-            name="type"
-            label="Type"
-            rules={[{ required: true }]}
-        >
-            <Select
-                placeholder="Select Type"
-                getPopupContainer={(trigger) =>
-                    trigger.parentNode as HTMLElement
-                }
-            >
-                {typeOptions.map((opt) => (
-                    <Select.Option key={opt.value} value={opt.value}>
-                        {opt.label}
-                    </Select.Option>
-                ))}
-            </Select>
-        </Form.Item>
+                                        <Form.Item
+                                            name="type"
+                                            label="Type"
+                                            rules={[{ required: true }]}
+                                        >
+                                            <Select
+                                                placeholder="Select Type"
+                                                getPopupContainer={(trigger) =>
+                                                    trigger.parentNode as HTMLElement
+                                                }
+                                            >
+                                                {typeOptions.map((opt) => (
+                                                    <Select.Option
+                                                        key={opt.value}
+                                                        value={opt.value}
+                                                    >
+                                                        {opt.label}
+                                                    </Select.Option>
+                                                ))}
+                                            </Select>
+                                        </Form.Item>
 
-        <Form.Item
-            name="price"
-            label="Price"
-            rules={[{ required: true }]}
-        >
-            <InputNumber
-                placeholder="Price"
-                min={0}
-                style={{ width: "100%" }}
-            />
-        </Form.Item>
-    </Form>
+                                        <Form.Item
+                                            name="price"
+                                            label="Price"
+                                            rules={[{ required: true }]}
+                                        >
+                                            <InputNumber
+                                                placeholder="Price"
+                                                min={0}
+                                                style={{ width: "100%" }}
+                                            />
+                                        </Form.Item>
+                                    </Form>
 
-    <div
-        style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            gap: 8,
-            marginTop: 16,
-        }}
-    >
-        <Button onClick={closeModal}>Cancel</Button>
-        <Button type="primary" onClick={handleSave}>
-            Save
-        </Button>
-    </div>
-</AnimatedModal>
-
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            justifyContent: "flex-end",
+                                            gap: 8,
+                                            marginTop: 16,
+                                        }}
+                                    >
+                                        <Button onClick={closeModal}>
+                                            Cancel
+                                        </Button>
+                                        <Button
+                                            type="primary"
+                                            onClick={handleSave}
+                                        >
+                                            Save
+                                        </Button>
+                                    </div>
+                                </AnimatedModal>
                             </Card>
                         </motion.div>
                     </Col>
 
-                       <Col xs={24} md={6} xl={6}>
+                    <Col xs={24} md={6} xl={6}>
                         <motion.div
                             variants={cardVariants}
                             initial="hidden"
@@ -948,7 +1062,7 @@ export default function Page() {
                                 title={
                                     <span
                                         style={{
-                                            fontSize: "14px",
+                               fontSize: screens.xs? "12px":"14px",
                                             fontWeight: 600,
                                         }}
                                     >
@@ -968,7 +1082,7 @@ export default function Page() {
                                         flexDirection: "column",
                                         alignItems: "center",
                                         marginTop: "-18px",
-                                        marginLeft:"0px"
+                                        marginLeft: "0px",
                                     }}
                                 >
                                     <div
@@ -978,25 +1092,22 @@ export default function Page() {
                                             margin: "0 auto",
                                         }}
                                     >
-                                       {pieChartData ? (
-                                        <PieChart
-                        
-                                            data={pieChartData}
-                                            title="SalesReturn"
-                                        />
-                                    ) : (
-                                        <div style={{ marginTop: 30 }}>
-                                            <Empty
-                                                description="No data available"
-                                                image={
-                                                    Empty.PRESENTED_IMAGE_SIMPLE
-                                                }
+                                        {pieChartData ? (
+                                            <PieChart
+                                                data={pieChartData}
+                                                title="SalesReturn"
                                             />
-                                        </div>
-                                    )}
+                                        ) : (
+                                            <div style={{ marginTop: 30 }}>
+                                                <Empty
+                                                    description="No data available"
+                                                    image={
+                                                        Empty.PRESENTED_IMAGE_SIMPLE
+                                                    }
+                                                />
+                                            </div>
+                                        )}
                                     </div>
-
-                                 
                                 </div>
                             </Card>
                         </motion.div>
@@ -1022,7 +1133,7 @@ export default function Page() {
                                         <Title
                                             level={5}
                                             style={{
-                                                fontSize: "14px",
+                                               fontSize: screens.xs? "12px":"14px",
                                                 margin: 0,
                                                 fontWeight: "bold",
                                             }}
@@ -1032,19 +1143,21 @@ export default function Page() {
                                         <Space size={4}>
                                             <Tooltip title="Details">
                                                 <Button
+                                                   size="small"
                                                     type="primary"
                                                     icon={
                                                         <InfoCircleOutlined />
                                                     }
                                                     onClick={() =>
                                                         router.push(
-                                                            "/heirlooms"
+                                                            "/heirlooms",
                                                         )
                                                     }
                                                 ></Button>
                                             </Tooltip>
                                             <Tooltip title="Download Excel">
                                                 <Button
+                                                   size="small"
                                                     type="primary"
                                                     icon={<DownloadOutlined />}
                                                     onClick={downloadExcel}
@@ -1052,6 +1165,7 @@ export default function Page() {
                                             </Tooltip>
                                             <Tooltip title="Clear Data">
                                                 <Button
+                                                   size="small"
                                                     type="primary"
                                                     danger
                                                     icon={<DeleteOutlined />}
@@ -1061,6 +1175,11 @@ export default function Page() {
                                         </Space>
                                     </div>
                                 }
+                                  styles={{
+                                    body: {
+                                        padding: 8,
+                                    },
+                                }}
                                 style={{
                                     padding: 0,
                                     borderRadius: 16,
@@ -1145,7 +1264,7 @@ export default function Page() {
                                 title={
                                     <span
                                         style={{
-                                            fontSize: "14px",
+                                    fontSize: screens.xs? "12px":"14px",
                                             fontWeight: 600,
                                         }}
                                     >
@@ -1155,7 +1274,8 @@ export default function Page() {
                                 variant="outlined"
                                 extra={
                                     <Button
-                                        type="default"
+                                       size="small"
+                                        type="primary"
                                         onClick={() => setFileList([])}
                                     >
                                         Clear
@@ -1264,7 +1384,7 @@ export default function Page() {
                                 title={
                                     <span
                                         style={{
-                                            fontSize: "14px",
+                                   fontSize: screens.xs? "12px":"14px",
                                             fontWeight: 600,
                                         }}
                                     >

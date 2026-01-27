@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import { RootState } from "@/store/redux/store";
 import MainLayout from "@/components/Layout/MainLayout";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";

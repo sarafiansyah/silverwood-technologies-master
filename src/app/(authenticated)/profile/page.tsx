@@ -35,9 +35,9 @@ import {
     RetweetOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
-import type { RootState } from "@/store/store";
-import { setUser } from "@/store/userSlice";
-import type { UserState } from "@/store/userSlice";
+import type { RootState } from "@/store/redux/store";
+import { setUser } from "@/store/redux/userSlice";
+import type { UserState } from "@/store/redux/userSlice";
 import { useSelector, useDispatch } from "react-redux";
 import DashboardCard from "@/components/Card/DashboardCard";
 import { motion, useMotionValue, useTransform } from "framer-motion";
@@ -76,7 +76,7 @@ const Profile: React.FC = () => {
     const [avatarModalOpen, setAvatarModalOpen] = useState(false);
     const [avatarList, setAvatarList] = useState<string[]>([]);
     const [avatarUnsaved, setAvatarUnsaved] = useState<string | undefined>(
-        userAvatar
+        userAvatar,
     );
     const [api, contextHolder] = notification.useNotification();
 
@@ -678,7 +678,7 @@ const Profile: React.FC = () => {
                     {avatarList.map((file) => {
                         const avatarName = file.replace(
                             /\.(png|jpg|jpeg|webp|svg)$/i,
-                            ""
+                            "",
                         );
 
                         return (

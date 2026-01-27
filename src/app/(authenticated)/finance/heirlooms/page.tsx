@@ -32,8 +32,8 @@ import {
 import GaugeChart from "@/components/Finance/chart/GaugeChart";
 import PieChart from "@/components/Finance//chart/DonutChart";
 import ColumnChart from "@/components/Finance/chart/ColumnChart";
-import { useBalanceStore } from "@/store/useBalanceStore";
-import { useHeirloomStore, Heirloom } from "@/store/useHeirloomStore";
+import { useBalanceStore } from "@/store/zustand/useBalanceStore";
+import { useHeirloomStore, Heirloom } from "@/store/zustand/useHeirloomStore";
 
 const { Dragger } = Upload;
 const { Title, Text } = Typography;
@@ -246,7 +246,7 @@ export default function Page() {
             ([type, totalPrice]) => ({
                 type,
                 totalPrice,
-            })
+            }),
         );
 
         const totalPrice = grouped.reduce((sum, g) => sum + g.totalPrice, 0);
@@ -362,7 +362,7 @@ export default function Page() {
 
     const totalPrice = useMemo(
         () => heirlooms.reduce((sum, item) => sum + item.price, 0),
-        [heirlooms]
+        [heirlooms],
     );
 
     const filtered = useMemo(() => {
@@ -372,7 +372,7 @@ export default function Page() {
             (r) =>
                 r.name.toLowerCase().includes(q) ||
                 r.email.toLowerCase().includes(q) ||
-                r.city.toLowerCase().includes(q)
+                r.city.toLowerCase().includes(q),
         );
     }, [data, search]);
 
@@ -419,7 +419,6 @@ export default function Page() {
 
     // map to 0-400 range
     const gaugeValue = Math.min(Math.max(spendingPercent * 400, 0), 400);
-
 
     const getSpendingLevel = (value: number) => {
         if (value < 100) return "Low Spending";
@@ -484,10 +483,10 @@ export default function Page() {
                                                           style: "currency",
                                                           currency: "IDR",
                                                           minimumFractionDigits: 0,
-                                                      }
+                                                      },
                                                   ).format(
                                                       currentBalance -
-                                                          totalPrice
+                                                          totalPrice,
                                                   )}`
                                                 : `-${new Intl.NumberFormat(
                                                       "id-ID",
@@ -495,12 +494,12 @@ export default function Page() {
                                                           style: "currency",
                                                           currency: "IDR",
                                                           minimumFractionDigits: 0,
-                                                      }
+                                                      },
                                                   ).format(
                                                       Math.abs(
                                                           currentBalance -
-                                                              totalPrice
-                                                      )
+                                                              totalPrice,
+                                                      ),
                                                   )}`}
                                         </span>
                                     </Tooltip>

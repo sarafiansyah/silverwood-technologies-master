@@ -22,7 +22,7 @@ import {
     DeploymentUnitOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
-import type { RootState } from "@/store/store";
+import type { RootState } from "@/store/redux/store";
 import { useSelector } from "react-redux";
 import DashboardCard from "@/components/Card/DashboardCard";
 import SystemVersionCard from "@/components/Card/SystemVersionCard";

@@ -2,7 +2,7 @@
 
 import { SessionProvider } from "next-auth/react";
 import { Provider as ReduxProvider } from "react-redux";
-import { store } from "@/store/store";
+import { store } from "@/store/redux/store";
 import { ConfigProvider, App as AntdApp } from "antd";
 
 export default function SessionProviderWrapper({

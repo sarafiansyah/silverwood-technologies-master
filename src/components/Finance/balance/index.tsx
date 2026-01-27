@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useBalanceStore } from "@/store/useBalanceStore";
-import { useHeirloomStore, Heirloom } from "@/store/useHeirloomStore";
+import { useBalanceStore } from "@/store/zustand/useBalanceStore";
+import { useHeirloomStore, Heirloom } from "@/store/zustand/useHeirloomStore";
 import {
     Card,
     InputNumber,
@@ -63,7 +63,7 @@ export default function BalanceTracker() {
 
     const totalPrice = useMemo(
         () => heirlooms.reduce((sum, item) => sum + item.price, 0),
-        [heirlooms]
+        [heirlooms],
     );
 
     console.log("TOT", totalPrice);
@@ -212,21 +212,21 @@ export default function BalanceTracker() {
                                         ? formatIDR(currentBalance - totalPrice)
                                         : "•••••••"}
                                 </Title>
-                                         {currentBalance - totalPrice < 0 && (
-      <span
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 4,
-          color: "#ff4d4f",
-          fontSize: 12,
-          marginTop: 2,
-        }}
-      >
-        <WarningOutlined />
-        Your expenses exceed your balance
-      </span>
-    )}
+                                {currentBalance - totalPrice < 0 && (
+                                    <span
+                                        style={{
+                                            display: "inline-flex",
+                                            alignItems: "center",
+                                            gap: 4,
+                                            color: "#ff4d4f",
+                                            fontSize: 12,
+                                            marginTop: 2,
+                                        }}
+                                    >
+                                        <WarningOutlined />
+                                        Your expenses exceed your balance
+                                    </span>
+                                )}
                             </Card>
                         </Col>
 
@@ -366,25 +366,33 @@ export default function BalanceTracker() {
                             boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
                         }}
                     >
-                     <Form layout="vertical" >
-  <Form.Item label="Title" style={{ marginBottom: 8, marginTop:-8 }}>
-    <Input
-      placeholder="Limit title"
-      value={limitTitle}
-      onChange={(e) => setLimitTitle(e.target.value)}
-    />
-  </Form.Item>
+                        <Form layout="vertical">
+                            <Form.Item
+                                label="Title"
+                                style={{ marginBottom: 8, marginTop: -8 }}
+                            >
+                                <Input
+                                    placeholder="Limit title"
+                                    value={limitTitle}
+                                    onChange={(e) =>
+                                        setLimitTitle(e.target.value)
+                                    }
+                                />
+                            </Form.Item>
 
-  <Form.Item label="Amount" style={{ marginBottom: 16 }}>
-    <InputNumber
-      placeholder="Limit value"
-      value={limitValue}
-      onChange={(v) => setLimitValue(Number(v))}
-      style={{ width: "100%" }}
-    />
-  </Form.Item>
-</Form>
-                     
+                            <Form.Item
+                                label="Amount"
+                                style={{ marginBottom: 16 }}
+                            >
+                                <InputNumber
+                                    placeholder="Limit value"
+                                    value={limitValue}
+                                    onChange={(v) => setLimitValue(Number(v))}
+                                    style={{ width: "100%" }}
+                                />
+                            </Form.Item>
+                        </Form>
+
                         <Button
                             type="primary"
                             block

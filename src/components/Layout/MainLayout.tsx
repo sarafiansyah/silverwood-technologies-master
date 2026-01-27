@@ -5,8 +5,12 @@ import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Layout, Grid } from "antd";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/store/store";
-import { clearUser } from "@/store/userSlice";
+import { useBalanceStore } from "@/store/zustand/useBalanceStore";
+import { useBankStore } from "@/store/zustand/useBankStore";
+import { useHeirloomStore } from "@/store/zustand/useHeirloomStore";
+import { useRewardHistoryStore } from "@/store/zustand/useRewardHistoryStore";
+import { RootState } from "@/store/redux/store";
+import { clearUser } from "@/store/redux/userSlice";
 import { signOut } from "next-auth/react";
 import { MenuItems } from "@/components/Layout/MenuItems";
 import Sidebar from "@/components/Layout/Sidebar";
@@ -49,6 +53,10 @@ export default function MainLayout({ children, isDark, setIsDark }: Props) {
 
     const handleLogout = async () => {
         dispatch(clearUser());
+        useBalanceStore.persist.clearStorage();
+        useBankStore.persist.clearStorage();
+        useHeirloomStore.persist.clearStorage();
+        useRewardHistoryStore.persist.clearStorage();
         await signOut({ redirect: true, callbackUrl: "/auth/login" });
     };
 

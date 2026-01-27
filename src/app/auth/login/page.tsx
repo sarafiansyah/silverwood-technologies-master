@@ -7,8 +7,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button, Input, Typography, message, Grid } from "antd";
 import { useForm, Controller } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "@/store/userSlice";
-import type { RootState } from "@/store/store";
+import { setUser } from "@/store/redux/userSlice";
+import type { RootState } from "@/store/redux/store";
 import Image from "next/image";
 
 const { Title } = Typography;
@@ -28,7 +28,7 @@ export default function LoginPage() {
     const screens = useBreakpoint();
 
     const isAuthenticated = useSelector(
-        (state: RootState) => state.user.isAuthenticated
+        (state: RootState) => state.user.isAuthenticated,
     );
 
     useEffect(() => {

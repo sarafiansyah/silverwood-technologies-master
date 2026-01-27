@@ -41,9 +41,9 @@ import { saveAs } from "file-saver";
 import GaugeChart from "@/components/Finance/chart/GaugeChart";
 import PieChart from "@/components/Finance//chart/DonutChart";
 import ColumnChart from "@/components/Finance/chart/ColumnChart";
-import { useBalanceStore } from "@/store/useBalanceStore";
-import { useHeirloomStore, Heirloom } from "@/store/useHeirloomStore";
-import { useRewardHistoryStore } from "@/store/useRewardHistoryStore";
+import { useBalanceStore } from "@/store/zustand/useBalanceStore";
+import { useHeirloomStore, Heirloom } from "@/store/zustand/useHeirloomStore";
+import { useRewardHistoryStore } from "@/store/zustand/useRewardHistoryStore";
 
 const { Dragger } = Upload;
 const { Title, Text } = Typography;
@@ -224,7 +224,7 @@ export default function Page() {
         useState<UserRow[]>(initialData);
     const [form] = Form.useForm();
     const rewardHistoryData = useRewardHistoryStore(
-        (state) => state.rewardHistoryData
+        (state) => state.rewardHistoryData,
     );
     const { clearRewardHistoryData } = useRewardHistoryStore();
     const [isModalUploadOpen, setIsModalUploadOpen] = useState(false);
@@ -260,7 +260,7 @@ export default function Page() {
             ([type, totalPrice]) => ({
                 type,
                 totalPrice,
-            })
+            }),
         );
 
         const totalPrice = grouped.reduce((sum, g) => sum + g.totalPrice, 0);
@@ -510,7 +510,7 @@ export default function Page() {
                     (1000 * 3600 * 24);
                 return (
                     <div style={{ textAlign: "left" }}>{`${Math.floor(
-                        diff
+                        diff,
                     )} days`}</div>
                 );
             },
@@ -519,7 +519,7 @@ export default function Page() {
 
     const totalPrice = useMemo(
         () => heirlooms.reduce((sum, item) => sum + item.price, 0),
-        [heirlooms]
+        [heirlooms],
     );
 
     const filtered = useMemo(() => {
@@ -529,7 +529,7 @@ export default function Page() {
             (r) =>
                 r.name.toLowerCase().includes(q) ||
                 r.email.toLowerCase().includes(q) ||
-                r.city.toLowerCase().includes(q)
+                r.city.toLowerCase().includes(q),
         );
     }, [data, search]);
 
@@ -721,8 +721,8 @@ export default function Page() {
                 const newUniqueData = parsedData.filter(
                     (newItem) =>
                         !rewardHistoryData.some((oldItem) =>
-                            isDuplicate(newItem, oldItem)
-                        )
+                            isDuplicate(newItem, oldItem),
+                        ),
                 );
 
                 if (newUniqueData.length === 0) {
@@ -741,7 +741,7 @@ export default function Page() {
             } catch (err) {
                 console.error(err);
                 message.error(
-                    "Failed to parse Excel file. Please check the format."
+                    "Failed to parse Excel file. Please check the format.",
                 );
             }
         };
@@ -924,7 +924,7 @@ export default function Page() {
                                 padding: "8px 12px",
                             }}
                         >
-                            <div style={{ fontWeight: "bold",marginTop:10 }}>
+                            <div style={{ fontWeight: "bold", marginTop: 10 }}>
                                 Total:{" "}
                                 {new Intl.NumberFormat("id-ID", {
                                     style: "currency",
@@ -933,8 +933,8 @@ export default function Page() {
                                 }).format(
                                     rewardHistoryData.reduce(
                                         (sum, row) => sum + row.price,
-                                        0
-                                    )
+                                        0,
+                                    ),
                                 )}
                             </div>
                             <Pagination
@@ -952,7 +952,7 @@ export default function Page() {
                             />
                         </div>
                     </Card>
-                                        </Col>
+                </Col>
                 <Modal
                     title="Upload Excel"
                     open={isModalUploadOpen}
