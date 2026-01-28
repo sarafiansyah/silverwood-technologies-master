@@ -271,6 +271,24 @@ export default function AppHeader({
                                             </a>
                                         ),
                                     },
+                                      {
+                                        key: "about",
+                                        label: (
+                                            <a
+                                                onClick={() =>
+                                                    router.push("/public/about")
+                                                }
+                                                style={{
+                                                    fontSize: isMobile
+                                                        ? 12
+                                                        : 14,
+                                                    padding: 0,
+                                                }}
+                                            >
+                                                About
+                                            </a>
+                                        ),
+                                    },
                                     {
                                         key: "logout",
                                         label: (

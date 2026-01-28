@@ -144,8 +144,7 @@ const MainLayout: React.FC = () => {
                                     maxWidth: "80%",
                                 }}
                             >
-                                Lorem Ipsum is simply dummy text of the printing
-                                and typesetting industry.
+                             Click and scroll through the universe of Silverwood and have a wonderful day!
                             </span>
                         </div>
                     </Card>

@@ -265,8 +265,7 @@ export default function AboutPage() {
                 </Text>
             </div>
             <div style={{ padding: isMobile ? "16px 8px" : "40px 36px" }}>
-                {" "}
-                <Row gutter={[isMobile ? 6 : 12, isMobile ? 6 : 12]}>
+                         <Row gutter={[isMobile ? 6 : 12, isMobile ? 6 : 12]}>
                     {teamMembers.map((member, index) => (
                         <Col
                             key={index}
