@@ -24,6 +24,8 @@ export const featureGroups: FeatureGroup[] = [
             "User login and session",
             "Customizable user profile",
             "Dark & light UI theme",
+            "Modern font styles",
+            "Responsive Mobile design",
             "Data management by Redux",
             "Available online via Vercel",
             "No database connections",
@@ -36,6 +38,7 @@ export const featureGroups: FeatureGroup[] = [
         items: [
             "Informative Chart variants",
             "Upload and Download data",
+            "Read Spreadsheet data",
         ],
     },
     {
@@ -45,6 +48,7 @@ export const featureGroups: FeatureGroup[] = [
         items: [
             "Oil monitoring features",
             "Upload and Download data",
+            "Read JSON data",
         ],
     },
     {
