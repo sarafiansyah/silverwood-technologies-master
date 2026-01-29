@@ -1,22 +1,32 @@
 export const teamMembers = [
   {
     name: "Mahesa Rafiansyah",
-    title: "CEO Founder",
+    title: "Rafiansyah Design",
     image: "/assets/images/members/rd01.png",
   },
   {
     name: "Stephanie Aurelianna",
-    title: "President",
+    title: "RD Silverwood ",
     image: "/assets/images/members/rd02.png",
   },
   {
     name: "Bryan Kusuma",
-    title: "Vice President",
+    title: "RD Viscorion",
     image: "/assets/images/members/rd03.png",
   },
   {
     name: "Michelle Gervacia",
-    title: "Head of Finance",
+    title: "RD Moneypulate",
     image: "/assets/images/members/rd04.png",
+  },
+    {
+    name: "Michelle Gervacia",
+    title: "RD Chambers",
+    image: "/assets/images/members/rd05.png",
+  },
+    {
+    name: "Michelle Gervacia",
+    title: "RD Moneypulate",
+    image: "/assets/images/members/rd06.png",
   },
 ];
