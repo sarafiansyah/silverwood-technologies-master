@@ -35,6 +35,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { i } from "framer-motion/client";
 import { oilBrands } from "@/constants/viscorion-oil-details";
+import { timestampSave } from "@/utils/timestamp/timestapSave";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -174,8 +175,18 @@ export default function DashboardPage() {
         setRecord(newRecord);
     };
 
+    const getTimestamp = (): string => {
+        const now = new Date();
+
+        const pad = (n: number) => n.toString().padStart(2, "0");
+
+        return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}_${pad(now.getHours())}-${pad(now.getMinutes())}-${pad(now.getSeconds())}`;
+    };
+
     const handleDownload = (): void => {
         if (!record) return;
+
+        const timestamp = timestampSave();
 
         const blob = new Blob([JSON.stringify(record, null, 2)], {
             type: "application/json",
@@ -184,7 +195,7 @@ export default function DashboardPage() {
 
         const a = document.createElement("a");
         a.href = url;
-        a.download = "oil-record.json";
+        a.download = `oil-record_${timestamp}.json`;
         a.click();
 
         URL.revokeObjectURL(url);
@@ -254,7 +265,7 @@ export default function DashboardPage() {
 
     function getTimeLeftFromLastChange(
         lastChanged?: string | Date | null,
-        intervalMonths = 6
+        intervalMonths = 6,
     ): { monthsLeft: number | null; daysLeft: number | null } {
         if (!lastChanged) return { monthsLeft: null, daysLeft: null };
 
@@ -278,7 +289,7 @@ export default function DashboardPage() {
         }
 
         const days = Math.ceil(
-            (next.getTime() - temp.getTime()) / (1000 * 60 * 60 * 24)
+            (next.getTime() - temp.getTime()) / (1000 * 60 * 60 * 24),
         );
 
         return {
@@ -294,7 +305,8 @@ export default function DashboardPage() {
         record?.mesinNextChange?.km != null
             ? Math.max(
                   0,
-                  record.mesinNextChange.km - (form.getFieldValue("newKm") ?? 0)
+                  record.mesinNextChange.km -
+                      (form.getFieldValue("newKm") ?? 0),
               )
             : null;
 
@@ -306,7 +318,7 @@ export default function DashboardPage() {
             ? Math.max(
                   0,
                   record.gear.gearNextChange.km -
-                      (form.getFieldValue("newKm") ?? 0)
+                      (form.getFieldValue("newKm") ?? 0),
               )
             : null;
 
@@ -516,7 +528,8 @@ export default function DashboardPage() {
                                                         checked={includeGear}
                                                         onChange={(e) =>
                                                             setIncludeGear(
-                                                                e.target.checked
+                                                                e.target
+                                                                    .checked,
                                                             )
                                                         }
                                                     ></Checkbox>
@@ -596,38 +609,38 @@ export default function DashboardPage() {
 
                                     {/* Buttons */}
                                     <Form.Item>
-                                        <Space >   <Button
-    type="primary"
-    htmlType="submit"
-    className="liquid-btn"
->
-    Summarize
-</Button>
-
-                                        <Button
-                                            danger
-                                            icon={<ReloadOutlined />}
-                                            style={{ marginRight: 6 }}
-                                            onClick={() => {
-                                                form.resetFields();
-                                                setRecord(null);
-                                                setIncludeGear(false);
-                                            }}
-                                        ></Button>
-                                        <Button
-                                            icon={<UploadOutlined />}
-                                         
-                                            onClick={() => {
-                                                setModalUploadOilDetailsProperties(
-                                                    true
-                                                );
-                                            }}
-                                        ></Button>
-                                        <Button
-                                            icon={<DownloadOutlined />}
-                                            onClick={handleDownload}
-                                          
-                                        ></Button></Space>
+                                        <Space>
+                                            {" "}
+                                            <Button
+                                                type="primary"
+                                                htmlType="submit"
+                                                className="liquid-btn"
+                                            >
+                                                Summarize
+                                            </Button>
+                                            <Button
+                                                danger
+                                                icon={<ReloadOutlined />}
+                                                style={{ marginRight: 6 }}
+                                                onClick={() => {
+                                                    form.resetFields();
+                                                    setRecord(null);
+                                                    setIncludeGear(false);
+                                                }}
+                                            ></Button>
+                                            <Button
+                                                icon={<UploadOutlined />}
+                                                onClick={() => {
+                                                    setModalUploadOilDetailsProperties(
+                                                        true,
+                                                    );
+                                                }}
+                                            ></Button>
+                                            <Button
+                                                icon={<DownloadOutlined />}
+                                                onClick={handleDownload}
+                                            ></Button>
+                                        </Space>
                                     </Form.Item>
                                 </Form>
 
@@ -783,7 +796,7 @@ export default function DashboardPage() {
                                                     </span>
                                                     <span>
                                                         {form.getFieldValue(
-                                                            "newKm"
+                                                            "newKm",
                                                         ) ?? "-"}
                                                     </span>
 
@@ -856,7 +869,7 @@ export default function DashboardPage() {
                                                             }}
                                                             onClick={() =>
                                                                 setShowEngineRemaining(
-                                                                    (v) => !v
+                                                                    (v) => !v,
                                                                 )
                                                             }
                                                         >
@@ -1005,7 +1018,7 @@ export default function DashboardPage() {
                                                     </span>
                                                     <span>
                                                         {form.getFieldValue(
-                                                            "newKm"
+                                                            "newKm",
                                                         ) ?? "-"}
                                                     </span>
 
@@ -1093,7 +1106,7 @@ export default function DashboardPage() {
                                                             }}
                                                             onClick={() =>
                                                                 setShowGearRemaining(
-                                                                    (v) => !v
+                                                                    (v) => !v,
                                                                 )
                                                             }
                                                         >
