@@ -11,6 +11,7 @@ import {
     Grid,
     Tag,
     Typography,
+    message,
     Avatar,
     Button,
     Select,
@@ -18,6 +19,7 @@ import {
     Modal,
     Alert,
     notification,
+    Upload,
 } from "antd";
 import {
     ArrowUpOutlined,
@@ -33,7 +35,10 @@ import {
     FacebookOutlined,
     MessageOutlined,
     RetweetOutlined,
+    UploadOutlined,
+    EditOutlined,
 } from "@ant-design/icons";
+import type { UploadProps } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type { RootState } from "@/store/redux/store";
 import { setUser } from "@/store/redux/userSlice";
@@ -44,6 +49,7 @@ import { motion, useMotionValue, useTransform } from "framer-motion";
 import { useState, useRef } from "react";
 import Image from "next/image";
 import AnimatedModal from "@/components/Modal/Animated";
+import { restoreAppBackup } from "@/utils/backup/appBackup";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { Title, Paragraph, Text } = Typography;
@@ -110,6 +116,31 @@ const Profile: React.FC = () => {
             description:
                 "Changes are temporary and saved only during your session. Signing out will reset everything.",
         });
+    };
+
+    const uploadProps: UploadProps = {
+        accept: ".json",
+        showUploadList: false,
+
+        beforeUpload: (file) => {
+            const reader = new FileReader();
+
+            reader.onload = () => {
+                try {
+                    const backup = JSON.parse(reader.result as string);
+                    restoreAppBackup(backup);
+
+                    message.success("Backup restored successfully");
+                    window.location.reload(); // important for Zustand rehydrate
+                } catch (err) {
+                    message.error("Invalid backup file");
+                }
+            };
+
+            reader.readAsText(file);
+
+            return false; // prevent auto upload
+        },
     };
 
     return (
@@ -290,6 +321,8 @@ const Profile: React.FC = () => {
                         // Profile Card Display
                         <div
                             style={{
+                                alignContent:"center",
+                                justifyContent:"center",
                                 perspective: 1000,
                                 width: screens.xs ? 300 : "100vw", // small on XS, full width otherwise
                                 height: screens.xs ? 460 : 650, // small on XS, full height otherwise
@@ -606,56 +639,113 @@ const Profile: React.FC = () => {
                         }}
                     >
                         {!onEditMode && (
-                            <div
-                                style={{
-                                    padding: 20,
-                                    display: "flex",
-                                    justifyContent: "center",
-                                }}
-                            >
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        gap: 8,
-                                        padding: 6,
-                                        borderRadius: 50,
-                                        background: "#f5f5f5",
-                                        boxShadow:
-                                            "0 4px 12px rgba(0,0,0,0.08)",
-                                    }}
-                                >
-                                    <Button
-                                        size="middle"
-                                        icon={<RetweetOutlined />}
-                                        onClick={() => setFlipped(!flipped)}
-                                        style={{
-                                            borderRadius: 50,
-                                            background: "#1677ff",
-                                            color: "#fff",
-                                            border: "none",
-                                        }}
-                                    >
-                                        FLIP
-                                    </Button>
+                         <div
+  style={{
+    padding: 20,
+    display: "flex",
+    justifyContent: "center",
+  }}
+>
+  <div
+    style={{
+      display: "flex",
+      gap: 20,
+      padding: 12,
+      borderRadius: 50,
+    
+    }}
+  >
+    {/* Flip */}
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 4,
+        cursor: "pointer",
+      }}
+      onClick={() => setFlipped(!flipped)}
+    >
+      <Button
+        size="large"
+        shape="circle"
+        icon={<RetweetOutlined />}
+        style={{
+          background: "#1677ff",
+          color: "#fff",
+          border: "none",
+        }}
+      />
+      <span style={{ fontSize: 12, fontWeight: 500 }}>FLIP</span>
+    </div>
 
-                                    <Button
-                                        size="middle"
-                                        icon={<RetweetOutlined />}
-                                        onClick={() => {
-                                            setOnEditMode(true);
-                                            openNotificationWithIcon("info");
-                                        }}
-                                        style={{
-                                            borderRadius: 50,
-                                            background: "#52c41a",
-                                            color: "#fff",
-                                            border: "none",
-                                        }}
-                                    >
-                                        EDIT
-                                    </Button>
-                                </div>
-                            </div>
+    {/* Edit */}
+<div
+  style={{
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 4,
+    cursor: "pointer",
+    width: 40, // fixed width for all buttons
+    margin: "0 8px", // horizontal spacing between buttons
+  }}
+  onClick={() => {
+    setOnEditMode(true);
+    openNotificationWithIcon("info");
+  }}
+>
+  <Button
+    size="large"
+    shape="circle"
+    icon={<EditOutlined />}
+    style={{
+      background: "#52c41a",
+      color: "#fff",
+      border: "none",
+    }}
+  />
+  <span
+    style={{
+      fontSize: 12,
+      fontWeight: 500,
+      textAlign: "center",
+      width: "100%", // ensure label is centered
+    }}
+  >
+    EDIT
+  </span>
+</div>
+
+
+    {/* Restore */}
+    <Upload {...uploadProps}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 4,
+          cursor: "pointer",
+        }}
+      >
+        <Button
+          size="large"
+          shape="circle"
+          icon={<UploadOutlined />}
+          style={{
+            background: "#ffa023",
+            color: "#fff",
+            border: "none",
+          }}
+        />
+        <span style={{ fontSize: 12, fontWeight: 500 }}>RESTORE</span>
+      </div>
+    </Upload>
+  </div>
+</div>
+
                         )}
                     </div>
                 </Col>

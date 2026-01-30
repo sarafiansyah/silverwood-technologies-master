@@ -3,7 +3,7 @@
 import React, { useMemo } from "react";
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Layout, Grid } from "antd";
+import { Layout, Grid, Modal, Button, message } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { useBalanceStore } from "@/store/zustand/useBalanceStore";
 import { useBankStore } from "@/store/zustand/useBankStore";
@@ -18,6 +18,8 @@ import AppHeader from "@/components/Layout/AppHeader";
 import AppFooter from "@/components/Layout/AppFooter";
 import { findMenuItemByPath } from "@/components/Layout/Sidebar"; // or move to utils
 import { AppstoreOutlined } from "@ant-design/icons";
+import { createAppBackup } from '@/utils/backup/appBackup';
+import { timestampSave } from '@/utils/timestamp/timestapSave';
 
 const { Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -51,19 +53,74 @@ export default function MainLayout({ children, isDark, setIsDark }: Props) {
     //     return item?.label || "Dashboard";
     // }, [pathname]);
 
-    const handleLogout = async () => {
-        dispatch(clearUser());
-        useBalanceStore.persist.clearStorage();
-        useBankStore.persist.clearStorage();
-        useHeirloomStore.persist.clearStorage();
-        useRewardHistoryStore.persist.clearStorage();
-        await signOut({ redirect: true, callbackUrl: "/auth/login" });
-    };
+const handleLogout = async () => {
+  Modal.confirm({
+    title: "Before you go…",
+    content: "Do you want to download a backup before logging out?",
+
+    okText: "Logout",
+    okType: "danger", // red for destructive action
+    cancelText: "Cancel",
+
+    onOk: async () => {
+      // Just logout
+      dispatch(clearUser());
+      useBalanceStore.persist.clearStorage();
+      useBankStore.persist.clearStorage();
+      useHeirloomStore.persist.clearStorage();
+      useRewardHistoryStore.persist.clearStorage();
+
+      await signOut({
+        redirect: true,
+        callbackUrl: "/auth/login",
+      });
+    },
+
+    footer: (_, { OkBtn, CancelBtn }) => (
+      <>
+        {/* Cancel button */}
+        <CancelBtn />
+
+        {/* Backup button */}
+        <Button
+          type="primary"
+          onClick={() => {
+            downloadBackup();
+            message.success("Backup completed successfully!");
+          }}
+        >
+          Backup
+        </Button>
+
+        {/* Logout button */}
+        <OkBtn />
+      </>
+    ),
+  });
+};
 
     const handleClick = () => {
         setHasClicked(true);
         setCollapsed(!collapsed);
     };
+
+    const downloadBackup = () => {
+  const backup = createAppBackup();
+  const timestamp = timestampSave();
+
+  const blob = new Blob([JSON.stringify(backup, null, 2)], {
+    type: 'application/json',
+  });
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+
+  a.href = url;
+  a.download = `app-backup_${timestamp}.json`;
+  a.click();
+
+  URL.revokeObjectURL(url);
+};
 
     return (
         <>
