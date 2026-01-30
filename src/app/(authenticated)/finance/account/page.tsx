@@ -47,7 +47,7 @@ export default function BankBalancesPage() {
         <div style={{ padding: "2px 12px" }}>
             {screens.xs && (
                 <Row gutter={[24, 24]}>
-                    <div style={{ width: "100%" }}>
+                    <div style={{ width: "100%", marginBottom: 10 }}>
                         <FinanceNavCard />
                     </div>
                 </Row>
