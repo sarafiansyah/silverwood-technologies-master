@@ -18,6 +18,7 @@ import {
     Empty,
     Select,
     Form,
+    Grid,
     Tooltip,
 } from "antd";
 import type { UploadFile, UploadProps } from "antd";
@@ -34,11 +35,13 @@ import PieChart from "@/components/Finance//chart/DonutChart";
 import ColumnChart from "@/components/Finance/chart/ColumnChart";
 import { useBalanceStore } from "@/store/zustand/useBalanceStore";
 import { useHeirloomStore, Heirloom } from "@/store/zustand/useHeirloomStore";
+import FinanceNavCard from "@/components/Card/FinanceNavCard";
 
 const { Dragger } = Upload;
 const { Title, Text } = Typography;
 const { Option } = Select;
 const { confirm } = Modal;
+const { useBreakpoint } = Grid;
 
 // interface Heirloom {
 //     key: string;
@@ -222,7 +225,7 @@ export default function Page() {
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const { currentBalance } = useBalanceStore();
     const [pieChartData, setPieChartData] = useState<PieChartItem[]>([]);
-
+    const screens = useBreakpoint();
     const [form] = Form.useForm();
 
     const heirloomArray = Array.isArray(heirlooms) ? [...heirlooms] : [];
@@ -445,7 +448,14 @@ export default function Page() {
     const spendingColor = getSpendingColor(spendingLevel);
 
     return (
-        <main style={{ padding: "1rem" }}>
+        <main style={{ padding: "2px 12px" }}>
+            {screens.xs && (
+                <Row gutter={[24, 24]}>
+                    <div style={{ width: "100%" }}>
+                        <FinanceNavCard />
+                    </div>
+                </Row>
+            )}
             <Row gutter={[24, 24]}>
                 <Col span={24}>
                     <Card

@@ -1,10 +1,13 @@
 "use client";
 
 import React from "react";
-import { Row, Col, Card, Statistic, Divider, Typography } from "antd";
+import { Row, Col, Card, Statistic, Divider, Typography, Grid } from "antd";
 import { useBankStore } from "@/store/zustand/useBankStore";
 import BankTable from "@/components/Finance/bank/BankTable";
 import AddBankForm from "@/components/Finance/bank/AddBankForm";
+import FinanceNavCard from "@/components/Card/FinanceNavCard";
+
+const { useBreakpoint } = Grid;
 
 export default function BankBalancesPage() {
     const banks = useBankStore((s) => s.banks);
@@ -12,7 +15,7 @@ export default function BankBalancesPage() {
     const updateBank = useBankStore((s) => s.updateBank);
     const removeBank = useBankStore((s) => s.removeBank);
     const totalBalance = useBankStore((s) => s.totalBalance);
-
+    const screens = useBreakpoint();
     // Prevent hydration mismatch
     const [ready, setReady] = React.useState(false);
     React.useEffect(() => setReady(true), []);
@@ -41,7 +44,15 @@ export default function BankBalancesPage() {
     };
 
     return (
-        <div style={{ padding: 0 }}>
+        <div style={{ padding: "2px 12px" }}>
+            {screens.xs && (
+                <Row gutter={[24, 24]}>
+                    <div style={{ width: "100%" }}>
+                        <FinanceNavCard />
+                    </div>
+                </Row>
+            )}
+
             <Row gutter={[16, 16]}>
                 <Col xs={24} lg={16}>
                     <Card size="small">

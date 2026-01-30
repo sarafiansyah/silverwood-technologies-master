@@ -22,6 +22,7 @@ import {
     EditOutlined,
     WarningOutlined,
 } from "@ant-design/icons";
+import FinanceNavCard from "@/components/Card/FinanceNavCard";
 
 const { Title } = Typography;
 const { useBreakpoint } = Grid;
@@ -94,11 +95,20 @@ export default function BalanceTracker() {
                 flexDirection: "column",
             }}
         >
+            {screens.xs && (
+                <Row gutter={[24, 24]}>
+                    <div style={{ width: "100%" }}>
+                        {" "}
+                        <FinanceNavCard />
+                    </div>
+                </Row>
+            )}
+
             <Row gutter={[24, 24]} wrap align="top">
-                {/* 💰 Balance & Limits */}
+                {/* Balance & Limits */}
                 <Col xs={24} md={16}>
                     <Row gutter={[screens.xs ? 8 : 16, screens.xs ? 8 : 16]}>
-                        {/* 🧾 Initial Balance */}
+                        {/*  Initial Balance */}
                         <Col xs={12} sm={12}>
                             <Card
                                 title={

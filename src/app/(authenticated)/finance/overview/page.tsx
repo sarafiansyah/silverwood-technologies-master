@@ -24,13 +24,18 @@ import {
 import type { UploadFile, UploadProps } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import {
+    BankOutlined,
+    DashboardOutlined,
     DeleteOutlined,
+    DollarOutlined,
     DownloadOutlined,
     EditOutlined,
     FileExcelOutlined,
+    GoldOutlined,
     InboxOutlined,
     InfoCircleOutlined,
     PlusOutlined,
+    SnippetsOutlined,
     UploadOutlined,
 } from "@ant-design/icons";
 import jsPDF from "jspdf";
@@ -46,6 +51,10 @@ import { useHeirloomStore, Heirloom } from "@/store/zustand/useHeirloomStore";
 import { useRewardHistoryStore } from "@/store/zustand/useRewardHistoryStore";
 import { motion, AnimatePresence, Variants, easeOut } from "framer-motion";
 import AnimatedModal from "@/components/Modal/Animated";
+import { timestampSave } from "@/utils/timestamp/timestapSave";
+import FinanceNavCard from "@/components/Card/FinanceNavCard";
+import { time } from "console";
+import Image from "next/image";
 
 const { Dragger } = Upload;
 const { useBreakpoint } = Grid;
@@ -294,8 +303,8 @@ export default function Page() {
             align: "center",
             width: 10,
             render: (_: any, __: any, index: number) => {
-                const currentPage = tablePagination.current || 1; 
-                const pageSize = tablePagination.pageSize || 50; 
+                const currentPage = tablePagination.current || 1;
+                const pageSize = tablePagination.pageSize || 50;
                 const number = (currentPage - 1) * pageSize + index + 1;
 
                 return (
@@ -325,7 +334,7 @@ export default function Page() {
             title: "Price",
             dataIndex: "price",
             key: "price",
-            width: 80, 
+            width: 80,
             align: "right",
             sorter: (a, b) => a.price - b.price,
             render: (val: number) =>
@@ -339,7 +348,7 @@ export default function Page() {
             title: "Date",
             dataIndex: "date",
             key: "date",
-            width: 80, 
+            width: 80,
             align: "center",
             sorter: (a, b) =>
                 new Date(a.date).getTime() - new Date(b.date).getTime(),
@@ -460,7 +469,7 @@ export default function Page() {
         pdf.save("Self_Rewards.pdf");
     };
 
-    const downloadExcel = () => {
+    const handleDownloadExcel = () => {
         if (!heirlooms || heirlooms.length === 0) {
             message.error("no data to export!");
             return;
@@ -481,14 +490,7 @@ export default function Page() {
 
         // Create timestamp
         const now = new Date();
-        const datetime =
-            now.getFullYear().toString() +
-            ("0" + (now.getMonth() + 1)).slice(-2) +
-            ("0" + now.getDate()).slice(-2) +
-            "_" +
-            ("0" + now.getHours()).slice(-2) +
-            ("0" + now.getMinutes()).slice(-2) +
-            ("0" + now.getSeconds()).slice(-2);
+        const datetime = timestampSave();
 
         // Generate Excel file
         const excelBuffer = XLSX.write(workbook, {
@@ -503,7 +505,7 @@ export default function Page() {
         saveAs(blob, `self_rewards_${datetime}.xlsx`);
     };
 
-    const handleExcelUpload = (info: any) => {
+    const handleUploadExcel = (info: any) => {
         const { rewardHistoryData, setRewardHistoryData } =
             useRewardHistoryStore.getState();
         const file = info.file.originFileObj || info.file;
@@ -627,6 +629,15 @@ export default function Page() {
     return (
         <main style={{ padding: "2px 12px" }}>
             {contextHolder}
+
+            {screens.xs && (
+                <Row gutter={[24, 24]}>
+                    <div style={{ width: "100%" }}>
+                        <FinanceNavCard />
+                    </div>
+                </Row>
+            )}
+
             <Row gutter={[24, 24]}>
                 <Row gutter={[22, 22]}>
                     {/* TOP SECTION (1:2:1 Ratio) */}
@@ -640,7 +651,9 @@ export default function Page() {
                                 title={
                                     <span
                                         style={{
-                                            fontSize: screens.xs? "12px":"14px",
+                                            fontSize: screens.xs
+                                                ? "12px"
+                                                : "14px",
                                             fontWeight: 600,
                                         }}
                                     >
@@ -705,7 +718,7 @@ export default function Page() {
                                                         totalPrice >
                                                         currentBalance
                                                             ? "#F5222D"
-                                                            : "#434343ff", 
+                                                            : "#434343ff",
                                                     fontWeight: 600,
                                                 }}
                                             >
@@ -747,7 +760,9 @@ export default function Page() {
                                         <Title
                                             level={5}
                                             style={{
-                                               fontSize: screens.xs? "12px":"14px",
+                                                fontSize: screens.xs
+                                                    ? "12px"
+                                                    : "14px",
                                                 margin: 0,
                                                 fontWeight: "bold",
                                             }}
@@ -799,7 +814,7 @@ export default function Page() {
                                         <Space size={4}>
                                             <Tooltip title="Details">
                                                 <Button
-                                                size="small"
+                                                    size="small"
                                                     type="primary"
                                                     icon={
                                                         <InfoCircleOutlined />
@@ -813,16 +828,18 @@ export default function Page() {
                                             </Tooltip>
                                             <Tooltip title="Download Excel">
                                                 <Button
-                                                   size="small"
+                                                    size="small"
                                                     type="primary"
                                                     icon={<DownloadOutlined />}
-                                                    onClick={downloadExcel}
+                                                    onClick={
+                                                        handleDownloadExcel
+                                                    }
                                                 ></Button>
                                             </Tooltip>
 
                                             <Tooltip title="Add New Heirlooms">
                                                 <Button
-                                                   size="small"
+                                                    size="small"
                                                     type="primary"
                                                     icon={<PlusOutlined />}
                                                     onClick={() => openModal()}
@@ -912,62 +929,70 @@ export default function Page() {
                                                         1
                                                     }
                                                 >
-                                                     <div
-                                                    style={{
-                                                        fontSize:screens.xs? 10:14,
-                                                        display:"flex",
-                                                        fontWeight: "bold",
-                                                        color: "#ff4d4f",
-                                                        gap:8
-                                                    }}
-                                                >
-                                                   - Rp.{" "}
-                                                    {new Intl.NumberFormat(
-                                                        "id-ID"
-                                                    ).format(totalPrice)} {" "}    <Tooltip title="This is your current available balance">
-                                                <Text
-                                                    style={{
-                                                                  fontSize:screens.xs? 10:14,
-                                                        color:
-                                                            currentBalance -
-                                                                totalPrice >=
-                                                            0
-                                                                ? "#0da84d"
-                                                                : "#ff4d4f", // green if positive, red if negative
-                                                    }}
-                                                >
-                                                    {currentBalance -
-                                                        totalPrice >=
-                                                    0
-                                                        ? `+${new Intl.NumberFormat(
-                                                              "id-ID",
-                                                              {
-                                                                  style: "currency",
-                                                                  currency:
-                                                                      "IDR",
-                                                                  minimumFractionDigits: 0,
-                                                              }
-                                                          ).format(
-                                                              currentBalance -
-                                                                  totalPrice
-                                                          )}`
-                                                        : `-${new Intl.NumberFormat(
-                                                              "id-ID",
-                                                              {
-                                                                  style: "currency",
-                                                                  currency:
-                                                                      "IDR",
-                                                                  minimumFractionDigits: 0,
-                                                              }
-                                                          ).format(
-                                                              Math.abs(
-                                                                  currentBalance -
-                                                                      totalPrice
-                                                              )
-                                                          )}`}
-                                                </Text>
-                                            </Tooltip> 
-                                                </div> 
+                                                    <div
+                                                        style={{
+                                                            fontSize: screens.xs
+                                                                ? 10
+                                                                : 14,
+                                                            display: "flex",
+                                                            fontWeight: "bold",
+                                                            color: "#ff4d4f",
+                                                            gap: 8,
+                                                        }}
+                                                    >
+                                                        - Rp.{" "}
+                                                        {new Intl.NumberFormat(
+                                                            "id-ID",
+                                                        ).format(
+                                                            totalPrice,
+                                                        )}{" "}
+                                                        <Tooltip title="This is your current available balance">
+                                                            <Text
+                                                                style={{
+                                                                    fontSize:
+                                                                        screens.xs
+                                                                            ? 10
+                                                                            : 14,
+                                                                    color:
+                                                                        currentBalance -
+                                                                            totalPrice >=
+                                                                        0
+                                                                            ? "#0da84d"
+                                                                            : "#ff4d4f", // green if positive, red if negative
+                                                                }}
+                                                            >
+                                                                {currentBalance -
+                                                                    totalPrice >=
+                                                                0
+                                                                    ? `+${new Intl.NumberFormat(
+                                                                          "id-ID",
+                                                                          {
+                                                                              style: "currency",
+                                                                              currency:
+                                                                                  "IDR",
+                                                                              minimumFractionDigits: 0,
+                                                                          },
+                                                                      ).format(
+                                                                          currentBalance -
+                                                                              totalPrice,
+                                                                      )}`
+                                                                    : `-${new Intl.NumberFormat(
+                                                                          "id-ID",
+                                                                          {
+                                                                              style: "currency",
+                                                                              currency:
+                                                                                  "IDR",
+                                                                              minimumFractionDigits: 0,
+                                                                          },
+                                                                      ).format(
+                                                                          Math.abs(
+                                                                              currentBalance -
+                                                                                  totalPrice,
+                                                                          ),
+                                                                      )}`}
+                                                            </Text>
+                                                        </Tooltip>
+                                                    </div>
                                                 </Table.Summary.Cell>
                                             </Table.Summary.Row>
                                         );
@@ -982,7 +1007,7 @@ export default function Page() {
                                             ? "Edit Heirloom"
                                             : "Add Heirloom"
                                     }
-                                    width={screens.xs? 300:400}
+                                    width={screens.xs ? 300 : 400}
                                     topOffset={96}
                                 >
                                     <Form form={form} layout="vertical">
@@ -1062,7 +1087,9 @@ export default function Page() {
                                 title={
                                     <span
                                         style={{
-                               fontSize: screens.xs? "12px":"14px",
+                                            fontSize: screens.xs
+                                                ? "12px"
+                                                : "14px",
                                             fontWeight: 600,
                                         }}
                                     >
@@ -1133,7 +1160,9 @@ export default function Page() {
                                         <Title
                                             level={5}
                                             style={{
-                                               fontSize: screens.xs? "12px":"14px",
+                                                fontSize: screens.xs
+                                                    ? "12px"
+                                                    : "14px",
                                                 margin: 0,
                                                 fontWeight: "bold",
                                             }}
@@ -1143,7 +1172,7 @@ export default function Page() {
                                         <Space size={4}>
                                             <Tooltip title="Details">
                                                 <Button
-                                                   size="small"
+                                                    size="small"
                                                     type="primary"
                                                     icon={
                                                         <InfoCircleOutlined />
@@ -1157,15 +1186,17 @@ export default function Page() {
                                             </Tooltip>
                                             <Tooltip title="Download Excel">
                                                 <Button
-                                                   size="small"
+                                                    size="small"
                                                     type="primary"
                                                     icon={<DownloadOutlined />}
-                                                    onClick={downloadExcel}
+                                                    onClick={
+                                                        handleDownloadExcel
+                                                    }
                                                 ></Button>
                                             </Tooltip>
                                             <Tooltip title="Clear Data">
                                                 <Button
-                                                   size="small"
+                                                    size="small"
                                                     type="primary"
                                                     danger
                                                     icon={<DeleteOutlined />}
@@ -1175,7 +1206,7 @@ export default function Page() {
                                         </Space>
                                     </div>
                                 }
-                                  styles={{
+                                styles={{
                                     body: {
                                         padding: 8,
                                     },
@@ -1264,7 +1295,9 @@ export default function Page() {
                                 title={
                                     <span
                                         style={{
-                                    fontSize: screens.xs? "12px":"14px",
+                                            fontSize: screens.xs
+                                                ? "12px"
+                                                : "14px",
                                             fontWeight: 600,
                                         }}
                                     >
@@ -1274,7 +1307,7 @@ export default function Page() {
                                 variant="outlined"
                                 extra={
                                     <Button
-                                       size="small"
+                                        size="small"
                                         type="primary"
                                         onClick={() => setFileList([])}
                                     >
@@ -1342,7 +1375,7 @@ export default function Page() {
                                         accept=".xlsx,.xls"
                                         showUploadList={false}
                                         beforeUpload={() => false}
-                                        onChange={handleExcelUpload}
+                                        onChange={handleUploadExcel}
                                         style={{
                                             color: "#999",
                                             marginTop: -25,
@@ -1384,7 +1417,9 @@ export default function Page() {
                                 title={
                                     <span
                                         style={{
-                                   fontSize: screens.xs? "12px":"14px",
+                                            fontSize: screens.xs
+                                                ? "12px"
+                                                : "14px",
                                             fontWeight: 600,
                                         }}
                                     >

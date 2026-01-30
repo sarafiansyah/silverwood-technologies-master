@@ -18,6 +18,7 @@ import {
     Empty,
     Select,
     Form,
+    Grid,
     Tooltip,
     Tag,
     Pagination,
@@ -44,33 +45,19 @@ import ColumnChart from "@/components/Finance/chart/ColumnChart";
 import { useBalanceStore } from "@/store/zustand/useBalanceStore";
 import { useHeirloomStore, Heirloom } from "@/store/zustand/useHeirloomStore";
 import { useRewardHistoryStore } from "@/store/zustand/useRewardHistoryStore";
+import FinanceNavCard from "@/components/Card/FinanceNavCard";
 
 const { Dragger } = Upload;
 const { Title, Text } = Typography;
 const { Option } = Select;
 const { confirm, success } = Modal;
-
-// interface Heirloom {
-//     key: string;
-//     name: string;
-//     type: string;
-//     price: number;
-//     date: string;
-// }
+const { useBreakpoint } = Grid;
 
 interface PieChartItem {
     type: string;
     value: number;
     color: string;
 }
-
-const colorMap = {
-    Foods: "#22c55e", // bright green
-    Electronics: "#3b82f6", // sky blue
-    Jewelry: "#eab308", // gold yellow
-    Furniture: "#d35f17ff", // warm brown
-    Fashion: "#a855f7", // purple
-} as const;
 
 interface UserRow {
     key: string;
@@ -133,76 +120,6 @@ const initialData: UserRow[] = [
     },
 ];
 
-const columns: ColumnsType<UserRow> = [
-    {
-        title: "Name",
-        dataIndex: "name",
-        key: "name",
-        sorter: (a, b) => a.name.localeCompare(b.name),
-    },
-    {
-        title: "Age",
-        dataIndex: "age",
-        key: "age",
-        sorter: (a, b) => a.age - b.age,
-        width: 100,
-    },
-    { title: "Email", dataIndex: "email", key: "email" },
-    {
-        title: "City",
-        dataIndex: "city",
-        key: "city",
-        filters: [
-            { text: "Jakarta", value: "Jakarta" },
-            { text: "Bandung", value: "Bandung" },
-            { text: "Surabaya", value: "Surabaya" },
-            { text: "Medan", value: "Medan" },
-            { text: "Yogyakarta", value: "Yogyakarta" },
-        ],
-        onFilter: (value, record) => record.city === value,
-    },
-    {
-        title: "Price",
-        dataIndex: "income",
-        key: "income",
-        sorter: (a, b) => a.income - b.income,
-        render: (val: number) => `IDR ${val.toLocaleString()}`,
-        align: "right",
-        width: 140,
-    },
-];
-
-const columnsHeirloom = [
-    {
-        title: "No",
-        key: "index",
-        width: 50, // fixed width for numbering
-        render: (_: any, __: any, index: number) => index + 1, // 1-based index
-    },
-    {
-        title: "Name",
-        dataIndex: "name",
-        key: "name",
-        width: 200, // you can adjust
-    },
-    {
-        title: "Price",
-        dataIndex: "price",
-        key: "price",
-        width: 100,
-        render: (val: number) => `$${val}`,
-    },
-];
-
-const options = [
-    { value: "Electronics", label: "Electronics" },
-    { value: "Jewelry", label: "Jewelry" },
-    { value: "Foods", label: "Foods" },
-    { value: "Art", label: "Art" },
-    { value: "Furniture", label: "Furniture" },
-    { value: "Other", label: "Other" },
-];
-
 export default function Page() {
     const target = 150;
     const total = 400;
@@ -228,7 +145,7 @@ export default function Page() {
     );
     const { clearRewardHistoryData } = useRewardHistoryStore();
     const [isModalUploadOpen, setIsModalUploadOpen] = useState(false);
-
+    const screens = useBreakpoint();
     const heirloomArray = Array.isArray(heirlooms) ? [...heirlooms] : [];
     // heirloomArray.forEach((item) => console.log(item.name));
     const [tablePagination, setTablePagination] = useState({
@@ -302,100 +219,6 @@ export default function Page() {
     const closeModal = () => {
         setIsModalOpen(false);
     };
-
-    const handleSave = () => {
-        form.validateFields().then((values) => {
-            const dateStr = new Date().toLocaleString();
-            if (editingItem) {
-                editHeirloom({ ...editingItem, ...values });
-            } else {
-                const newItem: Heirloom = {
-                    key: Date.now().toString(),
-                    ...values,
-                    date: dateStr,
-                };
-                addHeirloom(newItem);
-            }
-            closeModal();
-        });
-    };
-
-    const handleDelete = (key: string) => {
-        confirm({
-            title: "Are you sure you want to delete this heirloom?",
-            onOk() {
-                deleteHeirloom(key);
-            },
-            onCancel() {},
-        });
-    };
-    const columnsHeirloom = [
-        {
-            title: "No",
-            key: "index",
-            width: 30,
-            align: "center" as "center", //  type-safe literal
-            render: (_: any, __: any, index: number) => index + 1,
-        },
-        { title: "Name", dataIndex: "name", key: "name", width: 110 },
-        { title: "Type", dataIndex: "type", key: "type", width: 80 },
-        {
-            title: "Price",
-            dataIndex: "price",
-            key: "price",
-            width: 90,
-            render: (val: number) =>
-                new Intl.NumberFormat("id-ID", {
-                    style: "currency",
-                    currency: "IDR",
-                    minimumFractionDigits: 0,
-                }).format(val),
-        },
-        {
-            title: "Date",
-            dataIndex: "date",
-            key: "date",
-            width: 110,
-            align: "left" as "left",
-            render: (val: string | Date) => {
-                const d = new Date(val);
-                const hours = String(d.getHours()).padStart(2, "0");
-                const minutes = String(d.getMinutes()).padStart(2, "0");
-                const seconds = String(d.getSeconds()).padStart(2, "0");
-                const day = String(d.getDate()).padStart(2, "0");
-                const month = String(d.getMonth() + 1).padStart(2, "0");
-                const year = d.getFullYear();
-                return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`; // 24h format
-            },
-        },
-        {
-            title: "Action",
-            key: "action",
-            width: 50,
-            align: "center" as "center",
-            fixed: "right" as "right", //  right-aligned
-            render: (_: any, record: Heirloom) => (
-                <Space>
-                    <Button
-                        size="small"
-                        type="primary"
-                        variant="solid"
-                        color="orange"
-                        icon={<EditOutlined />}
-                        onClick={() => openModal(record)}
-                    ></Button>
-                    <Button
-                        size="small"
-                        type="primary"
-                        variant="solid"
-                        danger
-                        icon={<DeleteOutlined />}
-                        onClick={() => deleteHeirloom(record.key)}
-                    ></Button>
-                </Space>
-            ),
-        },
-    ];
 
     const columnsRewardHistory: ColumnsType<RewardHistoryRow> = [
         {
@@ -763,45 +586,19 @@ export default function Page() {
         });
     };
 
-    // transform rewardHistoryData → chart data
-    const monthNames = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-    ];
-
-    const dataColumns = monthNames.map((month, index) => {
-        // filter all data that belongs to this month
-        const total = rewardHistoryData
-            .filter((item) => {
-                if (!item.date) return false;
-                const itemMonth = new Date(item.date).getMonth(); // 0–11
-                return itemMonth === index;
-            })
-            .reduce((sum, item) => sum + (item.price || 0), 0);
-
-        return {
-            name: "Total Reward",
-            month,
-            value: total,
-        };
-    });
-
     const showModalUpload = () => setIsModalUploadOpen(true);
     const handleOkModalUpload = () => setIsModalUploadOpen(false);
     const handleCancelModalUpload = () => setIsModalUploadOpen(false);
 
     return (
-        <main style={{ padding: "6px" }}>
+        <main style={{ padding: "2px 12px" }}>
+            {screens.xs && (
+                <Row gutter={[24, 24]}>
+                    <div style={{ width: "100%" }}>
+                        <FinanceNavCard />
+                    </div>
+                </Row>
+            )}
             <Row gutter={[24, 24]}>
                 {/* BOTTOM SECTION */}
                 <Col xs={24} md={24} xl={24}>
