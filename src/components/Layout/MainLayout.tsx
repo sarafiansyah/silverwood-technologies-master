@@ -10,7 +10,7 @@ import { useBankStore } from "@/store/zustand/useBankStore";
 import { useHeirloomStore } from "@/store/zustand/useHeirloomStore";
 import { useRewardHistoryStore } from "@/store/zustand/useRewardHistoryStore";
 import { RootState } from "@/store/redux/store";
-import { clearUser } from "@/store/redux/userSlice";
+import { clearUser } from "@/store/redux/slices/userSlice";
 import { signOut } from "next-auth/react";
 import { MenuItems } from "@/components/Layout/MenuItems";
 import Sidebar from "@/components/Layout/Sidebar";
@@ -18,8 +18,8 @@ import AppHeader from "@/components/Layout/AppHeader";
 import AppFooter from "@/components/Layout/AppFooter";
 import { findMenuItemByPath } from "@/components/Layout/Sidebar"; // or move to utils
 import { AppstoreOutlined } from "@ant-design/icons";
-import { createAppBackup } from '@/utils/backup/appBackup';
-import { timestampSave } from '@/utils/timestamp/timestapSave';
+import { createAppBackup } from "@/utils/backup/appBackup";
+import { timestampSave } from "@/utils/timestamp/timestapSave";
 
 const { Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -47,57 +47,51 @@ export default function MainLayout({ children, isDark, setIsDark }: Props) {
         return item?.icon || <AppstoreOutlined />;
     });
 
-    // Memoize for performance
-    // const currentPageTitle = useMemo(() => {
-    //     const item = MenuItems.find((item) => item.key === pathname);
-    //     return item?.label || "Dashboard";
-    // }, [pathname]);
+    const handleLogout = async () => {
+        Modal.confirm({
+            title: "Before you go…",
+            content: "Do you want to download a backup before logging out?",
 
-const handleLogout = async () => {
-  Modal.confirm({
-    title: "Before you go…",
-    content: "Do you want to download a backup before logging out?",
+            okText: "Logout",
+            okType: "danger", // red for destructive action
+            cancelText: "Cancel",
 
-    okText: "Logout",
-    okType: "danger", // red for destructive action
-    cancelText: "Cancel",
+            onOk: async () => {
+                // Just logout
+                dispatch(clearUser());
+                useBalanceStore.persist.clearStorage();
+                useBankStore.persist.clearStorage();
+                useHeirloomStore.persist.clearStorage();
+                useRewardHistoryStore.persist.clearStorage();
 
-    onOk: async () => {
-      // Just logout
-      dispatch(clearUser());
-      useBalanceStore.persist.clearStorage();
-      useBankStore.persist.clearStorage();
-      useHeirloomStore.persist.clearStorage();
-      useRewardHistoryStore.persist.clearStorage();
+                await signOut({
+                    redirect: true,
+                    callbackUrl: "/auth/login",
+                });
+            },
 
-      await signOut({
-        redirect: true,
-        callbackUrl: "/auth/login",
-      });
-    },
+            footer: (_, { OkBtn, CancelBtn }) => (
+                <>
+                    {/* Cancel button */}
+                    <CancelBtn />
 
-    footer: (_, { OkBtn, CancelBtn }) => (
-      <>
-        {/* Cancel button */}
-        <CancelBtn />
+                    {/* Backup button */}
+                    <Button
+                        type="primary"
+                        onClick={() => {
+                            downloadBackup();
+                            message.success("Backup completed successfully!");
+                        }}
+                    >
+                        Backup
+                    </Button>
 
-        {/* Backup button */}
-        <Button
-          type="primary"
-          onClick={() => {
-            downloadBackup();
-            message.success("Backup completed successfully!");
-          }}
-        >
-          Backup
-        </Button>
-
-        {/* Logout button */}
-        <OkBtn />
-      </>
-    ),
-  });
-};
+                    {/* Logout button */}
+                    <OkBtn />
+                </>
+            ),
+        });
+    };
 
     const handleClick = () => {
         setHasClicked(true);
@@ -105,22 +99,22 @@ const handleLogout = async () => {
     };
 
     const downloadBackup = () => {
-  const backup = createAppBackup();
-  const timestamp = timestampSave();
+        const backup = createAppBackup();
+        const timestamp = timestampSave();
 
-  const blob = new Blob([JSON.stringify(backup, null, 2)], {
-    type: 'application/json',
-  });
+        const blob = new Blob([JSON.stringify(backup, null, 2)], {
+            type: "application/json",
+        });
 
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
 
-  a.href = url;
-  a.download = `app-backup_${timestamp}.json`;
-  a.click();
+        a.href = url;
+        a.download = `app-backup_${timestamp}.json`;
+        a.click();
 
-  URL.revokeObjectURL(url);
-};
+        URL.revokeObjectURL(url);
+    };
 
     return (
         <>

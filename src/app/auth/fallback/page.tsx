@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Alert, Button, Input, Typography, message } from "antd";
 import { useForm, Controller } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { setUser } from "@/store/redux/userSlice";
+import { setUser } from "@/store/redux/slices/userSlice";
 import Image from "next/image";
 
 const { Title } = Typography;

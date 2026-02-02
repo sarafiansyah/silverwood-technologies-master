@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button, Input, Typography, message, Grid } from "antd";
 import { useForm, Controller } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "@/store/redux/userSlice";
+import { setUser } from "@/store/redux/slices/userSlice";
 import type { RootState } from "@/store/redux/store";
 import Image from "next/image";
 

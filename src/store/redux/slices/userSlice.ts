@@ -17,6 +17,7 @@ export interface UserState {
     threads?: string;
     status?: string;
     avatarId?: string;
+    tutorial?: number;
     isAuthenticated: boolean;
 }
 

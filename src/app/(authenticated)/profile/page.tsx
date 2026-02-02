@@ -41,8 +41,8 @@ import {
 import type { UploadProps } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type { RootState } from "@/store/redux/store";
-import { setUser } from "@/store/redux/userSlice";
-import type { UserState } from "@/store/redux/userSlice";
+import { setUser } from "@/store/redux/slices/userSlice";
+import type { UserState } from "@/store/redux/slices/userSlice";
 import { useSelector, useDispatch } from "react-redux";
 import DashboardCard from "@/components/Card/DashboardCard";
 import { motion, useMotionValue, useTransform } from "framer-motion";
@@ -110,7 +110,13 @@ const Profile: React.FC = () => {
         }, 2000);
     };
 
-    const openNotificationWithIcon = (type: NotificationType) => {
+    const openNotificationWithIcon = (
+        type: NotificationType,
+        tutorial?: number,
+    ) => {
+        const tutorialValue: 0 | 1 | undefined =
+            tutorial === 1 ? 1 : tutorial === 0 ? 0 : undefined;
+        if (tutorialValue !== 1) return;
         api[type]({
             title: <span style={{ fontWeight: 600 }}>Temporary Edit</span>,
             description:
@@ -321,8 +327,8 @@ const Profile: React.FC = () => {
                         // Profile Card Display
                         <div
                             style={{
-                                alignContent:"center",
-                                justifyContent:"center",
+                                alignContent: "center",
+                                justifyContent: "center",
                                 perspective: 1000,
                                 width: screens.xs ? 300 : "100vw", // small on XS, full width otherwise
                                 height: screens.xs ? 460 : 650, // small on XS, full height otherwise
@@ -639,113 +645,127 @@ const Profile: React.FC = () => {
                         }}
                     >
                         {!onEditMode && (
-                         <div
-  style={{
-    padding: 20,
-    display: "flex",
-    justifyContent: "center",
-  }}
->
-  <div
-    style={{
-      display: "flex",
-      gap: 20,
-      padding: 12,
-      borderRadius: 50,
-    
-    }}
-  >
-    {/* Flip */}
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: 4,
-        cursor: "pointer",
-      }}
-      onClick={() => setFlipped(!flipped)}
-    >
-      <Button
-        size="large"
-        shape="circle"
-        icon={<RetweetOutlined />}
-        style={{
-          background: "#1677ff",
-          color: "#fff",
-          border: "none",
-        }}
-      />
-      <span style={{ fontSize: 12, fontWeight: 500 }}>FLIP</span>
-    </div>
+                            <div
+                                style={{
+                                    padding: 20,
+                                    display: "flex",
+                                    justifyContent: "center",
+                                }}
+                            >
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        gap: 20,
+                                        padding: 12,
+                                        borderRadius: 50,
+                                    }}
+                                >
+                                    {/* Flip */}
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            alignItems: "center",
+                                            gap: 4,
+                                            cursor: "pointer",
+                                        }}
+                                        onClick={() => setFlipped(!flipped)}
+                                    >
+                                        <Button
+                                            size="large"
+                                            shape="circle"
+                                            icon={<RetweetOutlined />}
+                                            style={{
+                                                background: "#1677ff",
+                                                color: "#fff",
+                                                border: "none",
+                                            }}
+                                        />
+                                        <span
+                                            style={{
+                                                fontSize: 12,
+                                                fontWeight: 500,
+                                            }}
+                                        >
+                                            FLIP
+                                        </span>
+                                    </div>
 
-    {/* Edit */}
-<div
-  style={{
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 4,
-    cursor: "pointer",
-    width: 40, // fixed width for all buttons
-    margin: "0 8px", // horizontal spacing between buttons
-  }}
-  onClick={() => {
-    setOnEditMode(true);
-    openNotificationWithIcon("info");
-  }}
->
-  <Button
-    size="large"
-    shape="circle"
-    icon={<EditOutlined />}
-    style={{
-      background: "#52c41a",
-      color: "#fff",
-      border: "none",
-    }}
-  />
-  <span
-    style={{
-      fontSize: 12,
-      fontWeight: 500,
-      textAlign: "center",
-      width: "100%", // ensure label is centered
-    }}
-  >
-    EDIT
-  </span>
-</div>
+                                    {/* Edit */}
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            gap: 4,
+                                            cursor: "pointer",
+                                            width: 40, // fixed width for all buttons
+                                            margin: "0 8px", // horizontal spacing between buttons
+                                        }}
+                                        onClick={() => {
+                                            setOnEditMode(true);
+                                            openNotificationWithIcon(
+                                                "info",
+                                                userDataDetails.tutorial,
+                                            );
+                                        }}
+                                    >
+                                        <Button
+                                            size="large"
+                                            shape="circle"
+                                            icon={<EditOutlined />}
+                                            style={{
+                                                background: "#52c41a",
+                                                color: "#fff",
+                                                border: "none",
+                                            }}
+                                        />
+                                        <span
+                                            style={{
+                                                fontSize: 12,
+                                                fontWeight: 500,
+                                                textAlign: "center",
+                                                width: "100%", // ensure label is centered
+                                            }}
+                                        >
+                                            EDIT
+                                        </span>
+                                    </div>
 
-
-    {/* Restore */}
-    <Upload {...uploadProps}>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 4,
-          cursor: "pointer",
-        }}
-      >
-        <Button
-          size="large"
-          shape="circle"
-          icon={<UploadOutlined />}
-          style={{
-            background: "#ffa023",
-            color: "#fff",
-            border: "none",
-          }}
-        />
-        <span style={{ fontSize: 12, fontWeight: 500 }}>RESTORE</span>
-      </div>
-    </Upload>
-  </div>
-</div>
-
+                                    {/* Restore */}
+                                    <Upload {...uploadProps}>
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                alignItems: "center",
+                                                gap: 4,
+                                                cursor: "pointer",
+                                            }}
+                                        >
+                                            <Button
+                                                size="large"
+                                                shape="circle"
+                                                icon={<UploadOutlined />}
+                                                style={{
+                                                    background: "#ffa023",
+                                                    color: "#fff",
+                                                    border: "none",
+                                                }}
+                                            />
+                                            <span
+                                                style={{
+                                                    fontSize: 12,
+                                                    fontWeight: 500,
+                                                }}
+                                            >
+                                                RESTORE
+                                            </span>
+                                        </div>
+                                    </Upload>
+                                </div>
+                            </div>
                         )}
                     </div>
                 </Col>

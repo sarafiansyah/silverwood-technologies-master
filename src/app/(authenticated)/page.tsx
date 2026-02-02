@@ -2,7 +2,7 @@
 
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/redux/store";
-import { clearUser } from "@/store/redux/userSlice";
+import { clearUser } from "@/store/redux/slices/userSlice";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";

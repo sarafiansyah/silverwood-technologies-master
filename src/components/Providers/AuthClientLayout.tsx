@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/redux/store";
+import { setDarkMode } from "@/store/redux/slices/themeSlice";
 import MainLayout from "@/components/Layout/MainLayout";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
-import ThemeSwitch from "@/components/Theme/ThemeSwitch";
 import { ConfigProvider, App as AntdApp, theme } from "antd";
 import type { ThemeConfig } from "antd";
 import { motion, AnimatePresence } from "framer-motion";
@@ -19,10 +18,10 @@ export default function ClientConditionalLayout({
     const user = useSelector((state: RootState) => state.user);
     const { data: session, status } = useSession();
     const pathname = usePathname();
-
+    const dispatch = useDispatch();
+    const isDark = useSelector((state: RootState) => state.theme.isDark);
     const excludedRoutes = ["/login", "/auth/loading"];
-
-    const [isDark, setIsDark] = useState(false);
+    const isLoggedIn = user.isAuthenticated || session?.user;
 
     const currentTheme: ThemeConfig = {
         algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
@@ -33,12 +32,7 @@ export default function ClientConditionalLayout({
     };
 
     if (status === "loading") return null;
-
-    if (excludedRoutes.includes(pathname)) {
-        return <>{children}</>;
-    }
-
-    const isLoggedIn = user.isAuthenticated || session?.user;
+    if (excludedRoutes.includes(pathname)) return <>{children}</>;
 
     if (isLoggedIn) {
         return (
@@ -51,7 +45,12 @@ export default function ClientConditionalLayout({
                             animate={{ opacity: 1, filter: "blur(0px)" }}
                             transition={{ duration: 0.65, ease: "easeOut" }}
                         >
-                            <MainLayout isDark={isDark} setIsDark={setIsDark}>
+                            <MainLayout
+                                isDark={isDark}
+                                setIsDark={(value: boolean) =>
+                                    dispatch(setDarkMode(value))
+                                }
+                            >
                                 {children}
                             </MainLayout>
                         </motion.div>

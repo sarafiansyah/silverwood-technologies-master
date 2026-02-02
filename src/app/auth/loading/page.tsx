@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setUser } from "@/store/redux/userSlice";
+import { setUser } from "@/store/redux/slices/userSlice";
 import { useRouter } from "next/navigation";
 
 export default function AuthLoading() {
