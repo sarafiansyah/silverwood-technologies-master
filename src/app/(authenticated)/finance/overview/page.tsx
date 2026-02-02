@@ -812,6 +812,7 @@ export default function Page() {
                                                 <Button
                                                     size="small"
                                                     type="primary"
+                                                     style={{fontSize:12}}
                                                     icon={
                                                         <InfoCircleOutlined />
                                                     }
@@ -825,6 +826,7 @@ export default function Page() {
                                             <Tooltip title="Download Excel">
                                                 <Button
                                                     size="small"
+                                                     style={{fontSize:12}}
                                                     type="primary"
                                                     icon={<DownloadOutlined />}
                                                     onClick={
@@ -835,8 +837,10 @@ export default function Page() {
 
                                             <Tooltip title="Add New Heirlooms">
                                                 <Button
+                                                color="green"
                                                     size="small"
-                                                    type="primary"
+                                                    style={{fontSize:12}}
+                                                  variant="solid"
                                                     icon={<PlusOutlined />}
                                                     onClick={() => openModal()}
                                                 >
@@ -1304,7 +1308,9 @@ export default function Page() {
                                 extra={
                                     <Button
                                         size="small"
-                                        type="primary"
+                                        variant="solid"
+                                        color="red"
+                                                style={{fontSize:12}}
                                         onClick={() => setFileList([])}
                                     >
                                         Clear
@@ -1379,7 +1385,8 @@ export default function Page() {
                                         }}
                                     >
                                         <Button
-                                            type="primary"
+                                          variant="outlined"
+                                          color="green"
                                             icon={<UploadOutlined />}
                                             size="small"
                                             style={{ fontSize: 14 }}

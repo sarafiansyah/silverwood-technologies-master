@@ -20,13 +20,13 @@ export const teamMembers = [
     image: "/assets/images/members/rd04.png",
   },
     {
-    name: "Michelle Gervacia",
+    name: "Victoria Wijaya",
     title: "RD Chambers",
     image: "/assets/images/members/rd05.png",
   },
     {
-    name: "Michelle Gervacia",
-    title: "RD Moneypulate",
+    name: "Richard Whitmore ",
+    title: "RD Automatron",
     image: "/assets/images/members/rd06.png",
   },
 ];

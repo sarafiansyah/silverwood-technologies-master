@@ -90,7 +90,7 @@ export default function BalanceTracker() {
         <div
             style={{
                 width: "100%",
-                padding: "2px",
+                padding: "2px 12px",
                 display: "flex",
                 flexDirection: "column",
             }}
