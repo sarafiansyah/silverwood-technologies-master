@@ -205,7 +205,6 @@ export default function AboutPage() {
                             <SpecCard />
                         </Card>
                         <Card
-                            bordered={false}
                             styles={{
                                 body: {
                                     padding: 8,

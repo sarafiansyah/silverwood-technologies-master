@@ -123,7 +123,7 @@ return (
           fontSize: screens.xs ? 12 : 14,
           height: 28,
         }}
-        dropdownRender={(menu) => <div style={{ fontSize: 12 }}>{menu}</div>}
+        popupRender={(menu) => <div style={{ fontSize: 12 }}>{menu}</div>}
       >
         <Option value={1}>Enabled</Option>
         <Option value={0}>Disabled</Option>
@@ -218,7 +218,7 @@ return (
       <div style={{ display: "flex", flexDirection: "column", minWidth: 120, maxWidth: 200 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <UploadOutlined style={{ color: "#ffa023", fontSize: 18 }} />
-          <span style={{ fontWeight: 600 }}>Restore Backup</span>
+          <span style={{ fontWeight: 600 }}>Restore Data</span>
         </div>
         <span style={{ fontSize: 11, color: "#888" }}>Restore your saved profile data</span>
       </div>
