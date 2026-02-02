@@ -222,6 +222,15 @@ export default function AboutPage() {
                         </Card>
                     </div>
                 )}
+                <div
+                    style={{
+                        textAlign: "center",
+                        marginTop: 12,
+                        color: "#919191",
+                    }}
+                >
+                    Swipe to see more
+                </div>
             </div>
 
             <div

@@ -29,6 +29,8 @@ export const featureGroups: FeatureGroup[] = [
             "Data management by Redux",
             "Available online via Vercel",
             "No database connections",
+            "Tutorial Notifications",
+            "Interactive settings",
         ],
     },
     {

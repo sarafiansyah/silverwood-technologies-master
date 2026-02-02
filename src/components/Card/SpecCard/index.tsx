@@ -67,7 +67,12 @@ const SpecCard = () => {
       )}
 
       {!isLast && (
-        <Divider style={{ borderTop: "2px solid rgba(172,172,172,0.35)" }} />
+     <Divider
+  style={{
+    borderTop: "2px solid rgba(172,172,172,0.35)",
+    margin: "14px 0", 
+  }}
+/>
       )}
     </div>
   );
