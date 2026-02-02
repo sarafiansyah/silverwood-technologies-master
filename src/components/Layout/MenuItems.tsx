@@ -134,6 +134,6 @@ export const MenuItems: MenuItemType[] = [
         key: "/settings",
         icon: <SettingOutlined />,
         label: "Settings",
-        path: "/settings",
+        path: "/public/settings",
     },
 ];
