@@ -3,11 +3,11 @@ import {
     HomeOutlined,
     ShopOutlined,
     SafetyOutlined,
-    CloudOutlined,
     DeploymentUnitOutlined,
 } from "@ant-design/icons";
+import { SpecSection } from "@/types/spec"; // or wherever you put it
 
-export const specData = [
+export const specData: SpecSection[] = [
     {
         title: "Specification",
         icon: AppstoreOutlined,
@@ -67,10 +67,9 @@ export const specData = [
             ["PDF Export", "jsPDF"],
             ["HTML Capture", "html2canvas"],
             ["File Download", "file-saver"],
-                        ["Google Integration ", "Google APIs"],
+            ["Google Integration ", "Google APIs"],
             ["OCR Scanner", "Tesseract.js"],
             ["QR & Barcode ", "ZXing"],
         ],
     },
-   
 ];
