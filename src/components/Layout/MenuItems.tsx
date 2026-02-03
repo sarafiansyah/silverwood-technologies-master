@@ -7,6 +7,9 @@ import {
     LockOutlined,
     ExperimentOutlined,
     DollarCircleOutlined,
+    ThunderboltOutlined,
+    ScanOutlined,
+    DeploymentUnitOutlined,
 } from "@ant-design/icons";
 
 export interface MenuItemType {
@@ -80,7 +83,7 @@ export const MenuItems: MenuItemType[] = [
             },
         ],
     },
-     {
+    {
         key: "moneypulate",
         label: "Finance",
         icon: <DollarCircleOutlined />,
@@ -109,11 +112,43 @@ export const MenuItems: MenuItemType[] = [
                 icon: <DollarCircleOutlined />,
                 path: "/finance/heirlooms",
             },
-               {
+            {
                 key: "moneypulate5",
                 label: "Transaction",
                 icon: <DollarCircleOutlined />,
                 path: "/finance/transactions",
+            },
+        ],
+    },
+    {
+        key: "scanners",
+        label: "Scanners",
+        icon: <ScanOutlined />,
+        children: [
+            {
+                key: "scanner1",
+                label: "Text Scanner",
+                icon: <ScanOutlined />,
+                path: "/public/automatrons/text-scanner",
+            },
+            {
+                key: "scanner2",
+                label: "Code Scanner",
+                icon: <ScanOutlined />,
+                path: "/public/automatrons/code-scanner",
+            },
+        ],
+    },
+    {
+        key: "experimental",
+        label: "Experimental",
+        icon: <DeploymentUnitOutlined />,
+        children: [
+            {
+                key: "experimental",
+                label: "AR Ruler",
+                icon: <DeploymentUnitOutlined />,
+                path: "/public/automatrons/ar-ruler",
             },
         ],
     },

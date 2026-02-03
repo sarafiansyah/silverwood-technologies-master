@@ -63,4 +63,13 @@ export const featureGroups: FeatureGroup[] = [
             "Private & public access",
         ],
     },
+       {
+        icon: SafetyOutlined,
+        tagColor: "cyan",
+        tagLabel: "RD Lenscore",
+        items: [
+            "OCR / Text Scanner",
+            "QR & Barcode Scanner",
+        ],
+    },
 ];

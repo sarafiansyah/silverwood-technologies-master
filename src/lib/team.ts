@@ -25,8 +25,8 @@ export const teamMembers = [
     image: "/assets/images/members/rd05.png",
   },
     {
-    name: "Richard Whitmore ",
-    title: "RD Automatron",
+    name: "Richard Whitmore",
+    title: "RD Lenscore",
     image: "/assets/images/members/rd06.png",
   },
 ];
