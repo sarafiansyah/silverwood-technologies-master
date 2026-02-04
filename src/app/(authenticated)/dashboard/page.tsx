@@ -20,6 +20,7 @@ import {
     ExperimentOutlined,
     LockOutlined,
     DeploymentUnitOutlined,
+    ScanOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import type { RootState } from "@/store/redux/store";
@@ -200,8 +201,8 @@ const MainLayout: React.FC = () => {
                     <DashboardCard
                         title="Moneypulate"
                         subtitle="Rafiansyah"
-                        status="OFFLINE"
-                        statusColor="red"
+                        status="ONLINE"
+                        statusColor="green"
                         icon={<DollarOutlined />}
                     />
                 </Col>
@@ -212,6 +213,15 @@ const MainLayout: React.FC = () => {
                         status="OFFLINE"
                         statusColor="red"
                         icon={<DeploymentUnitOutlined />}
+                    />
+                </Col>
+                   <Col xs={12} md={6}>
+                    <DashboardCard
+                        title="Lenscore"
+                        subtitle="Rafiansyah"
+                        status="ONLINE"
+                        statusColor="green"
+                        icon={<ScanOutlined />}
                     />
                 </Col>
             </Row>
