@@ -3,7 +3,7 @@
 import React, { useMemo } from "react";
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Layout, Grid, Modal, Button, message } from "antd";
+import { Layout, Grid, Modal, Button, message, App } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { useBalanceStore } from "@/store/zustand/useBalanceStore";
 import { useBankStore } from "@/store/zustand/useBankStore";
@@ -23,6 +23,7 @@ import { timestampSave } from "@/utils/timestamp/timestapSave";
 
 const { Content } = Layout;
 const { useBreakpoint } = Grid;
+
 
 type Props = {
     children: React.ReactNode;
@@ -46,9 +47,10 @@ export default function MainLayout({ children, isDark, setIsDark }: Props) {
         const item = findMenuItemByPath(MenuItems, pathname);
         return item?.icon || <AppstoreOutlined />;
     });
+    const { modal } = App.useApp();
 
     const handleLogout = async () => {
-        Modal.confirm({
+        modal.confirm({
             title: "Before you go…",
             content: "Do you want to download a backup before logging out?",
 

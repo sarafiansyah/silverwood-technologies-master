@@ -5,7 +5,7 @@ export const MOCK_USERS: UserData[] = [
         id: "1",
         firstName: "Mahesa",
         lastName: "Rafiansyah",
-        email: "mahesa@example.com",
+        email: "mahesa@silverwood.com",
         password:
             "$2b$10$k71mbVSdLwgi8e2.CWunSezpZNkNSwy3S3UNTWKIThuqRaJhhDVdy",
         roles: ["Administrator"],
@@ -45,7 +45,7 @@ export const MOCK_USERS: UserData[] = [
         id: "3",
         firstName: "Michelle",
         lastName: "Aurelia",
-        email: "michelle@example.com",
+        email: "michelle@silverwood.com",
         password:
             "$2b$10$2SJ6IE.LPLm5cM7AEJ8VCuVktCwuippm9aiqBFmw9tOio8hyx067S",
         roles: ["Finance"],
@@ -65,7 +65,7 @@ export const MOCK_USERS: UserData[] = [
         id: "4",
         firstName: "Rara",
         lastName: "Sundari",
-        email: "rara@example.com",
+        email: "rara@silverwood.com",
         password:
             "$2b$10$1diWHw0Sde3mQxO6Bjy.P.HA61pL/Nw8XgBCcTKITT5BwanhNlv6i",
         roles: ["HR"],
@@ -85,7 +85,7 @@ export const MOCK_USERS: UserData[] = [
         id: "5",
         firstName: "Nina",
         lastName: "Hartati",
-        email: "nina@example.com",
+        email: "nina@silverwood.com",
         password:
             "$2b$10$uTe3M/bLFIPFxoDMqfZjcu/aZDEW/TC0Xb0NpTPvApL0SGHoDLTn6",
         roles: ["Support"],
@@ -105,7 +105,7 @@ export const MOCK_USERS: UserData[] = [
         id: "6",
         firstName: "Lina",
         lastName: "Wijaya",
-        email: "lina@example.com",
+        email: "lina@silverwood.com",
         password:
             "$2b$10$rqYmTyQeIpwEb/vUrqZc8O76J/sP9g1JheTe6PtlkQCDxVHY4ZN5C",
         roles: ["Marketing"],
@@ -125,7 +125,7 @@ export const MOCK_USERS: UserData[] = [
         id: "7",
         firstName: "Johan",
         lastName: "Pratama",
-        email: "johan@example.com",
+        email: "johan@silverwood.com",
         password:
             "$2b$10$oXOLd2sou4dxXOLnBsuTI.MQZ3blsRz5q6qb6dT4KVSckoZxFNqo6",
         roles: ["Administrator"],
@@ -145,7 +145,7 @@ export const MOCK_USERS: UserData[] = [
         id: "8",
         firstName: "Kevin",
         lastName: "Hartono",
-        email: "kevin@example.com",
+        email: "kevin@silverwood.com",
         password:
             "$2b$10$cVYZUCoeWu4mkwX8exBDz.3DKUjD6ucq2.R1Cn7HoiZqwQADrA5Ri",
         roles: ["Developer"],

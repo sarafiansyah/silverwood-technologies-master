@@ -10,6 +10,7 @@ import { ConfigProvider, App as AntdApp, theme } from "antd";
 import type { ThemeConfig } from "antd";
 import { motion, AnimatePresence } from "framer-motion";
 
+
 export default function ClientConditionalLayout({
     children,
 }: {

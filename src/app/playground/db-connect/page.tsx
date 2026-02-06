@@ -20,5 +20,5 @@ export default async function Page() {
       )
     `);
 
-    return <UsersView memberTypes={memberTypes || []} users={users || []} />;
+    return <UsersView users={users || []} />;
 }
