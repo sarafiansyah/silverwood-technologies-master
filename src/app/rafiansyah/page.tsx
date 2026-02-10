@@ -1,38 +1,28 @@
-import { Card, Layout, Space } from "antd";
-import { GradualSpacing } from "@/components/Typography/Animations/GradualSpacing";
-import { StaggeredFade } from "@/components/Typography/Animations/StaggeredFade";
+"use client";
 
-export default function Page() {
-  return (
-    <Layout style={{ minHeight: "100vh", background:"#000000" }}>
-     
-        <Space orientation="vertical" size={24}>
-          <GradualSpacing
-            text="WELCOME MAHESA"
-            style={{
-              fontSize: 40,
-              fontWeight: 700,
-              letterSpacing: -4,
-               opacity: 0.8,
-              color:"white"
-            }}
-          />
-               <StaggeredFade
-            text="WELCOME MAHESA"
-            style={{
-              fontSize: 40,
-              fontWeight: 700,
-    
-              color:"white"
-            }}
-          />
+import { useRef } from "react";
+import { useGsapFadeUp } from "@/hooks/gsap/useFadeUpEntrance";
 
-          <StaggeredFade
-            text="Subtitles drift into existence"
-            style={{ fontSize: 20, opacity: 0.8,   color:"white" }}
-          />
-        </Space>
-    
-    </Layout>
-  );
+export default function AboutDetails() {
+    const ref = useRef<HTMLDivElement>(null);
+
+    useGsapFadeUp(ref as React.RefObject<HTMLElement>, {
+        selector: ".about-line",
+        y: 18,
+        blur: 6,
+        stagger: 0.2,
+        duration: 1.4,
+    });
+
+    return (
+        <div
+            ref={ref}
+            style={{ background: "#fff", color: "#000", padding: 60 }}
+        >
+            <h1 className="about-line">About</h1>
+            <p className="about-line">Reusable motion logic.</p>
+            <p className="about-line">Configurable behavior.</p>
+            <p className="about-line">Single hook, many entrances.</p>
+        </div>
+    );
 }

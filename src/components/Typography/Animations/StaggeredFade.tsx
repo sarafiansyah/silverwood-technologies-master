@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import { motion, useInView } from "framer-motion";
-import { fadeUpVariant } from "./animationConfig";
+import { fadeUpVariant } from "@/hooks/framer/variants";
+
 
 type Props = {
   text: string;

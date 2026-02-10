@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { motion, useInView } from "framer-motion";
-import { gradualLetterVariant } from "./animationConfig";
+import { gradualLetterVariant } from "@/hooks/framer/variants";
 
 type Props = {
   text: string;
@@ -20,7 +20,6 @@ export function GradualSpacing({ text, style }: Props) {
         display: "flex",
         gap: 4,
         flexWrap: "wrap",
-        justifyContent: "center",
       }}
     >
       {text.split("").map((char, i) => (
