@@ -50,40 +50,8 @@ interface DashboardData {
 
 const MainLayout: React.FC = () => {
     // Sample data for the table
-    const data: DashboardData[] = [
-        { key: "1", name: "Sales", value: 1200, change: 10 },
-        { key: "2", name: "Users", value: 850, change: -5 },
-        { key: "3", name: "Revenue", value: 4500, change: 15 },
-    ];
-
-    // Table columns
-    const columns: ColumnsType<DashboardData> = [
-        {
-            title: "Metric",
-            dataIndex: "name",
-            key: "name",
-        },
-        {
-            title: "Value",
-            dataIndex: "value",
-            key: "value",
-        },
-        {
-            title: "Change (%)",
-            dataIndex: "change",
-            key: "change",
-            render: (change: number) => (
-                <span style={{ color: change > 0 ? "green" : "red" }}>
-                    {change > 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}{" "}
-                    {Math.abs(change)}%
-                </span>
-            ),
-        },
-    ];
-
     const screens = useBreakpoint();
     const firstName = useSelector((state: RootState) => state.user.firstName);
-
     const lastName = useSelector((state: RootState) => state.user.lastName);
 
     const greetingText = useMemo(() => {
@@ -97,23 +65,23 @@ const MainLayout: React.FC = () => {
 
     const subtitleText = GREETINGS_SUBTITLE[0];
 
-const fadeUp: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 12,          // less distance = softer feel
-    filter: "blur(6px)",
-  },
-  show: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: {
-      delay: 5 + i * 0.35,          // keep your late start
-      duration: 1.6,                // softer ≠ longer, just smoother
-      ease: [0.33, 1, 0.68, 1],     // gentle deceleration curve
-    },
-  }),
-};
+    const fadeUp: Variants = {
+        hidden: {
+            opacity: 0,
+            y: 12, // less distance = softer feel
+            filter: "blur(6px)",
+        },
+        show: (i: number) => ({
+            opacity: 1,
+            y: 0,
+            filter: "blur(0px)",
+            transition: {
+                delay: 5 + i * 0.35, // keep your late start
+                duration: 1.6, // softer ≠ longer, just smoother
+                ease: [0.33, 1, 0.68, 1], // gentle deceleration curve
+            },
+        }),
+    };
 
     return (
         <>
@@ -216,60 +184,56 @@ const fadeUp: Variants = {
                 />
             </div>
 
-
-   <motion.div
-        variants={fadeUp}
-        initial="hidden"
-        animate="show"
-
-      >   <Row gutter={[12, 12]} style={{ marginBottom: 16 }}>
-                <Col xs={12} md={6}>
-                    <DashboardCard
-                        title="Viscorion"
-                        subtitle="Rafiansyah"
-                        status="ONLINE"
-                        statusColor="green"
-                        icon={<ExperimentOutlined />}
-                    />
-                </Col>
-                <Col xs={12} md={6}>
-                    <DashboardCard
-                        title="Chambers"
-                        subtitle="Rafiansyah"
-                        status="ONLINE"
-                        statusColor="green"
-                        icon={<LockOutlined />}
-                    />
-                </Col>
-                <Col xs={12} md={6}>
-                    <DashboardCard
-                        title="Moneypulate"
-                        subtitle="Rafiansyah"
-                        status="ONLINE"
-                        statusColor="green"
-                        icon={<DollarOutlined />}
-                    />
-                </Col>
-                <Col xs={12} md={6}>
-                    <DashboardCard
-                        title="Gallery"
-                        subtitle="Rafiansyah"
-                        status="OFFLINE"
-                        statusColor="red"
-                        icon={<DeploymentUnitOutlined />}
-                    />
-                </Col>
-                <Col xs={12} md={6}>
-                    <DashboardCard
-                        title="Lenscore"
-                        subtitle="Rafiansyah"
-                        status="ONLINE"
-                        statusColor="green"
-                        icon={<ScanOutlined />}
-                    />
-                </Col>
-            </Row></motion.div>
-         
+            <motion.div variants={fadeUp} initial="hidden" animate="show">
+                {" "}
+                <Row gutter={[12, 12]} style={{ marginBottom: 16 }}>
+                    <Col xs={12} md={6}>
+                        <DashboardCard
+                            title="Viscorion"
+                            subtitle="Rafiansyah"
+                            status="ONLINE"
+                            statusColor="green"
+                            icon={<ExperimentOutlined />}
+                        />
+                    </Col>
+                    <Col xs={12} md={6}>
+                        <DashboardCard
+                            title="Chambers"
+                            subtitle="Rafiansyah"
+                            status="ONLINE"
+                            statusColor="green"
+                            icon={<LockOutlined />}
+                        />
+                    </Col>
+                    <Col xs={12} md={6}>
+                        <DashboardCard
+                            title="Moneypulate"
+                            subtitle="Rafiansyah"
+                            status="ONLINE"
+                            statusColor="green"
+                            icon={<DollarOutlined />}
+                        />
+                    </Col>
+                    <Col xs={12} md={6}>
+                        <DashboardCard
+                            title="Gallery"
+                            subtitle="Rafiansyah"
+                            status="OFFLINE"
+                            statusColor="red"
+                            icon={<DeploymentUnitOutlined />}
+                        />
+                    </Col>
+                    <Col xs={12} md={6}>
+                        <DashboardCard
+                            title="Lenscore"
+                            subtitle="Rafiansyah"
+                            status="ONLINE"
+                            statusColor="green"
+                            icon={<ScanOutlined />}
+                        />
+                    </Col>
+                </Row>
+            </motion.div>
 
             <div
                 style={{

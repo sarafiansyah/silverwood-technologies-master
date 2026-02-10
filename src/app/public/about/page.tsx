@@ -33,6 +33,7 @@ import FeatureCard from "@/components/Card/FeatureCard";
 import { teamMembers } from "@/lib/team";
 import { useGsapFadeUp } from "@/hooks/gsap/useFadeUpEntrance";
 import { useRef } from "react";
+import { ABOUT_DETAILS } from "@/constants/silverwood-about";
 
 const { Title, Paragraph, Text } = Typography;
 const { useBreakpoint } = Grid;
@@ -41,12 +42,13 @@ export default function AboutPage() {
     const aboutRef = useRef<HTMLDivElement>(null);
     const screens = useBreakpoint();
     const isMobile = screens.xs;
+    const aboutDetails = ABOUT_DETAILS[0];
 
     useGsapFadeUp(aboutRef as React.RefObject<HTMLElement>, {
         selector: ".about-line",
         y: 18,
         duration: 1.4,
-          delay: 0.5,
+        delay: 0.5,
     });
 
     return (
@@ -85,14 +87,10 @@ export default function AboutPage() {
                             className="about-line"
                             style={{ fontSize: isMobile ? 14 : 16 }}
                         >
-                            We build thoughtful digital experiences where design
-                            meets performance. Every detail is intentional,
-                            every interaction meaningful. No bloat, no
-                            nonsense—just elegant engineering.
+                            {aboutDetails}
                         </Paragraph>
 
                         <div className="about-line">
-                            {" "}
                             <Button
                                 type="primary"
                                 size={isMobile ? "middle" : "large"}
