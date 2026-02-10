@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 import { ConfigProvider, App as AntdApp, theme } from "antd";
 import type { ThemeConfig } from "antd";
 import { motion, AnimatePresence } from "framer-motion";
-
+import { SILVERWOOD_EXCLUDED_LAYOUT_ROUTES } from "@/constants/silverwood-excluded-routes";
 
 export default function ClientConditionalLayout({
     children,
@@ -21,7 +21,6 @@ export default function ClientConditionalLayout({
     const pathname = usePathname();
     const dispatch = useDispatch();
     const isDark = useSelector((state: RootState) => state.theme.isDark);
-    const excludedRoutes = ["/login", "/auth/loading"];
     const isLoggedIn = user.isAuthenticated || session?.user;
 
     const currentTheme: ThemeConfig = {
@@ -32,8 +31,15 @@ export default function ClientConditionalLayout({
         },
     };
 
+    const isExcluded = SILVERWOOD_EXCLUDED_LAYOUT_ROUTES.some((route) =>
+        pathname.startsWith(route),
+    );
+
     if (status === "loading") return null;
-    if (excludedRoutes.includes(pathname)) return <>{children}</>;
+    
+    if (isExcluded || !isLoggedIn) {
+        return <>{children}</>;
+    }
 
     if (isLoggedIn) {
         return (
