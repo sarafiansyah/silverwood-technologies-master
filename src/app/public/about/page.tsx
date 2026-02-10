@@ -31,36 +31,23 @@ import Image from "next/image";
 import SpecCard from "@/components/Card/SpecCard";
 import FeatureCard from "@/components/Card/FeatureCard";
 import { teamMembers } from "@/lib/team";
+import { useGsapFadeUp } from "@/hooks/gsap/useFadeUpEntrance";
+import { useRef } from "react";
 
 const { Title, Paragraph, Text } = Typography;
 const { useBreakpoint } = Grid;
 
-// const teamMembers = [
-//     {
-//         name: "Mahesa Rafiansyah",
-//         title: "CEO Founder",
-//         image: "/assets/images/members/rd01.png",
-//     },
-//     {
-//         name: "Stephanie Aurelianna",
-//         title: "President",
-//         image: "/assets/images/members/rd02.png",
-//     },
-//     {
-//         name: "Bryan Kusuma",
-//         title: "Vice President",
-//         image: "/assets/images/members/rd03.png",
-//     },
-//     {
-//         name: "Michelle Gervacia",
-//         title: "Head of Finance",
-//         image: "/assets/images/members/rd04.png",
-//     },
-// ];
-
 export default function AboutPage() {
+    const aboutRef = useRef<HTMLDivElement>(null);
     const screens = useBreakpoint();
     const isMobile = screens.xs;
+
+    useGsapFadeUp(aboutRef as React.RefObject<HTMLElement>, {
+        selector: ".about-line",
+        y: 18,
+        duration: 1.4,
+          delay: 0.5,
+    });
 
     return (
         <>
@@ -76,24 +63,43 @@ export default function AboutPage() {
                     style={{ minHeight: isMobile ? "60vh" : "70vh" }}
                 >
                     {/* LEFT: TEXT */}
-                    <Col xs={24} md={12} order={isMobile ? 2 : 1}>
-                        <Title level={isMobile ? 3 : 2}>
+                    <Col
+                        xs={24}
+                        md={12}
+                        order={isMobile ? 2 : 1}
+                        ref={aboutRef}
+                    >
+                        <Text
+                            className="about-line"
+                            strong
+                            style={{
+                                display: "block",
+                                fontSize: isMobile ? 20 : 28,
+                                marginBottom: 12,
+                            }}
+                        >
                             About Our Product
-                        </Title>
+                        </Text>
 
-                        <Paragraph style={{ fontSize: isMobile ? 14 : 16 }}>
+                        <Paragraph
+                            className="about-line"
+                            style={{ fontSize: isMobile ? 14 : 16 }}
+                        >
                             We build thoughtful digital experiences where design
                             meets performance. Every detail is intentional,
                             every interaction meaningful. No bloat, no
                             nonsense—just elegant engineering.
                         </Paragraph>
 
-                        <Button
-                            type="primary"
-                            size={isMobile ? "middle" : "large"}
-                        >
-                            Learn More
-                        </Button>
+                        <div className="about-line">
+                            {" "}
+                            <Button
+                                type="primary"
+                                size={isMobile ? "middle" : "large"}
+                            >
+                                Learn More
+                            </Button>
+                        </div>
                     </Col>
 
                     {/* RIGHT: IMAGE */}

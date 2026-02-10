@@ -1,6 +1,6 @@
 "use client"; // Required for client-side components in Next.js App Router
 
-import React from "react";
+import React, { useMemo } from "react";
 import {
     Layout,
     Card,
@@ -22,11 +22,18 @@ import {
     DeploymentUnitOutlined,
     ScanOutlined,
 } from "@ant-design/icons";
+import { motion, Variants } from "framer-motion";
 import type { ColumnsType } from "antd/es/table";
 import type { RootState } from "@/store/redux/store";
 import { useSelector } from "react-redux";
 import DashboardCard from "@/components/Card/DashboardCard";
 import SystemVersionCard from "@/components/Card/SystemVersionCard";
+import {
+    GREETINGS_HEADLINE,
+    GREETINGS_SUBTITLE,
+} from "@/constants/silverwood-dashboard";
+import { GradualSpacing } from "@/components/Typography/Animations/GradualSpacing";
+import { StaggeredFade } from "@/components/Typography/Animations/StaggeredFade";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { Title, Paragraph, Text } = Typography;
@@ -79,6 +86,35 @@ const MainLayout: React.FC = () => {
 
     const lastName = useSelector((state: RootState) => state.user.lastName);
 
+    const greetingText = useMemo(() => {
+        const pick =
+            GREETINGS_HEADLINE[
+                Math.floor(Math.random() * GREETINGS_HEADLINE.length)
+            ];
+
+        return `${pick},${firstName ? ` ${firstName}` : ""}!`;
+    }, [firstName]);
+
+    const subtitleText = GREETINGS_SUBTITLE[0];
+
+const fadeUp: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 12,          // less distance = softer feel
+    filter: "blur(6px)",
+  },
+  show: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      delay: 5 + i * 0.35,          // keep your late start
+      duration: 1.6,                // softer ≠ longer, just smoother
+      ease: [0.33, 1, 0.68, 1],     // gentle deceleration curve
+    },
+  }),
+};
+
     return (
         <>
             <Row gutter={[24, 24]} style={{ marginBottom: 16 }}>
@@ -127,26 +163,28 @@ const MainLayout: React.FC = () => {
                                 gap: screens.xs ? 4 : 6,
                             }}
                         >
-                            <span
+                            <GradualSpacing
+                                text={greetingText}
                                 style={{
                                     fontSize: screens.xs ? 16 : 20,
                                     fontWeight: 600,
-                                    letterSpacing: 0.2,
+                                    letterSpacing: -3.8,
+                                    opacity: 0.8,
+                                    color: "white",
                                 }}
-                            >
-                                Welcome{firstName ? ` ${firstName}` : ""}!
-                            </span>
+                            />
 
-                            <span
+                            <StaggeredFade
+                                text={subtitleText}
                                 style={{
                                     fontSize: screens.xs ? 10 : 15,
                                     lineHeight: 1.4,
                                     opacity: 0.9,
                                     maxWidth: "80%",
+                                    color: "white",
+                                    textAlign: "left",
                                 }}
-                            >
-                             Click and scroll through the universe of Silverwood and have a wonderful day!
-                            </span>
+                            />
                         </div>
                     </Card>
                 </Col>
@@ -178,7 +216,13 @@ const MainLayout: React.FC = () => {
                 />
             </div>
 
-            <Row gutter={[12, 12]} style={{ marginBottom: 16 }}>
+
+   <motion.div
+        variants={fadeUp}
+        initial="hidden"
+        animate="show"
+
+      >   <Row gutter={[12, 12]} style={{ marginBottom: 16 }}>
                 <Col xs={12} md={6}>
                     <DashboardCard
                         title="Viscorion"
@@ -215,7 +259,7 @@ const MainLayout: React.FC = () => {
                         icon={<DeploymentUnitOutlined />}
                     />
                 </Col>
-                   <Col xs={12} md={6}>
+                <Col xs={12} md={6}>
                     <DashboardCard
                         title="Lenscore"
                         subtitle="Rafiansyah"
@@ -224,7 +268,8 @@ const MainLayout: React.FC = () => {
                         icon={<ScanOutlined />}
                     />
                 </Col>
-            </Row>
+            </Row></motion.div>
+         
 
             <div
                 style={{
