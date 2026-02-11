@@ -11,6 +11,7 @@
     "dependencies": {
         "@ant-design/icons": "^6.1.0",
         "@ant-design/plots": "^2.6.5",
+        "@google/generative-ai": "^0.24.1",
         "@reduxjs/toolkit": "^2.10.1",
         "@supabase/ssr": "^0.8.0",
         "@supabase/supabase-js": "^2.93.3",
@@ -29,6 +30,7 @@
         "react": "^19.2.3",
         "react-dom": "^19.2.3",
         "react-hook-form": "^7.66.0",
+        "react-markdown": "^10.1.0",
         "react-redux": "^9.2.0",
         "redux-persist": "^6.0.0",
         "tesseract.js": "^7.0.0",
