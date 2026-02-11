@@ -10,6 +10,8 @@ import {
     ThunderboltOutlined,
     ScanOutlined,
     DeploymentUnitOutlined,
+    BulbOutlined,
+    CoffeeOutlined,
 } from "@ant-design/icons";
 
 export interface MenuItemType {
@@ -150,11 +152,43 @@ export const MenuItems: MenuItemType[] = [
                 icon: <DeploymentUnitOutlined />,
                 path: "/playground/ar-ruler",
             },
-              {
+            {
                 key: "experimental",
                 label: "DB Connect",
                 icon: <DeploymentUnitOutlined />,
                 path: "/playground/db-connect",
+            },
+        ],
+    },
+    {
+        key: "foodster",
+        label: "Foodster",
+        icon: <CoffeeOutlined />,
+        children: [
+            {
+                key: "foodster1",
+                label: "Silverfoods",
+                icon: <CoffeeOutlined />,
+                path: "/foodster/resto-01",
+            },
+        ],
+    },
+    {
+        key: "genAi",
+        label: "Generative AI",
+        icon: <BulbOutlined />,
+        children: [
+            {
+                key: "genAi1",
+                label: "Gemini Search",
+                icon: <BulbOutlined />,
+                path: "/generative-ai/gemini-search",
+            },
+            {
+                key: "genAi2",
+                label: "GPT Search",
+                icon: <BulbOutlined />,
+                path: "/generative-ai/gpt-search",
             },
         ],
     },

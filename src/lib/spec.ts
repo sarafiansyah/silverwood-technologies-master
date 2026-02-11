@@ -63,6 +63,7 @@ export const specData: SpecSection[] = [
         title: "Additional Features",
         icon: DeploymentUnitOutlined,
         rows: [
+            ["Generative AI", "Google AI Studio"],
             ["Excel Export", "xlsx"],
             ["PDF Export", "jsPDF"],
             ["HTML Capture", "html2canvas"],

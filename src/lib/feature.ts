@@ -30,6 +30,7 @@ export const featureGroups: FeatureGroup[] = [
             "Available online via Vercel",
             "No database connections",
             "Tutorial Notifications",
+            "AI Integrated search features",
             "Interactive settings",
         ],
     },
@@ -63,13 +64,16 @@ export const featureGroups: FeatureGroup[] = [
             "Private & public access",
         ],
     },
-       {
+    {
         icon: SafetyOutlined,
         tagColor: "cyan",
         tagLabel: "RD Lenscore",
-        items: [
-            "OCR / Text Scanner",
-            "QR & Barcode Scanner",
-        ],
+        items: ["OCR / Text Scanner", "QR & Barcode Scanner"],
+    },
+    {
+        icon: SafetyOutlined,
+        tagColor: "pink",
+        tagLabel: "RD Foodster",
+        items: ["Google Drive integration", "AI Generated food details"],
     },
 ];
