@@ -15,8 +15,14 @@ import {
     Button,
     Grid,
     Typography,
+    Space,
 } from "antd";
-import { ReloadOutlined } from "@ant-design/icons";
+import {
+    ClockCircleOutlined,
+    EnvironmentOutlined,
+    ReloadOutlined,
+    ShopOutlined,
+} from "@ant-design/icons";
 import {
     parseFilename,
     ParsedMenu,
@@ -40,14 +46,38 @@ export default function DriveGallery() {
     const [modalOpen, setModalOpen] = useState(false);
     const [aiLoading, setAiLoading] = useState(false);
     const [aiError, setAiError] = useState("");
+    const headerItem = items.find((i) => i.type === "header");
 
-    const foods = items.filter((i) => i.type.toLowerCase().includes("food"));
+    const groupedItems = items.reduce<Record<string, ParsedMenu[]>>(
+        (acc, item) => {
+            const key = item.type?.trim() || "other";
 
-    const drinks = items.filter((i) => i.type.toLowerCase().includes("drink"));
+            if (!acc[key]) acc[key] = [];
+            acc[key].push(item);
+
+            return acc;
+        },
+        {},
+    );
+
+    const sortedGroupEntries = Object.entries(groupedItems)
+        .filter(([key]) => key.toLowerCase() !== "header") // 👈 hide RESTO group
+        .sort(([a], [b]) => {
+            const A = a.toLowerCase();
+            const B = b.toLowerCase();
+
+            if (A === "food") return -1;
+            if (B === "food") return 1;
+
+            if (A === "drink") return 1;
+            if (B === "drink") return -1;
+
+            return B.localeCompare(A);
+        });
+
     const [loading, setLoading] = useState(true);
     const screens = useBreakpoint();
     const isXs = screens.xs;
-
     const [result, setResult] = useState("");
 
     const loadImages = useCallback(async () => {
@@ -61,6 +91,15 @@ export default function DriveGallery() {
             parsed.sort((a, b) => a.price - b.price);
 
             setItems(parsed);
+
+            const groupedItems = items
+                .filter((i) => i.type !== "header")
+                .reduce<Record<string, ParsedMenu[]>>((acc, item) => {
+                    const key = item.type || "other";
+                    if (!acc[key]) acc[key] = [];
+                    acc[key].push(item);
+                    return acc;
+                }, {});
         } catch (err) {
             console.error("Failed loading images", err);
             setItems([]);
@@ -105,38 +144,41 @@ export default function DriveGallery() {
         );
     }
 
-const runGeminiSearch = async (raw: string) => {
-    setAiLoading(true);
-    setAiError(""); // reset error
-    setResult("");  // reset old result
+    const runGeminiSearch = async (raw: string) => {
+        setAiLoading(true);
+        setAiError(""); // reset error
+        setResult(""); // reset old result
 
-    const smartQuery = `jawab dengan singkat dalam satu baris apa isian dan bagaimana rasa ${raw}`;
+        const smartQuery = `jawab dengan singkat dalam satu baris apa isian dan bagaimana rasa ${raw}`;
 
-    try {
-        const res = await fetch("/api/generative-ai/gemini-integration", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ query: smartQuery }),
-        });
+        try {
+            const res = await fetch("/api/generative-ai/gemini-integration", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ query: smartQuery }),
+            });
 
-        if (res.ok) { // status 200-299
-            const data = await res.json();
-            setResult(data.text || "AI didn't say anything...");
-        } else if (res.status >= 500) { // server error
-            setAiError("AI got hungry and dropped the spoon. Try again later.");
-        } else { // other errors like 400
-            setAiError(`Something went wrong (status: ${res.status})`);
+            if (res.ok) {
+                // status 200-299
+                const data = await res.json();
+                setResult(data.text || "AI didn't say anything...");
+            } else if (res.status >= 500) {
+                // server error
+                setAiError(
+                    "AI got hungry and dropped the spoon. Try again later.",
+                );
+            } else {
+                // other errors like 400
+                setAiError(`Something went wrong (status: ${res.status})`);
+            }
+        } catch (e) {
+            setAiError("Network error or AI got distracted. Try again.");
+        } finally {
+            setAiLoading(false);
         }
-
-    } catch (e) {
-        setAiError("Network error or AI got distracted. Try again.");
-    } finally {
-        setAiLoading(false);
-    }
-};
-
+    };
 
     const handleCardClick = (item: ParsedMenu) => {
         setSelectedItem(item);
@@ -145,310 +187,262 @@ const runGeminiSearch = async (raw: string) => {
         runGeminiSearch(item.displayName);
     };
 
-const openDetail = (item: ParsedMenu) => {
-    if (!item.available) return;
+    const openDetail = (item: ParsedMenu) => {
+        if (!item.available) return;
 
-    setSelectedItem(item);
-    setModalOpen(true);
+        setSelectedItem(item);
+        setModalOpen(true);
 
-    // reset AI panel
-    setResult("");
-    setAiLoading(false);
-      setAiError(""); 
-};
+        // reset AI panel
+        setResult("");
+        setAiLoading(false);
+        setAiError("");
+    };
 
-const handleAiSearch = () => {
-    if (!selectedItem) return;
-    runGeminiSearch(selectedItem.displayName);
-};
-
+    const handleAiSearch = () => {
+        if (!selectedItem) return;
+        runGeminiSearch(selectedItem.displayName);
+    };
 
     return (
         <Row gutter={[16, 16]}>
             <Col span={24}>
-                <Card
-                    title={
-                        <Row justify="space-between" align="middle">
-                            <Col>
-                                <span
+                {headerItem && (
+                    <Card
+                        hoverable
+                        style={{
+                            width: "100%",
+                            borderRadius: 16,
+                            overflow: "hidden",
+                            padding: 0,
+                        }}
+               styles={{ body: { padding: 0 } }}
+                    >
+                        <div
+                            style={{
+                                position: "relative",
+                                width: "100%",
+                                height: 260,
+                            }}
+                        >
+                            <Image
+                                src={headerItem.url}
+                                alt={headerItem.displayName}
+                                fill
+                                style={{ objectFit: "cover" }}
+                                sizes="100vw"
+                            />
+<Button
+  type="text"
+  icon={<ReloadOutlined />}
+  onClick={loadImages}
+  style={{
+    position: "absolute",
+    top: 12,
+    right: 12,
+    zIndex: 2,
+    color: "#000000",
+    background: "rgb(255, 255, 255)",
+    borderRadius: "50%",
+    backdropFilter: "blur(6px)",
+  }}
+/>
+
+                            <div
+                                style={{
+                                    position: "absolute",
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    padding: 16,
+                                    background:
+                                        "linear-gradient(to top, rgba(0,0,0,0.80), rgba(0,0,0,0.20))",
+                                    color: "#fff",
+                                }}
+                            >
+                                <Text style={{ color: "#fff", fontSize: isXs? 16:20 }}>
+                                    {headerItem.displayName}
+                                </Text>
+
+                                <Space size={8} orientation="horizontal" wrap>
+                                    <Space size={6}>
+                                        <ShopOutlined />
+                                        <Text style={{ color: "#e6e6e6", fontSize: isXs? 14:16}}>
+                                            {headerItem.contactNumber}
+                                        </Text>
+                                    </Space>
+                                    <Space size={6}>
+                                        <ClockCircleOutlined />
+                                        <Text style={{ color: "#e6e6e6",fontSize: isXs? 14:16 }}>
+                                            {headerItem.openHours}
+                                        </Text>
+                                    </Space>
+                                </Space>
+                                <Space size={0} orientation="vertical">
+                                    <Space size={6}>
+                                        <EnvironmentOutlined />
+                                        <Text style={{ color: "#e6e6e6",fontSize: isXs? 14:16 }}>
+                                            {headerItem.address}
+                                        </Text>
+                                    </Space>
+                                </Space>
+                            </div>
+                        </div>
+                    </Card>
+                )}
+
+                {sortedGroupEntries.map(([groupName, groupItems]) => (
+                    <div key={groupName}>
+                        {/* HEADER */}
+                        <div
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                padding: "0 8px",
+                                marginBottom: 0,
+                                marginTop: 20,
+                                width: "100%",
+                            }}
+                        >
+                            <Text
+                                strong
+                                style={{
+                                    fontSize: screens.xs ? 14 : 16,
+                                    marginRight: 10,
+                                    whiteSpace: "nowrap",
+                                    textTransform: "uppercase",
+                                }}
+                            >
+                                {groupName}
+                            </Text>
+
+                            {screens.xs && (
+                                <div
                                     style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gap: 8,
-                                        fontSize: screens.xs ? "12px" : "15px",
-                                        fontWeight: 600,
+                                        height: 1,
+                                        background: "#c7c7c7",
+                                        flex: 1,
                                     }}
-                                >
-                                    Menu From Drive
-                                    <Tag color="magenta">LIVE</Tag>
-                                </span>
-                            </Col>
-                            <Col>
-                                <Button
-                                    type="text"
-                                    icon={<ReloadOutlined />}
-                                    onClick={loadImages}
                                 />
-                            </Col>
+                            )}
+                        </div>
+
+                        {/* GRID */}
+                        <Row
+                            gutter={[12, 12]}
+                            style={{ marginTop: 10, marginBottom: 20 }}
+                        >
+                            {groupItems.map((item) => (
+                                <Col
+                                    key={item.id}
+                                    xs={12}
+                                    sm={12}
+                                    md={8}
+                                    lg={6}
+                                    xl={6}
+                                >
+                                    <Card
+                                        onClick={() => openDetail(item)}
+                                        hoverable
+                                        style={{
+                                            borderRadius: 16,
+                                            overflow: "hidden",
+                                            boxShadow:
+                                                "0 4px 12px rgba(0,0,0,0.08)",
+                                            transition: "all .25s ease",
+                                            opacity: item.available ? 1 : 0.65,
+                                        }}
+                                        bodyStyle={{ padding: isXs ? 10 : 14 }}
+                                        cover={
+                                            <div
+                                                style={{
+                                                    cursor: item.available
+                                                        ? "pointer"
+                                                        : "not-allowed",
+                                                    overflow: "hidden",
+                                                }}
+                                            >
+                                                <Image
+                                                    src={item.url}
+                                                    alt={item.displayName}
+                                                    width={400}
+                                                    height={isXs ? 130 : 180}
+                                                    style={{
+                                                        width: "100%",
+                                                        height: isXs
+                                                            ? 130
+                                                            : 180,
+                                                        objectFit: "cover",
+                                                    }}
+                                                />
+                                            </div>
+                                        }
+                                    >
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                gap: isXs ? 4 : 6,
+                                            }}
+                                        >
+                                            <Text
+                                                strong
+                                                style={{
+                                                    fontSize: isXs ? 12 : 15,
+                                                }}
+                                            >
+                                                {item.displayName.length > 15
+                                                    ? item.displayName.slice(
+                                                          0,
+                                                          17,
+                                                      ) + "…"
+                                                    : item.displayName}
+                                            </Text>
+
+                                            <Text
+                                                type="success"
+                                                style={{
+                                                    fontSize: isXs ? 12 : 14,
+                                                }}
+                                            >
+                                                Rp {formatRupiah(item.price)}
+                                            </Text>
+
+                                            <Tag
+                                                color={
+                                                    item.available
+                                                        ? "green"
+                                                        : "red"
+                                                }
+                                                style={{
+                                                    fontSize: isXs ? 10 : 14,
+                                                }}
+                                            >
+                                                {item.available
+                                                    ? "Available"
+                                                    : "Empty"}
+                                            </Tag>
+                                        </div>
+                                    </Card>
+                                </Col>
+                            ))}
                         </Row>
-                    }
+                    </div>
+                ))}
+
+                <div
                     style={{
-                        borderRadius: 16,
-                        width: "100%",
-                        boxShadow: "0 10px 30px rgba(0,0,0,0.06)",
-                    }}
-                    styles={{
-                        body: { padding: 10 },
+                        borderTop: "1px solid #f0f0f0",
+                        paddingTop: 10,
+                        marginTop: 20,
+                        textAlign: "right",
+                        fontSize: 11,
+                        fontStyle: "italic",
+                        opacity: 0.7,
                     }}
                 >
-                    {/* FOODS */}
-                    <div
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            padding: "0 10px",
-                            marginBottom: 12,
-                            width: "100%",
-                        }}
-                    >
-                        <Text
-                            strong
-                            style={{
-                                fontSize: screens.xs ? 14 : 16,
-                                marginRight: 10,
-                                whiteSpace: "nowrap",
-                            }}
-                        >
-                            FOODS
-                        </Text>
-
-                        {screens.xs && (
-                            <div
-                                style={{
-                                    height: 1,
-                                    background: "#c7c7c7",
-                                    flex: 1,
-                                }}
-                            />
-                        )}
-                    </div>
-
-                    <Row gutter={[12, 12]} style={{ marginTop: 12 }}>
-                        {foods.map((item) => (
-                            <Col
-                                key={item.id}
-                                xs={12}
-                                sm={12}
-                                md={8}
-                                lg={6}
-                                xl={6}
-                            >
-                                <Card
-                                   onClick={() => openDetail(item)}
-                                    hoverable
-                                    style={{
-                                        borderRadius: 16,
-                                        overflow: "hidden",
-                                        boxShadow:
-                                            "0 4px 12px rgba(0,0,0,0.08)",
-
-                                        transition: "all .25s ease",
-                                        opacity: item.available ? 1 : 0.65,
-                                    }}
-                                    bodyStyle={{
-                                        padding: isXs ? 10 : 14,
-                                    }}
-                                    cover={
-                                        <div
-                                            style={{
-                                                cursor: item.available
-                                                    ? "pointer"
-                                                    : "not-allowed",
-                                                overflow: "hidden",
-                                            }}
-                                        >
-                                            <Image
-                                                src={item.url}
-                                                alt={item.displayName}
-                                                width={400}
-                                                height={isXs ? 130 : 180}
-                                                style={{
-                                                    width: "100%",
-                                                    height: isXs ? 130 : 180,
-                                                    objectFit: "cover",
-                                                }}
-                                            />
-                                        </div>
-                                    }
-                                >
-                                    <div
-                                        style={{
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            gap: isXs ? 4 : 6,
-                                        }}
-                                    >
-                                        <Text
-                                            strong
-                                            style={{ fontSize: isXs ? 12 : 15 }}
-                                        >
-                                            {item.displayName}
-                                        </Text>
-
-                                        <Text
-                                            type="success"
-                                            style={{ fontSize: isXs ? 12 : 14 }}
-                                        >
-                                            Rp {formatRupiah(item.price)}
-                                        </Text>
-
-                                        <Tag
-                                            color={
-                                                item.available ? "green" : "red"
-                                            }
-                                            style={{ fontSize: isXs ? 10 : 14 }}
-                                        >
-                                            {item.available
-                                                ? "Available"
-                                                : "Empty"}
-                                        </Tag>
-                                    </div>
-                                </Card>
-                            </Col>
-                        ))}
-                    </Row>
-
-                    {/* DRINKS */}
-                    <div
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            padding: "0 10px",
-                            marginBottom: 12,
-                            marginTop: 20,
-                            width: "100%",
-                        }}
-                    >
-                        <Text
-                            strong
-                            style={{
-                                fontSize: screens.xs ? 14 : 16,
-                                marginRight: 10,
-                                whiteSpace: "nowrap",
-                            }}
-                        >
-                            DRINKS
-                        </Text>
-
-                        {screens.xs && (
-                            <div
-                                style={{
-                                    height: 1,
-                                    background: "#c7c7c7",
-                                    flex: 1,
-                                }}
-                            />
-                        )}
-                    </div>
-
-                    <Row gutter={[12, 12]} style={{ marginTop: 12 }}>
-                        {drinks.map((item) => (
-                            <Col
-                                key={item.id}
-                                xs={12}
-                                sm={12}
-                                md={8}
-                                lg={6}
-                                xl={6}
-                            >
-                                <Card
-                                 onClick={() => openDetail(item)}
-                                    hoverable
-                                    style={{
-                                        borderRadius: 16,
-                                        overflow: "hidden",
-                                        boxShadow:
-                                            "0 4px 12px rgba(0,0,0,0.08)",
-                                        transition: "all .25s ease",
-                                        opacity: item.available ? 1 : 0.65,
-                                    }}
-                                    bodyStyle={{
-                                        padding: isXs ? 10 : 14,
-                                    }}
-                                    cover={
-                                        <div
-                                            style={{
-                                                cursor: item.available
-                                                    ? "pointer"
-                                                    : "not-allowed",
-                                                overflow: "hidden",
-                                            }}
-                                        >
-                                            <Image
-                                                src={item.url}
-                                                alt={item.displayName}
-                                                width={400}
-                                                height={isXs ? 130 : 180}
-                                                style={{
-                                                    width: "100%",
-                                                    height: isXs ? 130 : 180,
-                                                    objectFit: "cover",
-                                                }}
-                                            />
-                                        </div>
-                                    }
-                                >
-                                    <div
-                                        style={{
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            gap: isXs ? 4 : 6,
-                                        }}
-                                    >
-                                        <Text
-                                            strong
-                                            style={{ fontSize: isXs ? 12 : 15 }}
-                                        >
-                                            {item.displayName}
-                                        </Text>
-
-                                        <Text
-                                            type="success"
-                                            style={{ fontSize: isXs ? 12 : 14 }}
-                                        >
-                                            Rp {formatRupiah(item.price)}
-                                        </Text>
-
-                                        <Tag
-                                            color={
-                                                item.available ? "green" : "red"
-                                            }
-                                            style={{ fontSize: isXs ? 10 : 14 }}
-                                        >
-                                            {item.available
-                                                ? "Available"
-                                                : "Empty"}
-                                        </Tag>
-                                    </div>
-                                </Card>
-                            </Col>
-                        ))}
-                    </Row>
-
-                    <div
-                        style={{
-                            borderTop: "1px solid #f0f0f0",
-                            paddingTop: 10,
-                            marginTop: 20,
-                            textAlign: "right",
-                            fontSize: 11,
-                            fontStyle: "italic",
-                            opacity: 0.7,
-                        }}
-                    >
-                        Integrated with Rafiansyah Foodster
-                    </div>
-                </Card>
+                    Integrated with Rafiansyah Foodster
+                </div>
             </Col>
             <AnimatedModal
                 open={modalOpen}
@@ -487,18 +481,38 @@ const handleAiSearch = () => {
 
                         <Text type="secondary">Type: {selectedItem.type}</Text>
 
-<Text type="secondary">Need Details?</Text>
+                        <Text type="secondary">Need Details?</Text>
 
-{!result && !aiLoading && (
-    <Button type="primary" onClick={handleAiSearch}>
-        SEARCH AI
-    </Button>
-)}
-{aiError && (
-    <Text type="danger" style={{ marginTop: 8 }}>
-        {aiError}
-    </Text>
-)}
+                        {/* BUTTON */}
+                        {!aiLoading && !result && (
+                            <Button type="primary" onClick={handleAiSearch}>
+                                SEARCH AI
+                            </Button>
+                        )}
+
+                        {/* LOADING */}
+                        {aiLoading && (
+                            <div style={{ marginTop: 16 }}>
+                                <Spin />
+                            </div>
+                        )}
+
+                        {/* RESULT */}
+                        {!aiLoading && result && (
+                            <div style={{ marginTop: -10 }}>
+                                <ReactMarkdown>{result}</ReactMarkdown>
+                            </div>
+                        )}
+
+                        {/* ERROR */}
+                        {aiError && (
+                            <Text
+                                type="danger"
+                                style={{ marginTop: 8, display: "block" }}
+                            >
+                                {aiError}
+                            </Text>
+                        )}
                     </div>
                 )}
             </AnimatedModal>
