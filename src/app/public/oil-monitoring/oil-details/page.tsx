@@ -1,165 +1,132 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import { Card, Spin, Empty, Row, Col, Tag, Button, Grid } from "antd";
-import { ReloadOutlined } from "@ant-design/icons";
+import { Typography } from "antd";
+import ArticleCard from "@/components/Card/ArticleCard"; // the card we made
+import { FC } from "react";
 
-type DriveImage = {
-    id: string;
-    url: string;
-    name: string;
+const { Title } = Typography;
+
+interface Article {
+    title: string;
+    description: string;
+    imageUrl: string;
+    tags?: string[];
+}
+
+const articleSection01: Article[] = [
+    {
+        title: "Exploring",
+        description:
+            "Umumnya, Yamaha menyarankan untuk mengganti oli mesin setiap 2.000 hingga 3.000 kilometer, tergantung pada jenis oli yang digunakan dan kondisi berkendara. ",
+        imageUrl: "/assets/images/viscorion/viscorion-logo01.svg",
+        tags: ["Yamaha Indonesia"],
+    },
+    {
+        title: "Mastering Ant Design Components",
+        description:
+            "Untuk motor yang jarak tempuhnya 20-50 km sehari dapat dilakukan ganti oli setiap 2 bulan sekali. Hal ini dilakukan agar kondisi motor dapat lebih prima saat digunakan pada aktivitas sehari-hari.",
+        imageUrl: "/assets/images/viscorion/viscorion-logo01.svg",
+        tags: ["Honda Indonesia"],
+    },
+      {
+        title: "Mastering Ant Design Components",
+        description:
+            "Oli sintetis jadi pilihan cerdas karena bahannya lebih stabil secara kimia, sehingga tidak mudah rusak akibat oksidasi. interval ganti olinya juga lebih panjang, bisa bertahan hingga 6-12 bulan.",
+        imageUrl: "/assets/images/viscorion/viscorion-logo01.svg",
+        tags: ["Suzuki Indonesia"],
+    },
+];
+
+const articleSection02: Article[] = [
+    {
+        title: "Exploring",
+        description:
+            "Learn how to write cleaner, faster React apps using hooks, suspense, and concurrent mode.",
+        imageUrl: "/assets/images/viscorion/viscorion-logo01.svg",
+        tags: ["Honda"],
+    },
+    {
+        title: "Mastering Ant Design Components",
+        description:
+            "A deep dive into Ant Design components and how to customize them for modern web apps.",
+        imageUrl: "/assets/images/viscorion/viscorion-logo01.svg",
+        tags: ["UI", "Design", "AntD"],
+    },
+];
+
+const articleSection03: Article[] = [
+    {
+        title: "Exploring",
+        description:
+            "Learn how to write cleaner, faster React apps using hooks, suspense, and concurrent mode.",
+        imageUrl: "/assets/images/viscorion/viscorion-logo01.svg",
+        tags: ["Shell Indonesia"],
+    },
+    {
+        title: "Mastering Ant Design Components",
+        description:
+            "A deep dive into Ant Design components and how to customize them for modern web apps.",
+        imageUrl: "/assets/images/viscorion/viscorion-logo01.svg",
+        tags: ["UI", "Design", "AntD"],
+    },
+];
+
+interface ArticleSectionProps {
+    heading: string;
+    articles: Article[];
+}
+
+const ArticleSection: FC<ArticleSectionProps> = ({ heading, articles }) => (
+    <div
+        style={{
+            marginBottom: 48,
+            display: "flex",
+            flexDirection: "column",
+            gap: 24,
+        }}
+    >
+        <Title level={2} style={{ textAlign: "center", marginBottom: 32 }}>
+            {heading}
+        </Title>
+        {articles.map((article) => (
+            <ArticleCard
+                key={article.title}
+                title={article.title}
+                description={article.description}
+                imageUrl={article.imageUrl}
+                tags={article.tags}
+                onClick={() => console.log("Clicked:", article.title)}
+            />
+        ))}
+    </div>
+);
+
+const ArticlesPage: FC = () => {
+    return (
+        <div
+            style={{
+                padding: 20,
+                maxWidth: 1200,
+                margin: "0 auto",
+                display: "flex",
+                flexDirection: "column",
+                gap: 48,
+            }}
+        >
+            <ArticleSection
+                heading="When to change engine oil?"
+                articles={articleSection01}
+            />
+            <ArticleSection
+                heading="When to change gear oil?"
+                articles={articleSection02}
+            />
+            <ArticleSection
+                heading="Oil Viscosity"
+                articles={articleSection03}
+            />
+        </div>
+    );
 };
 
-const { useBreakpoint } = Grid;
-
-export default function DriveGallery() {
-    const [images, setImages] = useState<DriveImage[]>([]);
-    const [loading, setLoading] = useState(true);
-    const router = useRouter();
-    const screens = useBreakpoint();
-
-    useEffect(() => {
-        fetch("/api/chambers/private-chamber")
-            .then((r) => r.json())
-            .then((data: DriveImage[]) => {
-                setImages(data);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    }, []);
-
-    if (loading) {
-        return (
-            <div
-                style={{
-                    width: "100%",
-                    minHeight: "40vh",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}
-            >
-                <Spin size="large" />
-            </div>
-        );
-    }
-
-    if (!images.length) {
-        return (
-            <div
-                style={{
-                    width: "100%",
-                    minHeight: "40vh",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}
-            >
-                <Empty description="No images found in Google Drive" />
-            </div>
-        );
-    }
-
-    return (
-        <Row gutter={[16, 16]}>
-            <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                <Card
-                    title={
-                        <Row justify="space-between" align="middle">
-                            <Col>
-                                <span
-                                    style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gap: 8,
-                                        fontSize: screens.xs ? "10px" : "14px",
-                                    }}
-                                >
-                                    Chamber Contents{" "}
-                                    <Tag
-                                        color="red"
-                                        style={{
-                                            gap: 8,
-                                            fontSize: screens.xs
-                                                ? "10px"
-                                                : "12px",
-                                        }}
-                                    >
-                                        PRIVATE
-                                    </Tag>
-                                </span>
-                            </Col>
-                            <Col>
-                                <Button
-                                    type="text"
-                                    icon={<ReloadOutlined />}
-                                    onClick={() =>
-                                        console.log("Refresh clicked")
-                                    }
-                                />
-                            </Col>
-                        </Row>
-                    }
-                    style={{
-                        borderRadius: 12,
-                        overflow: "hidden",
-                        width: "100%",
-                    }}
-                    styles={{
-                        body: { padding: 16 },
-                    }}
-                >
-                    <div
-                        style={{
-                            display: "grid",
-                            gap: 16,
-                            gridTemplateColumns:
-                                "repeat(auto-fit, minmax(200px, 1fr))",
-                        }}
-                    >
-                        {images.map((img) => (
-                            <div
-                                key={img.id}
-                                style={{
-                                    cursor: "pointer",
-                                    padding: 8, // ← this is the clean “gap”
-                                }}
-                                onClick={() => window.open(img.url, "_blank")}
-                            >
-                                <Image
-                                    src={img.url}
-                                    alt={img.name}
-                                    width={500}
-                                    height={250}
-                                    style={{
-                                        width: "100%",
-                                        height: "auto",
-                                        maxHeight: 300,
-                                        objectFit: "cover",
-                                        borderRadius: 8,
-                                        transition: "transform 0.3s ease", // smooth zoom
-                                    }}
-                                    className="hover-zoom"
-                                />
-                            </div>
-                        ))}
-                    </div>
-                    <div
-                        style={{
-                            borderTop: "1px solid #f0f0f0",
-                            paddingTop: 8,
-                            textAlign: "right",
-                            fontSize: 10,
-                            fontStyle: "italic",
-                        }}
-                    >
-                        Integrated with Google Drive
-                    </div>
-                </Card>
-            </Col>
-        </Row>
-    );
-}
+export default ArticlesPage;
