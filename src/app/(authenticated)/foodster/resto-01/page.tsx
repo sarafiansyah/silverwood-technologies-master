@@ -60,20 +60,21 @@ export default function DriveGallery() {
         {},
     );
 
-    const sortedGroupEntries = Object.entries(groupedItems)
-        .filter(([key]) => key.toLowerCase() !== "header") // 👈 hide RESTO group
-        .sort(([a], [b]) => {
-            const A = a.toLowerCase();
-            const B = b.toLowerCase();
+const sortedGroupEntries = Object.entries(groupedItems)
+    .filter(([key]) => key.toLowerCase() !== "header") // hide RESTO group
+    .sort(([a], [b]) => {
+        const A = a.toLowerCase();
+        const B = b.toLowerCase();
 
-            if (A === "food") return -1;
-            if (B === "food") return 1;
+        if (A === "foods") return -1; // Foods always first
+        if (B === "foods") return 1;
 
-            if (A === "drink") return 1;
-            if (B === "drink") return -1;
+        if (A === "drinks") return 1;  // Drinks after Foods
+        if (B === "drinks") return -1;
 
-            return B.localeCompare(A);
-        });
+        return A.localeCompare(B); // everything else alphabetically
+    });
+
 
     const [loading, setLoading] = useState(true);
     const screens = useBreakpoint();
@@ -383,6 +384,7 @@ export default function DriveGallery() {
                                                 display: "flex",
                                                 flexDirection: "column",
                                                 gap: isXs ? 4 : 6,
+                                                marginTop:-6
                                             }}
                                         >
                                             <Text
@@ -449,6 +451,7 @@ export default function DriveGallery() {
                 onClose={() => setModalOpen(false)}
                 width={isXs ? 300 : 640}
                 title={selectedItem?.displayName}
+                
             >
                 {selectedItem && (
                     <div
