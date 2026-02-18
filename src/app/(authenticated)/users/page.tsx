@@ -18,6 +18,7 @@ import {
     notification,
     Tabs,
     App,
+    Table,
 } from "antd";
 
 import type { ColumnsType } from "antd/es/table";
@@ -73,18 +74,25 @@ export default function ManageUsersOnePage() {
     const resetAll = useBalanceStore((s) => s.resetAll);
 
     // ---------- load supabase ----------
+ 
     const loadSupabase = async () => {
-        const { data, error } = await supabase
-            .from("master_users")
-            .select(`*, users_finance (*)`);
+        try {
+            const { data, error } = await supabase
+                .from("master_users")
+                .select(`*, users_finance (*)`);
 
-        if (error) {
-            notification.error({ title: error.message });
-            return;
+            if (error) {
+                notification.error({ message: error.message });
+                return;
+            }
+
+            setRemoteUsers((data ?? []).map(mapSupabaseUser));
+        } catch (err: any) {
+            console.error("Error loading users:", err);
+            notification.error({ message: "Failed to load users." });
         }
-
-        setRemoteUsers((data ?? []).map(mapSupabaseUser));
     };
+
 
     useEffect(() => {
         loadSupabase();
@@ -103,24 +111,29 @@ export default function ManageUsersOnePage() {
 
     // ---------- restore ----------
     const handleRestore = (u: any) => {
-        dispatch(
-            setUser({
-                id: u.id,
-                firstName: u.firstName,
-                lastName: u.lastName,
-                email: u.email,
-                isAuthenticated: true,
-            }),
-        );
+        try {
+            dispatch(
+                setUser({
+                    id: u.id,
+                    firstName: u.firstName,
+                    lastName: u.lastName,
+                    email: u.email,
+                    isAuthenticated: true,
+                })
+            );
 
-        if (u.source === "supabase") {
-            resetAll();
-            setTotalIncome(u.totalIncome);
-            setBalance(u.balance);
-            u.limits?.forEach((l: any) => addLimit(l.title, l.value));
+            if (u.source === "supabase") {
+                resetAll();
+                setTotalIncome(u.totalIncome);
+                setBalance(u.balance);
+                u.limits?.forEach((l: any) => addLimit(l.title, l.value));
+            }
+
+            notification.success({ message: "User restored to stores" });
+        } catch (err: any) {
+            console.error("Error restoring user:", err);
+            notification.error({ message: "Failed to restore user." });
         }
-
-        notification.success({ title: "User restored to stores" });
     };
 
     // ---------- edit ----------
@@ -138,83 +151,101 @@ export default function ManageUsersOnePage() {
         setEditOpen(true);
     };
 
-    const handleSave = async () => {
-        const v = await form.validateFields();
-        if (!editingUser) return;
+  const handleSave = async () => {
+        try {
+            if (!editingUser) return;
+            const v = await form.validateFields();
 
-        await supabase
-            .from("master_users")
-            .update({
-                first_name: v.first_name,
-                last_name: v.last_name,
-                email: v.email,
-            })
-            .eq("id", editingUser.id);
+            const { error: userError } = await supabase
+                .from("master_users")
+                .update({
+                    first_name: v.first_name,
+                    last_name: v.last_name,
+                    email: v.email,
+                })
+                .eq("id", editingUser.id);
 
-        await supabase
-            .from("users_finance")
-            .update({
-                total_income: v.total_income,
-                current_balance: v.current_balance,
-            })
-            .eq("user_id", editingUser.id);
+            if (userError) throw userError;
 
-        notification.success({ title: "Updated" });
-        setEditOpen(false);
-        loadSupabase();
-    };
+            const { error: financeError } = await supabase
+                .from("users_finance")
+                .update({
+                    total_income: v.total_income,
+                    current_balance: v.current_balance,
+                })
+                .eq("user_id", editingUser.id);
 
-    // ---------- add ----------
-    const handleAdd = async () => {
-        const v = await addForm.validateFields();
+            if (financeError) throw financeError;
 
-        const { data, error } = await supabase
-            .from("master_users")
-            .insert({
-                first_name: v.first_name,
-                last_name: v.last_name,
-                email: v.email,
-                password: v.password,
-                phone_number: v.phone_number,
-            })
-            .select()
-            .single();
-
-        if (error) {
-            notification.error({ title: error.message });
-            return;
+            notification.success({ message: "Updated" });
+            setEditOpen(false);
+            loadSupabase();
+        } catch (err: any) {
+            console.error("Error saving user:", err);
+            notification.error({ message: err.message || "Failed to update user." });
         }
-
-        await supabase.from("users_finance").insert({
-            user_id: data.id,
-            total_income: v.total_income ?? 0,
-            current_balance: v.current_balance ?? 0,
-            limits: [],
-        });
-
-        notification.success({ title: "User added" });
-        setAddOpen(false);
-        addForm.resetFields();
-        loadSupabase();
     };
 
-    // ---------- delete ----------
+    const handleAdd = async () => {
+        try {
+            const v = await addForm.validateFields();
+
+            const { data, error } = await supabase
+                .from("master_users")
+                .insert({
+                    first_name: v.first_name,
+                    last_name: v.last_name,
+                    email: v.email,
+                    password: v.password,
+                    phone_number: v.phone_number,
+                })
+                .select()
+                .single();
+
+            if (error) throw error;
+
+            const { error: financeError } = await supabase.from("users_finance").insert({
+                user_id: data.id,
+                total_income: v.total_income ?? 0,
+                current_balance: v.current_balance ?? 0,
+                limits: [],
+            });
+
+            if (financeError) throw financeError;
+
+            notification.success({ message: "User added" });
+            setAddOpen(false);
+            addForm.resetFields();
+            loadSupabase();
+        } catch (err: any) {
+            console.error("Error adding user:", err);
+            notification.error({ message: err.message || "Failed to add user." });
+        }
+    };
+
     const handleDelete = async (u: any) => {
-        modal.confirm({
-            title: `Are you sure you want to delete ${u.firstName}?`,
-            okText: "Yes",
-            okType: "danger",
-            cancelText: "No",
-            onOk: async () => {
-                await supabase
-                    .from("users_finance")
-                    .delete()
-                    .eq("user_id", u.id);
-                await supabase.from("master_users").delete().eq("id", u.id);
-                notification.success({ title: "User deleted" });
-                loadSupabase();
-            },
-        });
+        try {
+            modal.confirm({
+                title: `Are you sure you want to delete ${u.firstName}?`,
+                okText: "Yes",
+                okType: "danger",
+                cancelText: "No",
+                onOk: async () => {
+                    try {
+                        await supabase.from("users_finance").delete().eq("user_id", u.id);
+                        await supabase.from("master_users").delete().eq("id", u.id);
+                        notification.success({ message: "User deleted" });
+                        loadSupabase();
+                    } catch (err: any) {
+                        console.error("Error deleting user:", err);
+                        notification.error({ message: "Failed to delete user." });
+                    }
+                },
+            });
+        } catch (err: any) {
+            console.error("Error triggering delete modal:", err);
+            notification.error({ message: "Failed to delete user." });
+        }
     };
 
     // ---------- columns ----------
@@ -295,22 +326,36 @@ export default function ManageUsersOnePage() {
                         key: "local",
                         label: "Local Users",
                         children: (
-                            <AnimatedTable
-                                rowKey="id"
-                                columns={columns}
-                                data={localData}
-                            />
+                                <Table
+                                size="small"
+                                bordered
+                rowKey="id"
+                columns={columns}
+                dataSource={localData}
+                scroll={{ x: 'max-content' }}
+                pagination={{ pageSize: 5 }}
+                  style={{ fontSize: '10px' }} // reduce table font size
+  components={{
+    body: {
+      row: (props) => (
+        <tr {...props} style={{ height: '20px' }} /> // set row height
+      ),
+    },
+  }}
+              />
                         ),
                     },
                     {
                         key: "supabase",
                         label: "Supabase Users",
                         children: (
-                            <AnimatedTable
-                                rowKey="id"
-                                columns={columns}
-                                data={supabaseData}
-                            />
+                               <Table
+                rowKey="id"
+                columns={columns}
+                dataSource={supabaseData}
+                scroll={{ x: 'max-content' }}
+                pagination={{ pageSize: 5 }}
+              />
                         ),
                     },
                 ]}
