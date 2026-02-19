@@ -74,7 +74,7 @@ export default function ManageUsersOnePage() {
     const resetAll = useBalanceStore((s) => s.resetAll);
 
     // ---------- load supabase ----------
- 
+
     const loadSupabase = async () => {
         try {
             const { data, error } = await supabase
@@ -92,7 +92,6 @@ export default function ManageUsersOnePage() {
             notification.error({ message: "Failed to load users." });
         }
     };
-
 
     useEffect(() => {
         loadSupabase();
@@ -119,7 +118,7 @@ export default function ManageUsersOnePage() {
                     lastName: u.lastName,
                     email: u.email,
                     isAuthenticated: true,
-                })
+                }),
             );
 
             if (u.source === "supabase") {
@@ -151,7 +150,7 @@ export default function ManageUsersOnePage() {
         setEditOpen(true);
     };
 
-  const handleSave = async () => {
+    const handleSave = async () => {
         try {
             if (!editingUser) return;
             const v = await form.validateFields();
@@ -182,7 +181,9 @@ export default function ManageUsersOnePage() {
             loadSupabase();
         } catch (err: any) {
             console.error("Error saving user:", err);
-            notification.error({ message: err.message || "Failed to update user." });
+            notification.error({
+                message: err.message || "Failed to update user.",
+            });
         }
     };
 
@@ -204,12 +205,14 @@ export default function ManageUsersOnePage() {
 
             if (error) throw error;
 
-            const { error: financeError } = await supabase.from("users_finance").insert({
-                user_id: data.id,
-                total_income: v.total_income ?? 0,
-                current_balance: v.current_balance ?? 0,
-                limits: [],
-            });
+            const { error: financeError } = await supabase
+                .from("users_finance")
+                .insert({
+                    user_id: data.id,
+                    total_income: v.total_income ?? 0,
+                    current_balance: v.current_balance ?? 0,
+                    limits: [],
+                });
 
             if (financeError) throw financeError;
 
@@ -219,7 +222,9 @@ export default function ManageUsersOnePage() {
             loadSupabase();
         } catch (err: any) {
             console.error("Error adding user:", err);
-            notification.error({ message: err.message || "Failed to add user." });
+            notification.error({
+                message: err.message || "Failed to add user.",
+            });
         }
     };
 
@@ -232,13 +237,21 @@ export default function ManageUsersOnePage() {
                 cancelText: "No",
                 onOk: async () => {
                     try {
-                        await supabase.from("users_finance").delete().eq("user_id", u.id);
-                        await supabase.from("master_users").delete().eq("id", u.id);
+                        await supabase
+                            .from("users_finance")
+                            .delete()
+                            .eq("user_id", u.id);
+                        await supabase
+                            .from("master_users")
+                            .delete()
+                            .eq("id", u.id);
                         notification.success({ message: "User deleted" });
                         loadSupabase();
                     } catch (err: any) {
                         console.error("Error deleting user:", err);
-                        notification.error({ message: "Failed to delete user." });
+                        notification.error({
+                            message: "Failed to delete user.",
+                        });
                     }
                 },
             });
@@ -326,36 +339,39 @@ export default function ManageUsersOnePage() {
                         key: "local",
                         label: "Local Users",
                         children: (
-                                <Table
+                            <Table
                                 size="small"
                                 bordered
-                rowKey="id"
-                columns={columns}
-                dataSource={localData}
-                scroll={{ x: 'max-content' }}
-                pagination={{ pageSize: 5 }}
-                  style={{ fontSize: '10px' }} // reduce table font size
-  components={{
-    body: {
-      row: (props) => (
-        <tr {...props} style={{ height: '20px' }} /> // set row height
-      ),
-    },
-  }}
-              />
+                                rowKey="id"
+                                columns={columns}
+                                dataSource={localData}
+                                scroll={{ x: "max-content" }}
+                                pagination={{ pageSize: 5 }}
+                                style={{ fontSize: "10px" }} // reduce table font size
+                                components={{
+                                    body: {
+                                        row: (props) => (
+                                            <tr
+                                                {...props}
+                                                style={{ height: "20px" }}
+                                            /> // set row height
+                                        ),
+                                    },
+                                }}
+                            />
                         ),
                     },
                     {
                         key: "supabase",
                         label: "Supabase Users",
                         children: (
-                               <Table
-                rowKey="id"
-                columns={columns}
-                dataSource={supabaseData}
-                scroll={{ x: 'max-content' }}
-                pagination={{ pageSize: 5 }}
-              />
+                            <Table
+                                rowKey="id"
+                                columns={columns}
+                                dataSource={supabaseData}
+                                scroll={{ x: "max-content" }}
+                                pagination={{ pageSize: 5 }}
+                            />
                         ),
                     },
                 ]}
