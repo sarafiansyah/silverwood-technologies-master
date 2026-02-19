@@ -34,6 +34,7 @@ import {
 } from "@/constants/silverwood-dashboard";
 import { GradualSpacing } from "@/components/Typography/Animations/GradualSpacing";
 import { StaggeredFade } from "@/components/Typography/Animations/StaggeredFade";
+import Image from "next/image";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { Title, Paragraph, Text } = Typography;
@@ -53,6 +54,7 @@ const MainLayout: React.FC = () => {
     const screens = useBreakpoint();
     const firstName = useSelector((state: RootState) => state.user.firstName);
     const lastName = useSelector((state: RootState) => state.user.lastName);
+    const isDark = useSelector((state: RootState) => state.theme.isDark);
 
     const greetingText = useMemo(() => {
         const pick =
@@ -94,8 +96,9 @@ const MainLayout: React.FC = () => {
                             borderRadius: 14,
                             overflow: "hidden",
                             background:
-                                "linear-gradient(135deg, #6C7CF5 0%, #8FA6FF 100%)",
-                            boxShadow: "0 10px 24px rgba(108, 124, 245, 0.35)",
+                                "linear-gradient(135deg, #D9EEF6 0%, #F0F8FB 55%, #FBE9E3 100%)",
+
+                            boxShadow: "0 6px 16px rgba(31, 79, 102, 0.18)",
 
                             color: "#fff",
                         }}
@@ -108,7 +111,7 @@ const MainLayout: React.FC = () => {
                         }}
                     >
                         {/* Soft background icon */}
-                        <UserOutlined
+                        {/* <UserOutlined
                             style={{
                                 position: "absolute",
                                 right: screens.xs ? 8 : 8,
@@ -119,7 +122,32 @@ const MainLayout: React.FC = () => {
                                 color: "#ffffff",
                                 pointerEvents: "none",
                             }}
-                        />
+                        /> */}
+
+                        {/* Background Image Layer */}
+                        <div
+                            style={{
+                                position: "absolute",
+                                inset: 0,
+                                zIndex: 0,
+                            }}
+                        >
+                            <Image
+                                src={
+                                    isDark
+                                        ? "/assets/images/dashboard/illus02.png"
+                                        : "/assets/images/dashboard/illus01.png"
+                                }
+                                alt="bg"
+                                fill
+                                priority
+                                style={{
+                                    objectFit: "contain",
+                                    opacity: 100,
+                                    marginLeft: 90,
+                                }}
+                            />
+                        </div>
 
                         {/* Content */}
                         <div
@@ -138,7 +166,7 @@ const MainLayout: React.FC = () => {
                                     fontWeight: 600,
                                     letterSpacing: -3.8,
                                     opacity: 0.8,
-                                    color: "white",
+                                    color: "#3AA4CA",
                                 }}
                             />
 
@@ -148,8 +176,8 @@ const MainLayout: React.FC = () => {
                                     fontSize: screens.xs ? 10 : 15,
                                     lineHeight: 1.4,
                                     opacity: 0.9,
-                                    maxWidth: "80%",
-                                    color: "white",
+                                    maxWidth: "50%",
+                                    color: "#3AA4CA",
                                     textAlign: "left",
                                 }}
                             />
