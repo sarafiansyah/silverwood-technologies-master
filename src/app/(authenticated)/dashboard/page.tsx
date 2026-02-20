@@ -95,7 +95,7 @@ const MainLayout: React.FC = () => {
                             position: "relative",
                             borderRadius: 14,
                             overflow: "hidden",
-                            background:
+                            background: isDark?"linear-gradient(135deg, #053B50 0%, #176B87 50%, #64CCC5 100%)":
                                 "linear-gradient(135deg, #D9EEF6 0%, #F0F8FB 55%, #FBE9E3 100%)",
 
                             boxShadow: "0 6px 16px rgba(31, 79, 102, 0.18)",
@@ -135,8 +135,8 @@ const MainLayout: React.FC = () => {
                             <Image
                                 src={
                                     isDark
-                                        ? "/assets/images/dashboard/illus02.png"
-                                        : "/assets/images/dashboard/illus01.png"
+                                        ? "/assets/images/dashboard/illus04.png"
+                                        : "/assets/images/dashboard/illus03.png"
                                 }
                                 alt="bg"
                                 fill
@@ -166,7 +166,7 @@ const MainLayout: React.FC = () => {
                                     fontWeight: 600,
                                     letterSpacing: -3.8,
                                     opacity: 0.8,
-                                    color: "#3AA4CA",
+                                    color: isDark? "#ffffff":"#3AA4CA",
                                 }}
                             />
 
@@ -177,7 +177,7 @@ const MainLayout: React.FC = () => {
                                     lineHeight: 1.4,
                                     opacity: 0.9,
                                     maxWidth: "50%",
-                                    color: "#3AA4CA",
+                                                           color: isDark? "#fff":"#3AA4CA",
                                     textAlign: "left",
                                 }}
                             />
