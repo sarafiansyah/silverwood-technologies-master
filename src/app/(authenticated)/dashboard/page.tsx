@@ -135,8 +135,8 @@ const MainLayout: React.FC = () => {
                             <Image
                                 src={
                                     isDark
-                                        ? "/assets/images/dashboard/illus04.png"
-                                        : "/assets/images/dashboard/illus03.png"
+                                        ? "/assets/images/dashboard/illus-dark.png"
+                                        : "/assets/images/dashboard/illus-light.png"
                                 }
                                 alt="bg"
                                 fill
