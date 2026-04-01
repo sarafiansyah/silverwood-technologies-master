@@ -17,6 +17,7 @@ import {
     Upload,
     Modal,
     Space,
+    Tabs,
 } from "antd";
 import type { UploadProps } from "antd";
 import type { UploadFile } from "antd/es/upload/interface";
@@ -29,6 +30,12 @@ import {
     DashboardOutlined,
     ScheduleOutlined,
     ClockCircleOutlined,
+    AppstoreAddOutlined,
+    BuildOutlined,
+    ExperimentOutlined,
+    HistoryOutlined,
+    BgColorsOutlined,
+    PicCenterOutlined,
 } from "@ant-design/icons";
 import dayjs, { Dayjs } from "dayjs";
 import { useState, useEffect } from "react";
@@ -98,7 +105,7 @@ export default function DashboardPage() {
     const [showGearRemaining, setShowGearRemaining] = useState(false);
     const screens = useBreakpoint();
 
-    const labelStyle = { fontSize: "12px" };
+    const labelStyle = { fontSize: "14px" };
     const controlWrapperStyle = {
         marginTop: -24,
         display: "flex",
@@ -327,24 +334,6 @@ export default function DashboardPage() {
             <Row gutter={[16, 16]}>
                 <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                     <Card
-                        title={
-                            <Row justify="space-between" align="middle">
-                                <Col>
-                                    <span
-                                        style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: 8,
-                                            fontSize: screens.xs
-                                                ? "12px"
-                                                : "14px",
-                                        }}
-                                    >
-                                        Viscorion Oil Monitoring System
-                                    </span>
-                                </Col>
-                            </Row>
-                        }
                         style={{
                             borderRadius: 12,
                             overflow: "hidden",
@@ -366,149 +355,430 @@ export default function DashboardPage() {
                                     layout="vertical"
                                     onFinish={handleFinish}
                                     style={{
-                                        marginTop: 0,
+                                        marginTop: -12,
                                         padding: 0,
                                         borderRadius: 8,
                                     }}
                                 >
-                                    <Row gutter={24}>
-                                        {/* Engine Oil */}
-                                        <Col xs={12} sm={12} md={12}>
-                                            <Title
-                                                style={{
-                                                    fontSize: isMobile
-                                                        ? 14
-                                                        : 14,
-                                                }}
-                                            >
-                                                <DashboardOutlined /> Engine Oil
-                                            </Title>
-
-                                            <Form.Item
-                                                label={
-                                                    <span style={labelStyle}>
-                                                        Oil Brand
-                                                    </span>
+                                    {/* Engine Oil */}
+                                    {isMobile ? (
+                                        <Tabs defaultActiveKey="engine">
+                                            {/* ENGINE TAB */}
+                                            <Tabs.TabPane
+                                                tab={
+                                                    <>
+                                                        <DashboardOutlined />{" "}
+                                                        Engine Oil
+                                                    </>
                                                 }
-                                                name="oilBrand"
-                                                style={{ marginBottom: 10 }}
-                                                rules={[
-                                                    {
-                                                        required: true,
-                                                        message:
-                                                            "Please select engine oil brand!",
-                                                    },
-                                                ]}
+                                                key="engine"
                                             >
-                                                <Select
-                                                    size="small"
-                                                    options={oilBrands}
-                                                    placeholder="Brands"
-                                                ></Select>
-                                            </Form.Item>
-
-                                            <Form.Item
-                                                label={
-                                                    <span style={labelStyle}>
-                                                        Model
-                                                    </span>
-                                                }
-                                                name="modelName"
-                                                style={{ marginBottom: 10 }}
-                                                rules={[
-                                                    {
-                                                        required: true,
-                                                        message:
-                                                            "Please enter model name!",
-                                                    },
-                                                ]}
-                                            >
-                                                <Input
-                                                    size="small"
-                                                    style={
-                                                        placeholderInputStyle
+                                                <Form.Item
+                                                    name="oilBrand"
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message:
+                                                                "Please select engine oil brand!",
+                                                        },
+                                                    ]}
+                                                    label={
+                                                        <span
+                                                            style={labelStyle}
+                                                        >
+                                                            Oil Brand
+                                                        </span>
                                                     }
-                                                    placeholder="e.g. 7100, Power1"
-                                                />
-                                            </Form.Item>
+                                                >
+                                                    <div
+                                                        style={{
+                                                            display: "flex",
+                                                            alignItems:
+                                                                "center",
+                                                            gap: 6,
+                                                            padding: "6px 8px",
+                                                            borderRadius: 50,
+                                                            border: "1px solid #c7c7c7",
+                                                            background:
+                                                                "#ffffff",
+                                                        }}
+                                                    >
+                                                        {/* Gradient Icon */}
 
-                                            <Form.Item
-                                                label={
-                                                    <span style={labelStyle}>
-                                                        Viscosity
-                                                    </span>
-                                                }
-                                                name="viscosity"
-                                                style={{ marginBottom: 10 }}
-                                                rules={[
-                                                    {
-                                                        required: true,
-                                                        message:
-                                                            "Please enter viscosity!",
-                                                    },
-                                                ]}
-                                            >
-                                                <Input
-                                                    size="small"
-                                                    style={
-                                                        placeholderInputStyle
-                                                    }
-                                                    placeholder="e.g. 15000"
-                                                />
-                                            </Form.Item>
-                                            <Form.Item
-                                                label={
-                                                    <span style={labelStyle}>
-                                                        Last Changed
-                                                    </span>
-                                                }
-                                                name="lastChanged"
-                                                style={{ marginBottom: 10 }}
-                                                rules={[
-                                                    {
-                                                        required: true,
-                                                        message:
-                                                            "Please select a date!",
-                                                    },
-                                                ]}
-                                            >
-                                                <DatePicker
-                                                    size="small"
-                                                    style={{
-                                                        fontSize: 11,
-                                                        width: "100%",
-                                                    }}
-                                                />
-                                            </Form.Item>
-                                            <Form.Item
-                                                label={
-                                                    <span style={labelStyle}>
-                                                        Current KM
-                                                    </span>
-                                                }
-                                                name="currentKm"
-                                                style={{ marginBottom: 10 }}
-                                                rules={[
-                                                    {
-                                                        required: true,
-                                                        message:
-                                                            "Please enter KM!",
-                                                    },
-                                                ]}
-                                            >
-                                                <InputNumber
-                                                    size="small"
-                                                    style={
-                                                        placeholderInputStyle
-                                                    }
-                                                    placeholder="e.g. 15000"
-                                                />
-                                            </Form.Item>
-                                        </Col>
+                                                        <div
+                                                            style={{
+                                                                width: 32,
+                                                                height: 32,
+                                                                borderRadius:
+                                                                    "50%",
+                                                                display: "flex",
+                                                                alignItems:
+                                                                    "center",
+                                                                justifyContent:
+                                                                    "center",
+                                                                background:
+                                                                    "linear-gradient(135deg, #5fd1ff, #6a5af9)",
+                                                                color: "#fff",
+                                                                fontSize: 16,
+                                                                flexShrink: 0,
+                                                            }}
+                                                        >
+                                                            <AppstoreAddOutlined />
+                                                        </div>
 
-                                        {/* Gear Oil */}
-                                        <Col xs={12} sm={12} md={12}>
-                                            <div style={{ display: "flex" }}>
+                                                        {/* Select Input */}
+                                                        <div
+                                                            style={{ flex: 1 }}
+                                                        >
+                                                            <Select
+                                                                options={
+                                                                    oilBrands
+                                                                }
+                                                                placeholder="Select brand"
+                                                                   variant="borderless"
+                                                                style={{
+                                                                    width: "100%",
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </Form.Item>
+
+                                                <Form.Item
+                                                    label={
+                                                        <span
+                                                            style={labelStyle}
+                                                        >
+                                                            Model
+                                                        </span>
+                                                    }
+                                                    name="modelName"
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message:
+                                                                "Please enter model name!",
+                                                        },
+                                                    ]}
+                                                >
+                                                    <div
+                                                        style={{
+                                                            display: "flex",
+                                                            alignItems:
+                                                                "center",
+                                                            gap: 6,
+                                                            padding: "6px 8px",
+                                                            borderRadius: 50,
+                                                            border: "1px solid #c7c7c7",
+                                                            background:
+                                                                "#ffffff",
+                                                        }}
+                                                    >
+                                                        {/* Gradient Icon */}
+
+                                                        <div
+                                                            style={{
+                                                                width: 32,
+                                                                height: 32,
+                                                                borderRadius:
+                                                                    "50%",
+                                                                display: "flex",
+                                                                alignItems:
+                                                                    "center",
+                                                                justifyContent:
+                                                                    "center",
+                                                                background:
+                                                                    "linear-gradient(135deg, #5fd1ff, #6a5af9)",
+                                                                color: "#fff",
+                                                                fontSize: 16,
+                                                                flexShrink: 0,
+                                                            }}
+                                                        >
+                                                            <BuildOutlined />
+                                                        </div>
+
+                                                        {/* Select Input */}
+                                                        <div
+                                                            style={{ flex: 1 }}
+                                                        >
+                                                            <Input
+                                                                   variant="borderless"
+                                                                placeholder="e.g. 7100, Power1"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </Form.Item>
+
+                                                <Form.Item
+                                                    label={
+                                                        <span
+                                                            style={labelStyle}
+                                                        >
+                                                            Viscosity
+                                                        </span>
+                                                    }
+                                                    name="viscosity"
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message:
+                                                                "Please enter viscosity!",
+                                                        },
+                                                    ]}
+                                                >
+                                                    <div
+                                                        style={{
+                                                            display: "flex",
+                                                            alignItems:
+                                                                "center",
+                                                            gap: 6,
+                                                            padding: "6px 8px",
+                                                            borderRadius: 50,
+                                                            border: "1px solid #c7c7c7",
+                                                            background:
+                                                                "#ffffff",
+                                                        }}
+                                                    >
+                                                        {/* Gradient Icon */}
+
+                                                        <div
+                                                            style={{
+                                                                width: 32,
+                                                                height: 32,
+                                                                borderRadius:
+                                                                    "50%",
+                                                                display: "flex",
+                                                                alignItems:
+                                                                    "center",
+                                                                justifyContent:
+                                                                    "center",
+                                                                background:
+                                                                    "linear-gradient(135deg, #5fd1ff, #6a5af9)",
+                                                                color: "#fff",
+                                                                fontSize: 16,
+                                                                flexShrink: 0,
+                                                            }}
+                                                        >
+                                                            <BgColorsOutlined />
+                                                        </div>
+
+                                                        {/* Select Input */}
+                                                        <div
+                                                            style={{ flex: 1 }}
+                                                        >
+                                                            <Input
+                                                                   variant="borderless"
+                                                                placeholder="e.g. 10W-40"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </Form.Item>
+
+                                                <Form.Item
+                                                    label={
+                                                        <span
+                                                            style={labelStyle}
+                                                        >
+                                                            Last Changed
+                                                        </span>
+                                                    }
+                                                    name="lastChanged"
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message:
+                                                                "Please select a date!",
+                                                        },
+                                                    ]}
+                                                >
+                                                        <div
+                                                        style={{
+                                                            display: "flex",
+                                                            alignItems:
+                                                                "center",
+                                                            gap: 6,
+                                                            padding: "6px 8px",
+                                                            borderRadius: 50,
+                                                            border: "1px solid #c7c7c7",
+                                                            background:
+                                                                "#ffffff",
+                                                        }}
+                                                    >
+                                                        {/* Gradient Icon */}
+
+                                                        <div
+                                                            style={{
+                                                                width: 32,
+                                                                height: 32,
+                                                                borderRadius:
+                                                                    "50%",
+                                                                display: "flex",
+                                                                alignItems:
+                                                                    "center",
+                                                                justifyContent:
+                                                                    "center",
+                                                                background:
+                                                                    "linear-gradient(135deg, #5fd1ff, #6a5af9)",
+                                                                color: "#fff",
+                                                                fontSize: 16,
+                                                                flexShrink: 0,
+                                                            }}
+                                                        >
+                                                            <HistoryOutlined />
+                                                        </div>
+
+                                                        {/* Select Input */}
+                                                        <div
+                                                            style={{ flex: 1 }}
+                                                        >
+                                                             <DatePicker
+                                                            variant="borderless"
+                                                        style={{
+                                                            width: "100%",
+                                                        }}
+                                                    />
+                                                        </div>
+                                                    </div>
+                                                  
+                                                </Form.Item>
+
+                                                <Form.Item
+                                                    label={
+                                                        <span
+                                                            style={labelStyle}
+                                                        >
+                                                            Current KM
+                                                        </span>
+                                                    }
+                                                    name="currentKm"
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message:
+                                                                "Please enter KM!",
+                                                        },
+                                                    ]}
+                                                >
+                                                         <div
+                                                        style={{
+                                                            display: "flex",
+                                                            alignItems:
+                                                                "center",
+                                                            gap: 6,
+                                                            padding: "6px 8px",
+                                                            borderRadius: 50,
+                                                            border: "1px solid #c7c7c7",
+                                                            background:
+                                                                "#ffffff",
+                                                        }}
+                                                    >
+                                                        {/* Gradient Icon */}
+
+                                                        <div
+                                                            style={{
+                                                                width: 32,
+                                                                height: 32,
+                                                                borderRadius:
+                                                                    "50%",
+                                                                display: "flex",
+                                                                alignItems:
+                                                                    "center",
+                                                                justifyContent:
+                                                                    "center",
+                                                                background:
+                                                                    "linear-gradient(135deg, #5fd1ff, #6a5af9)",
+                                                                color: "#fff",
+                                                                fontSize: 16,
+                                                                flexShrink: 0,
+                                                            }}
+                                                        >
+                                                            <PicCenterOutlined />
+                                                        </div>
+
+                                                        {/* Select Input */}
+                                                        <div
+                                                            style={{ flex: 1 }}
+                                                        >
+                                                          <InputNumber
+                                                              variant="borderless"
+                                                        placeholder="e.g. 10000"
+                                                        // size="small"
+                                                        style={{
+                                                            width: "100%",
+                                                        }}
+                                                    />
+                                                        </div>
+                                                    </div>
+                                                   
+                                                </Form.Item>
+                                            </Tabs.TabPane>
+
+                                            {/*  GEAR TAB */}
+                                            <Tabs.TabPane
+                                                tab={
+                                                    <>
+                                                        <SettingOutlined /> Gear
+                                                        Oil{" "}
+                                                    </>
+                                                }
+                                                key="gear"
+                                            >
+                                                <Checkbox
+                                                    checked={includeGear}
+                                                    onChange={(e) =>
+                                                        setIncludeGear(
+                                                            e.target.checked,
+                                                        )
+                                                    }
+                                                    style={{ marginBottom: 8 }}
+                                                >
+                                                    Include
+                                                </Checkbox>
+                                                <Form.Item
+                                                    label="Gear Oil Brand"
+                                                    name="gearOilBrand"
+                                                >
+                                                    <Select
+                                                        size="small"
+                                                        options={oilBrands}
+                                                        disabled={!includeGear}
+                                                    />
+                                                </Form.Item>
+
+                                                <Form.Item
+                                                    label="Gear Model"
+                                                    name="gearModel"
+                                                >
+                                                    <Input
+                                                        disabled={!includeGear}
+                                                    />
+                                                </Form.Item>
+
+                                                <Form.Item
+                                                    label="Gear Viscosity"
+                                                    name="gearViscosity"
+                                                >
+                                                    <Input
+                                                        disabled={!includeGear}
+                                                    />
+                                                </Form.Item>
+
+                                                <Form.Item
+                                                    label="Last Changed"
+                                                    name="gearLastChanged"
+                                                >
+                                                    <DatePicker
+                                                        disabled={!includeGear}
+                                                        style={{
+                                                            width: "100%",
+                                                        }}
+                                                    />
+                                                </Form.Item>
+                                            </Tabs.TabPane>
+                                        </Tabs>
+                                    ) : (
+                                        <Row gutter={12}>
+                                            <Col xs={12} sm={12} md={12}>
                                                 <Title
                                                     style={{
                                                         fontSize: isMobile
@@ -516,96 +786,275 @@ export default function DashboardPage() {
                                                             : 14,
                                                     }}
                                                 >
-                                                    <SettingOutlined /> Gear Oil
-                                                </Title>{" "}
+                                                    <DashboardOutlined /> Engine
+                                                    Oil
+                                                </Title>
+
+                                                <Form.Item
+                                                    label={
+                                                        <span
+                                                            style={labelStyle}
+                                                        >
+                                                            Oil Brand
+                                                        </span>
+                                                    }
+                                                    name="oilBrand"
+                                                    style={{
+                                                        marginBottom: 10,
+                                                    }}
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message:
+                                                                "Please select engine oil brand!",
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Select
+                                                        size="small"
+                                                        options={oilBrands}
+                                                        placeholder="Brands"
+                                                    ></Select>
+                                                </Form.Item>
+
+                                                <Form.Item
+                                                    label={
+                                                        <span
+                                                            style={labelStyle}
+                                                        >
+                                                            Model
+                                                        </span>
+                                                    }
+                                                    name="modelName"
+                                                    style={{
+                                                        marginBottom: 10,
+                                                    }}
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message:
+                                                                "Please enter model name!",
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Input
+                                                        size="small"
+                                                        style={
+                                                            placeholderInputStyle
+                                                        }
+                                                        placeholder="e.g. 7100, Power1"
+                                                    />
+                                                </Form.Item>
+
+                                                <Form.Item
+                                                    label={
+                                                        <span
+                                                            style={labelStyle}
+                                                        >
+                                                            Viscosity
+                                                        </span>
+                                                    }
+                                                    name="viscosity"
+                                                    style={{
+                                                        marginBottom: 10,
+                                                    }}
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message:
+                                                                "Please enter viscosity!",
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Input
+                                                        size="small"
+                                                        style={
+                                                            placeholderInputStyle
+                                                        }
+                                                        placeholder="e.g. 15000"
+                                                    />
+                                                </Form.Item>
+                                                <Form.Item
+                                                    label={
+                                                        <span
+                                                            style={labelStyle}
+                                                        >
+                                                            Last Changed
+                                                        </span>
+                                                    }
+                                                    name="lastChanged"
+                                                    style={{
+                                                        marginBottom: 10,
+                                                    }}
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message:
+                                                                "Please select a date!",
+                                                        },
+                                                    ]}
+                                                >
+                                                    <DatePicker
+                                                        size="small"
+                                                        style={{
+                                                            fontSize: 11,
+                                                            width: "100%",
+                                                        }}
+                                                    />
+                                                </Form.Item>
+                                                <Form.Item
+                                                    label={
+                                                        <span
+                                                            style={labelStyle}
+                                                        >
+                                                            Current KM
+                                                        </span>
+                                                    }
+                                                    name="currentKm"
+                                                    style={{
+                                                        marginBottom: 10,
+                                                    }}
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message:
+                                                                "Please enter KM!",
+                                                        },
+                                                    ]}
+                                                >
+                                                    <InputNumber
+                                                        size="small"
+                                                        style={
+                                                            placeholderInputStyle
+                                                        }
+                                                        placeholder="e.g. 15000"
+                                                    />
+                                                </Form.Item>
+                                            </Col>
+                                            {/* Gear Oil */}
+                                            <Col xs={12} sm={12} md={12}>
                                                 <div
                                                     style={{
-                                                        marginTop: -4,
-                                                        marginLeft: 6,
+                                                        display: "flex",
                                                     }}
                                                 >
-                                                    <Checkbox
-                                                        checked={includeGear}
-                                                        onChange={(e) =>
-                                                            setIncludeGear(
-                                                                e.target
-                                                                    .checked,
-                                                            )
-                                                        }
-                                                    ></Checkbox>
-                                                </div>{" "}
-                                            </div>
+                                                    <Title
+                                                        style={{
+                                                            fontSize: isMobile
+                                                                ? 14
+                                                                : 14,
+                                                        }}
+                                                    >
+                                                        <SettingOutlined /> Gear
+                                                        Oil
+                                                    </Title>{" "}
+                                                    <div
+                                                        style={{
+                                                            marginTop: -4,
+                                                            marginLeft: 6,
+                                                        }}
+                                                    >
+                                                        <Checkbox
+                                                            checked={
+                                                                includeGear
+                                                            }
+                                                            onChange={(e) =>
+                                                                setIncludeGear(
+                                                                    e.target
+                                                                        .checked,
+                                                                )
+                                                            }
+                                                        ></Checkbox>
+                                                    </div>{" "}
+                                                </div>
 
-                                            <Form.Item
-                                                label={
-                                                    <span style={labelStyle}>
-                                                        Gear Oil Brand
-                                                    </span>
-                                                }
-                                                name="gearOilBrand"
-                                                style={{ marginBottom: 10 }}
-                                            >
-                                                <Select
-                                                    size="small"
-                                                    placeholder="Brands"
-                                                    options={oilBrands}
-                                                    disabled={!includeGear}
-                                                ></Select>
-                                            </Form.Item>
-                                            <Form.Item
-                                                label={
-                                                    <span style={labelStyle}>
-                                                        Gear Oil Model
-                                                    </span>
-                                                }
-                                                name="gearModel"
-                                                style={{ marginBottom: 10 }}
-                                            >
-                                                <Input
-                                                    placeholder="e.g. Gear Oil EP"
-                                                    style={
-                                                        placeholderInputStyle
+                                                <Form.Item
+                                                    label={
+                                                        <span
+                                                            style={labelStyle}
+                                                        >
+                                                            Gear Oil Brand
+                                                        </span>
                                                     }
-                                                    disabled={!includeGear}
-                                                />
-                                            </Form.Item>
-                                            <Form.Item
-                                                label={
-                                                    <span style={labelStyle}>
-                                                        Gear Oil Viscosity
-                                                    </span>
-                                                }
-                                                name="gearViscosity"
-                                                style={{ marginBottom: 10 }}
-                                            >
-                                                <Input
-                                                    placeholder="e.g. 80W-90"
-                                                    style={
-                                                        placeholderInputStyle
-                                                    }
-                                                    disabled={!includeGear}
-                                                />
-                                            </Form.Item>
-                                            <Form.Item
-                                                label={
-                                                    <span style={labelStyle}>
-                                                        Last Changed
-                                                    </span>
-                                                }
-                                                name="gearLastChanged"
-                                                style={{ marginBottom: 10 }}
-                                            >
-                                                <DatePicker
-                                                    size="small"
+                                                    name="gearOilBrand"
                                                     style={{
-                                                        fontSize: 11,
-                                                        width: "100%",
+                                                        marginBottom: 10,
                                                     }}
-                                                    disabled={!includeGear}
-                                                />
-                                            </Form.Item>
-                                        </Col>
-                                    </Row>
+                                                >
+                                                    <Select
+                                                        size="small"
+                                                        placeholder="Brands"
+                                                        options={oilBrands}
+                                                        disabled={!includeGear}
+                                                    ></Select>
+                                                </Form.Item>
+                                                <Form.Item
+                                                    label={
+                                                        <span
+                                                            style={labelStyle}
+                                                        >
+                                                            Gear Oil Model
+                                                        </span>
+                                                    }
+                                                    name="gearModel"
+                                                    style={{
+                                                        marginBottom: 10,
+                                                    }}
+                                                >
+                                                    <Input
+                                                        placeholder="e.g. Gear Oil EP"
+                                                        style={
+                                                            placeholderInputStyle
+                                                        }
+                                                        disabled={!includeGear}
+                                                    />
+                                                </Form.Item>
+                                                <Form.Item
+                                                    label={
+                                                        <span
+                                                            style={labelStyle}
+                                                        >
+                                                            Gear Oil Viscosity
+                                                        </span>
+                                                    }
+                                                    name="gearViscosity"
+                                                    style={{
+                                                        marginBottom: 10,
+                                                    }}
+                                                >
+                                                    <Input
+                                                        placeholder="e.g. 80W-90"
+                                                        style={
+                                                            placeholderInputStyle
+                                                        }
+                                                        disabled={!includeGear}
+                                                    />
+                                                </Form.Item>
+                                                <Form.Item
+                                                    label={
+                                                        <span
+                                                            style={labelStyle}
+                                                        >
+                                                            Last Changed
+                                                        </span>
+                                                    }
+                                                    name="gearLastChanged"
+                                                    style={{
+                                                        marginBottom: 10,
+                                                    }}
+                                                >
+                                                    <DatePicker
+                                                        size="small"
+                                                        style={{
+                                                            fontSize: 11,
+                                                            width: "100%",
+                                                        }}
+                                                        disabled={!includeGear}
+                                                    />
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+                                    )}
 
                                     {/* Buttons */}
                                     <Form.Item>
