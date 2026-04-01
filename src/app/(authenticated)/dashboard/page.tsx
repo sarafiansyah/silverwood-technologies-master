@@ -105,26 +105,12 @@ const MainLayout: React.FC = () => {
                         styles={{
                             body: {
                                 padding: "16px",
-                                height: screens.xs ? 130 : 160,
+                                height: screens.xs ? 130 : 230,
                                 minHeight: screens.xs ? "auto" : 100,
                             },
                         }}
                     >
-                        {/* Soft background icon */}
-                        {/* <UserOutlined
-                            style={{
-                                position: "absolute",
-                                right: screens.xs ? 8 : 8,
-                                top: "50%",
-                                transform: "translateY(-50%)",
-                                fontSize: screens.xs ? 96 : 96,
-                                opacity: 0.18,
-                                color: "#ffffff",
-                                pointerEvents: "none",
-                            }}
-                        /> */}
-
-                        {/* Background Image Layer */}
+                                       {/* Background Image Layer */}
                         <div
                             style={{
                                 position: "absolute",
@@ -142,10 +128,9 @@ const MainLayout: React.FC = () => {
                                 fill
                                 priority
                                 style={{
-                                    objectFit: "contain",
-                                    opacity: 100,
-                                    marginLeft: 90,
-                                }}
+        objectFit: "contain",
+        objectPosition: "right",
+    }}
                             />
                         </div>
 
