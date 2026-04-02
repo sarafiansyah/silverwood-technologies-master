@@ -38,7 +38,7 @@ import {
     PicCenterOutlined,
 } from "@ant-design/icons";
 import dayjs, { Dayjs } from "dayjs";
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactNode, CSSProperties } from "react";
 import Image from "next/image";
 import { i } from "framer-motion/client";
 import { oilBrands } from "@/constants/viscorion-oil-details";
@@ -90,6 +90,22 @@ interface FormValues {
     gearViscosity?: string;
     gearLastChanged?: Dayjs;
 }
+
+interface IconFieldProps {
+    icon: React.ReactNode;
+    children: React.ReactNode;
+    backgroundColor?: string; // 👈 add this
+}
+
+type OilBrandOption = {
+    label: string;
+    value: string;
+};
+
+type EngineOilFormProps = {
+    oilBrands: OilBrandOption[];
+    labelStyle?: CSSProperties;
+};
 
 export default function DashboardPage() {
     const [form] = Form.useForm<FormValues>();
@@ -329,19 +345,249 @@ export default function DashboardPage() {
               )
             : null;
 
+    const IconField = ({
+        icon,
+        children,
+        backgroundColor = "#ffffff",
+    }: IconFieldProps) => {
+        return (
+            <div
+                style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    padding: "6px 8px",
+                    borderRadius: 50,
+                    border: "1px solid #c7c7c7",
+                    background: backgroundColor,
+                }}
+            >
+                <div
+                    style={{
+                        width: 32,
+                        height: 32,
+                        borderRadius: "50%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        background: "linear-gradient(135deg, #5fd1ff, #6a5af9)",
+                        color: "#fff",
+                        fontSize: 16,
+                        flexShrink: 0,
+                    }}
+                >
+                    {icon}
+                </div>
+
+                <div style={{ flex: 1 }}>{children}</div>
+            </div>
+        );
+    };
+
+    const EngineOilForm = ({ oilBrands, labelStyle }: EngineOilFormProps) => (
+        <>
+            <Form.Item
+                name="oilBrand"
+                label={<span style={labelStyle}>Oil Brand</span>}
+                rules={[
+                    {
+                        required: true,
+                        message: "Please select engine oil brand!",
+                    },
+                ]}
+            >
+                <IconField icon={<AppstoreAddOutlined />}>
+                    <Form.Item name="oilBrand" noStyle>
+                        <Select
+                            options={oilBrands}
+                            placeholder="Select brand"
+                            variant="borderless"
+                        />
+                    </Form.Item>
+                </IconField>
+            </Form.Item>
+
+            <Form.Item
+                label={<span style={labelStyle}>Model</span>}
+                name="modelName"
+                rules={[
+                    { required: true, message: "Please enter model name!" },
+                ]}
+            >
+                <IconField icon={<BuildOutlined />}>
+                    <Form.Item name="modelName" noStyle>
+                        <Input
+                            variant="borderless"
+                            placeholder="e.g. 7100, Power1"
+                        />
+                    </Form.Item>
+                </IconField>
+            </Form.Item>
+
+            <Form.Item
+                label={<span style={labelStyle}>Viscosity</span>}
+                name="viscosity"
+                rules={[{ required: true, message: "Please enter viscosity!" }]}
+            >
+                <IconField icon={<BgColorsOutlined />}>
+                    <Form.Item name="viscosity" noStyle>
+                        <Input variant="borderless" placeholder="e.g. 10W-40" />
+                    </Form.Item>
+                </IconField>
+            </Form.Item>
+
+            <Form.Item
+                label={<span style={labelStyle}>Last Changed</span>}
+                name="lastChanged"
+                rules={[{ required: true, message: "Please select a date!" }]}
+            >
+                <IconField icon={<HistoryOutlined />}>
+                    <Form.Item name="lastChanged" noStyle>
+                        <DatePicker
+                            variant="borderless"
+                            style={{ width: "100%" }}
+                        />
+                    </Form.Item>
+                </IconField>
+            </Form.Item>
+
+            <Form.Item
+                label={<span style={labelStyle}>Current KM</span>}
+                name="currentKm"
+                rules={[{ required: true, message: "Please enter KM!" }]}
+            >
+                <IconField icon={<PicCenterOutlined />}>
+                    <Form.Item name="currentKm" noStyle>
+                        <InputNumber
+                            variant="borderless"
+                            placeholder="e.g. 10000"
+                            style={{ width: "100%" }}
+                        />
+                    </Form.Item>
+                </IconField>
+            </Form.Item>
+        </>
+    );
+
+    const GearOilForm = ({ oilBrands, labelStyle }: EngineOilFormProps) => (
+        <>
+            {/* BRAND */}
+            <Form.Item
+                name="gearOilBrand"
+                label={<span style={labelStyle}>Gear Oil Brand</span>}
+            >
+                <IconField
+                    icon={<AppstoreAddOutlined />}
+                    backgroundColor={!includeGear ? "#c8c8c847" : "#ffffff"}
+                >
+                    <Form.Item name="gearOilBrand" noStyle>
+                        <Select
+                            options={oilBrands}
+                            placeholder="Select brand"
+                            variant="borderless"
+                            disabled={!includeGear}
+                        />
+                    </Form.Item>
+                </IconField>
+            </Form.Item>
+
+            {/* MODEL */}
+            <Form.Item
+                label={<span style={labelStyle}>Gear Oil Model</span>}
+                name="gearModel"
+            >
+                <IconField icon={<BuildOutlined />}  backgroundColor={!includeGear ? "#c8c8c847" : "#ffffff"}>
+                    <Form.Item name="gearModel" noStyle>
+                        <Input
+                            variant="borderless"
+                            placeholder="e.g. Gear Oil EP"
+                            disabled={!includeGear}
+                        />
+                    </Form.Item>
+                </IconField>
+            </Form.Item>
+
+            {/* VISCOSITY */}
+            <Form.Item
+                label={<span style={labelStyle}>Gear Oil Viscosity</span>}
+                name="gearViscosity"
+            >
+                <IconField icon={<BgColorsOutlined />}  backgroundColor={!includeGear ? "#c8c8c847" : "#ffffff"}>
+                    <Form.Item name="gearViscosity" noStyle>
+                        <Input
+                            variant="borderless"
+                            placeholder="e.g. 80W-90"
+                            disabled={!includeGear}
+                        />
+                    </Form.Item>
+                </IconField>
+            </Form.Item>
+
+            {/* LAST CHANGED */}
+            <Form.Item
+                label={<span style={labelStyle}>Last Changed</span>}
+                name="gearLastChanged"
+            >
+                <IconField icon={<HistoryOutlined />}  backgroundColor={!includeGear ? "#c8c8c847" : "#ffffff"}>
+                    <Form.Item name="gearLastChanged" noStyle>
+                        <DatePicker
+                            variant="borderless"
+                            style={{ width: "100%" }}
+                            disabled={!includeGear}
+                        />
+                    </Form.Item>
+                </IconField>
+            </Form.Item>
+        </>
+    );
+
+    const items = [
+        {
+            key: "engine",
+            label: (
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <DashboardOutlined />
+                    Engine Oil
+                </div>
+            ),
+            children: (
+                <EngineOilForm oilBrands={oilBrands} labelStyle={labelStyle} />
+            ),
+        },
+        {
+            key: "gear",
+            label: (
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <SettingOutlined />
+                    Gear Oil
+                </div>
+            ),
+            children: (
+                <>
+                    <div style={{ marginBottom: 12 }}>
+                        <Checkbox
+                            checked={includeGear}
+                            onChange={(e) => setIncludeGear(e.target.checked)}
+                        >
+                            Include
+                        </Checkbox>
+                    </div>
+
+                    <GearOilForm
+                        oilBrands={oilBrands}
+                        labelStyle={labelStyle}
+                    />
+                </>
+            ),
+        },
+    ];
+
     return (
         <>
             <Row gutter={[16, 16]}>
                 <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                    <Card
-                        style={{
-                            borderRadius: 12,
-                            overflow: "hidden",
-                            width: "100%",
-                        }}
-                        styles={{
-                            body: { padding: 16 },
-                        }}
+                    <div
+                        style={{ padding: isMobile ? "8px 2px" : "24px 12px" }}
                     >
                         <div
                             style={{
@@ -362,420 +608,11 @@ export default function DashboardPage() {
                                 >
                                     {/* Engine Oil */}
                                     {isMobile ? (
-                                        <Tabs defaultActiveKey="engine">
-                                            {/* ENGINE TAB */}
-                                            <Tabs.TabPane
-                                                tab={
-                                                    <>
-                                                        <DashboardOutlined />{" "}
-                                                        Engine Oil
-                                                    </>
-                                                }
-                                                key="engine"
-                                            >
-                                                <Form.Item
-                                                    name="oilBrand"
-                                                    rules={[
-                                                        {
-                                                            required: true,
-                                                            message:
-                                                                "Please select engine oil brand!",
-                                                        },
-                                                    ]}
-                                                    label={
-                                                        <span
-                                                            style={labelStyle}
-                                                        >
-                                                            Oil Brand
-                                                        </span>
-                                                    }
-                                                >
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            alignItems:
-                                                                "center",
-                                                            gap: 6,
-                                                            padding: "6px 8px",
-                                                            borderRadius: 50,
-                                                            border: "1px solid #c7c7c7",
-                                                            background:
-                                                                "#ffffff",
-                                                        }}
-                                                    >
-                                                        {/* Gradient Icon */}
-
-                                                        <div
-                                                            style={{
-                                                                width: 32,
-                                                                height: 32,
-                                                                borderRadius:
-                                                                    "50%",
-                                                                display: "flex",
-                                                                alignItems:
-                                                                    "center",
-                                                                justifyContent:
-                                                                    "center",
-                                                                background:
-                                                                    "linear-gradient(135deg, #5fd1ff, #6a5af9)",
-                                                                color: "#fff",
-                                                                fontSize: 16,
-                                                                flexShrink: 0,
-                                                            }}
-                                                        >
-                                                            <AppstoreAddOutlined />
-                                                        </div>
-
-                                                        {/* Select Input */}
-                                                        <div
-                                                            style={{ flex: 1 }}
-                                                        >
-                                                            <Select
-                                                                options={
-                                                                    oilBrands
-                                                                }
-                                                                placeholder="Select brand"
-                                                                   variant="borderless"
-                                                                style={{
-                                                                    width: "100%",
-                                                                }}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </Form.Item>
-
-                                                <Form.Item
-                                                    label={
-                                                        <span
-                                                            style={labelStyle}
-                                                        >
-                                                            Model
-                                                        </span>
-                                                    }
-                                                    name="modelName"
-                                                    rules={[
-                                                        {
-                                                            required: true,
-                                                            message:
-                                                                "Please enter model name!",
-                                                        },
-                                                    ]}
-                                                >
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            alignItems:
-                                                                "center",
-                                                            gap: 6,
-                                                            padding: "6px 8px",
-                                                            borderRadius: 50,
-                                                            border: "1px solid #c7c7c7",
-                                                            background:
-                                                                "#ffffff",
-                                                        }}
-                                                    >
-                                                        {/* Gradient Icon */}
-
-                                                        <div
-                                                            style={{
-                                                                width: 32,
-                                                                height: 32,
-                                                                borderRadius:
-                                                                    "50%",
-                                                                display: "flex",
-                                                                alignItems:
-                                                                    "center",
-                                                                justifyContent:
-                                                                    "center",
-                                                                background:
-                                                                    "linear-gradient(135deg, #5fd1ff, #6a5af9)",
-                                                                color: "#fff",
-                                                                fontSize: 16,
-                                                                flexShrink: 0,
-                                                            }}
-                                                        >
-                                                            <BuildOutlined />
-                                                        </div>
-
-                                                        {/* Select Input */}
-                                                        <div
-                                                            style={{ flex: 1 }}
-                                                        >
-                                                            <Input
-                                                                   variant="borderless"
-                                                                placeholder="e.g. 7100, Power1"
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </Form.Item>
-
-                                                <Form.Item
-                                                    label={
-                                                        <span
-                                                            style={labelStyle}
-                                                        >
-                                                            Viscosity
-                                                        </span>
-                                                    }
-                                                    name="viscosity"
-                                                    rules={[
-                                                        {
-                                                            required: true,
-                                                            message:
-                                                                "Please enter viscosity!",
-                                                        },
-                                                    ]}
-                                                >
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            alignItems:
-                                                                "center",
-                                                            gap: 6,
-                                                            padding: "6px 8px",
-                                                            borderRadius: 50,
-                                                            border: "1px solid #c7c7c7",
-                                                            background:
-                                                                "#ffffff",
-                                                        }}
-                                                    >
-                                                        {/* Gradient Icon */}
-
-                                                        <div
-                                                            style={{
-                                                                width: 32,
-                                                                height: 32,
-                                                                borderRadius:
-                                                                    "50%",
-                                                                display: "flex",
-                                                                alignItems:
-                                                                    "center",
-                                                                justifyContent:
-                                                                    "center",
-                                                                background:
-                                                                    "linear-gradient(135deg, #5fd1ff, #6a5af9)",
-                                                                color: "#fff",
-                                                                fontSize: 16,
-                                                                flexShrink: 0,
-                                                            }}
-                                                        >
-                                                            <BgColorsOutlined />
-                                                        </div>
-
-                                                        {/* Select Input */}
-                                                        <div
-                                                            style={{ flex: 1 }}
-                                                        >
-                                                            <Input
-                                                                   variant="borderless"
-                                                                placeholder="e.g. 10W-40"
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </Form.Item>
-
-                                                <Form.Item
-                                                    label={
-                                                        <span
-                                                            style={labelStyle}
-                                                        >
-                                                            Last Changed
-                                                        </span>
-                                                    }
-                                                    name="lastChanged"
-                                                    rules={[
-                                                        {
-                                                            required: true,
-                                                            message:
-                                                                "Please select a date!",
-                                                        },
-                                                    ]}
-                                                >
-                                                        <div
-                                                        style={{
-                                                            display: "flex",
-                                                            alignItems:
-                                                                "center",
-                                                            gap: 6,
-                                                            padding: "6px 8px",
-                                                            borderRadius: 50,
-                                                            border: "1px solid #c7c7c7",
-                                                            background:
-                                                                "#ffffff",
-                                                        }}
-                                                    >
-                                                        {/* Gradient Icon */}
-
-                                                        <div
-                                                            style={{
-                                                                width: 32,
-                                                                height: 32,
-                                                                borderRadius:
-                                                                    "50%",
-                                                                display: "flex",
-                                                                alignItems:
-                                                                    "center",
-                                                                justifyContent:
-                                                                    "center",
-                                                                background:
-                                                                    "linear-gradient(135deg, #5fd1ff, #6a5af9)",
-                                                                color: "#fff",
-                                                                fontSize: 16,
-                                                                flexShrink: 0,
-                                                            }}
-                                                        >
-                                                            <HistoryOutlined />
-                                                        </div>
-
-                                                        {/* Select Input */}
-                                                        <div
-                                                            style={{ flex: 1 }}
-                                                        >
-                                                             <DatePicker
-                                                            variant="borderless"
-                                                        style={{
-                                                            width: "100%",
-                                                        }}
-                                                    />
-                                                        </div>
-                                                    </div>
-                                                  
-                                                </Form.Item>
-
-                                                <Form.Item
-                                                    label={
-                                                        <span
-                                                            style={labelStyle}
-                                                        >
-                                                            Current KM
-                                                        </span>
-                                                    }
-                                                    name="currentKm"
-                                                    rules={[
-                                                        {
-                                                            required: true,
-                                                            message:
-                                                                "Please enter KM!",
-                                                        },
-                                                    ]}
-                                                >
-                                                         <div
-                                                        style={{
-                                                            display: "flex",
-                                                            alignItems:
-                                                                "center",
-                                                            gap: 6,
-                                                            padding: "6px 8px",
-                                                            borderRadius: 50,
-                                                            border: "1px solid #c7c7c7",
-                                                            background:
-                                                                "#ffffff",
-                                                        }}
-                                                    >
-                                                        {/* Gradient Icon */}
-
-                                                        <div
-                                                            style={{
-                                                                width: 32,
-                                                                height: 32,
-                                                                borderRadius:
-                                                                    "50%",
-                                                                display: "flex",
-                                                                alignItems:
-                                                                    "center",
-                                                                justifyContent:
-                                                                    "center",
-                                                                background:
-                                                                    "linear-gradient(135deg, #5fd1ff, #6a5af9)",
-                                                                color: "#fff",
-                                                                fontSize: 16,
-                                                                flexShrink: 0,
-                                                            }}
-                                                        >
-                                                            <PicCenterOutlined />
-                                                        </div>
-
-                                                        {/* Select Input */}
-                                                        <div
-                                                            style={{ flex: 1 }}
-                                                        >
-                                                          <InputNumber
-                                                              variant="borderless"
-                                                        placeholder="e.g. 10000"
-                                                        // size="small"
-                                                        style={{
-                                                            width: "100%",
-                                                        }}
-                                                    />
-                                                        </div>
-                                                    </div>
-                                                   
-                                                </Form.Item>
-                                            </Tabs.TabPane>
-
-                                            {/*  GEAR TAB */}
-                                            <Tabs.TabPane
-                                                tab={
-                                                    <>
-                                                        <SettingOutlined /> Gear
-                                                        Oil{" "}
-                                                    </>
-                                                }
-                                                key="gear"
-                                            >
-                                                <Checkbox
-                                                    checked={includeGear}
-                                                    onChange={(e) =>
-                                                        setIncludeGear(
-                                                            e.target.checked,
-                                                        )
-                                                    }
-                                                    style={{ marginBottom: 8 }}
-                                                >
-                                                    Include
-                                                </Checkbox>
-                                                <Form.Item
-                                                    label="Gear Oil Brand"
-                                                    name="gearOilBrand"
-                                                >
-                                                    <Select
-                                                        size="small"
-                                                        options={oilBrands}
-                                                        disabled={!includeGear}
-                                                    />
-                                                </Form.Item>
-
-                                                <Form.Item
-                                                    label="Gear Model"
-                                                    name="gearModel"
-                                                >
-                                                    <Input
-                                                        disabled={!includeGear}
-                                                    />
-                                                </Form.Item>
-
-                                                <Form.Item
-                                                    label="Gear Viscosity"
-                                                    name="gearViscosity"
-                                                >
-                                                    <Input
-                                                        disabled={!includeGear}
-                                                    />
-                                                </Form.Item>
-
-                                                <Form.Item
-                                                    label="Last Changed"
-                                                    name="gearLastChanged"
-                                                >
-                                                    <DatePicker
-                                                        disabled={!includeGear}
-                                                        style={{
-                                                            width: "100%",
-                                                        }}
-                                                    />
-                                                </Form.Item>
-                                            </Tabs.TabPane>
-                                        </Tabs>
+                                        <Tabs
+                                            defaultActiveKey="engine"
+                                            type="card"
+                                            items={items}
+                                        />
                                     ) : (
                                         <Row gutter={12}>
                                             <Col xs={12} sm={12} md={12}>
@@ -1057,39 +894,144 @@ export default function DashboardPage() {
                                     )}
 
                                     {/* Buttons */}
-                                    <Form.Item>
-                                        <Space>
-                                            {" "}
+                                    <Form.Item style={{ marginTop: 20 }}>
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                justifyContent: isMobile
+                                                    ? "space-between"
+                                                    : "flex-start",
+                                                alignItems: "center",
+                                                padding: "0px 4px",
+                                                gap: isMobile ? 0 : 16, // spacing when left-aligned
+                                            }}
+                                        >
+                                            {/* Main Action */}
                                             <Button
                                                 type="primary"
                                                 htmlType="submit"
                                                 className="liquid-btn"
+                                                style={{
+                                                    borderRadius: 12,
+                                                    padding: "0 16px",
+                                                    fontSize: 14,
+                                                    height: 38,
+                                                    fontWeight: 500,
+                                                }}
                                             >
                                                 Summarize
                                             </Button>
-                                            <Button
-                                                danger
-                                                icon={<ReloadOutlined />}
-                                                style={{ marginRight: 6 }}
-                                                onClick={() => {
-                                                    form.resetFields();
-                                                    setRecord(null);
-                                                    setIncludeGear(false);
+
+                                            {/* Icon Actions */}
+                                            <div
+                                                style={{
+                                                    display: "flex",
+                                                    gap: 16,
+                                                    alignItems: "center",
                                                 }}
-                                            ></Button>
-                                            <Button
-                                                icon={<UploadOutlined />}
-                                                onClick={() => {
-                                                    setModalUploadOilDetailsProperties(
-                                                        true,
-                                                    );
-                                                }}
-                                            ></Button>
-                                            <Button
-                                                icon={<DownloadOutlined />}
-                                                onClick={handleDownload}
-                                            ></Button>
-                                        </Space>
+                                            >
+                                                {/* Reset */}
+                                                <div
+                                                    style={{
+                                                        textAlign: "center",
+                                                    }}
+                                                >
+                                                    <Button
+                                                        danger
+                                                        shape="circle"
+                                                        icon={
+                                                            <ReloadOutlined />
+                                                        }
+                                                        onClick={() => {
+                                                            form.resetFields();
+                                                            setRecord(null);
+                                                            setIncludeGear(
+                                                                false,
+                                                            );
+                                                        }}
+                                                        style={{
+                                                            width: 32,
+                                                            height: 32,
+                                                            color: "#fff",
+                                                            background:
+                                                                "linear-gradient(135deg, #ff6b6b, #ff4d4f)",
+                                                        }}
+                                                    />
+                                                    <div
+                                                        style={{
+                                                            fontSize: 10,
+                                                            marginTop: 4,
+                                                        }}
+                                                    >
+                                                        Reset
+                                                    </div>
+                                                </div>
+
+                                                {/* Download */}
+                                                <div
+                                                    style={{
+                                                        textAlign: "center",
+                                                    }}
+                                                >
+                                                    <Button
+                                                        shape="circle"
+                                                        icon={
+                                                            <DownloadOutlined />
+                                                        }
+                                                        onClick={handleDownload}
+                                                        style={{
+                                                            width: 32,
+                                                            height: 32,
+                                                            color: "#fff",
+                                                            background:
+                                                                "linear-gradient(135deg, #36d1dc, #5b86e5)",
+                                                        }}
+                                                    />
+                                                    <div
+                                                        style={{
+                                                            fontSize: 10,
+                                                            marginTop: 4,
+                                                        }}
+                                                    >
+                                                        Download
+                                                    </div>
+                                                </div>
+
+                                                {/* Upload */}
+                                                <div
+                                                    style={{
+                                                        textAlign: "center",
+                                                    }}
+                                                >
+                                                    <Button
+                                                        shape="circle"
+                                                        icon={
+                                                            <UploadOutlined />
+                                                        }
+                                                        onClick={() =>
+                                                            setModalUploadOilDetailsProperties(
+                                                                true,
+                                                            )
+                                                        }
+                                                        style={{
+                                                            width: 32,
+                                                            height: 32,
+                                                            color: "#fff",
+                                                            background:
+                                                                "linear-gradient(135deg, #5fd1ff, #6a5af9)",
+                                                        }}
+                                                    />
+                                                    <div
+                                                        style={{
+                                                            fontSize: 10,
+                                                            marginTop: 4,
+                                                        }}
+                                                    >
+                                                        Upload
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </Form.Item>
                                 </Form>
 
@@ -1606,7 +1548,8 @@ export default function DashboardPage() {
                                 </div>
                             </div>
                         </div>
-                    </Card>
+                    </div>
+
                     <Modal
                         title={
                             <span
@@ -1645,12 +1588,12 @@ export default function DashboardPage() {
                                     </span>
                                 }
                                 name="newKm"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Please enter current KM",
-                                    },
-                                ]}
+                                // rules={[
+                                //     {
+                                //         required: true,
+                                //         message: "Please enter current KM",
+                                //     },
+                                // ]}
                             >
                                 <InputNumber
                                     style={{ width: "100%" }}
