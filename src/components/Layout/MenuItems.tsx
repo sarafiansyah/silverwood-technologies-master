@@ -12,6 +12,7 @@ import {
     DeploymentUnitOutlined,
     BulbOutlined,
     CoffeeOutlined,
+    IdcardOutlined
 } from "@ant-design/icons";
 
 export interface MenuItemType {
@@ -119,6 +120,25 @@ export const MenuItems: MenuItemType[] = [
                 label: "Transaction",
                 icon: <DollarCircleOutlined />,
                 path: "/finance/transactions",
+            },
+        ],
+    },
+    {
+        key: "attend",
+        label: "Attendance",
+        icon: <IdcardOutlined />,
+        children: [
+            {
+                key: "attend1",
+                label: "Coordinators",
+                icon: <IdcardOutlined />,
+                path: "/public/attendance/coordinators",
+            },
+            {
+                key: "attend2",
+                label: "Members",
+                icon: <IdcardOutlined />,
+                path: "/public/attendance/members",
             },
         ],
     },
