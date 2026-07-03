@@ -15,6 +15,8 @@ const SPREADSHEET_ID = process.env.GOOGLE_SHEET_ID!;
 
 const EMPLOYEE_SHEET = "Members";
 const ATTENDANCE_SHEET = "Attendance";
+const CHECKPOINTS_SHEET = "Checkpoints";
+const VISIT_SHEET = "Visits";
 
 /* =========================
    EMPLOYEE
@@ -140,22 +142,26 @@ export async function deleteEmployee(id: string) {
 export async function getAttendance() {
     const res = await sheets.spreadsheets.values.get({
         spreadsheetId: SPREADSHEET_ID,
-        range: `${ATTENDANCE_SHEET}!A2:F`,
+        range: `${ATTENDANCE_SHEET}!A2:G`,
     });
 
     const rows = res.data.values ?? [];
 
-    return rows.map((row) => ({
-        id: row[0] ?? "",
-        employeeId: row[1] ?? "",
-        date: row[2] ?? "",
-        checkIn: row[3] ?? "",
-        checkOut: row[4] ?? "",
-        status: row[5] ?? "",
-    }));
+return rows.map((row) => ({
+  id: row[0] ?? "",
+  employeeId: row[1] ?? "",
+  date: row[2] ?? "",
+  checkIn: row[3] ?? "",
+  checkOut: row[4] ?? "",
+  status: row[5] ?? "",
+  photoId: row[6] ?? "",
+}));
 }
 
-export async function checkIn(employeeId: string) {
+export async function checkIn(
+  employeeId: string,
+  photoId: string
+) {
     const today = new Date().toISOString().split("T")[0];
 
     const attendance = await getAttendance();
@@ -171,16 +177,17 @@ export async function checkIn(employeeId: string) {
         range: `${ATTENDANCE_SHEET}!A:F`,
         valueInputOption: "USER_ENTERED",
         requestBody: {
-            values: [
-                [
-                    crypto.randomUUID(),
-                    employeeId,
-                    today,
-                    new Date().toLocaleTimeString(),
-                    "",
-                    "Present",
-                ],
-            ],
+           values: [
+  [
+    crypto.randomUUID(),
+    employeeId,
+    today,
+    new Date().toLocaleTimeString(),
+    "",
+    "Present",
+    photoId,
+  ],
+],
         },
     });
 
@@ -220,3 +227,98 @@ export async function checkOut(employeeId: string) {
 
     return true;
 }
+
+export async function getCheckpoints() {
+  const res = await sheets.spreadsheets.values.get({
+    spreadsheetId: SPREADSHEET_ID,
+    range: `${CHECKPOINTS_SHEET}!A2:C`,
+  });
+
+  const rows = res.data.values ?? [];
+
+  return rows.map((row) => ({
+    id: row[0] ?? "",
+    name: row[1] ?? "",
+    location: row[2] ?? "",
+  }));
+}
+export async function visitCheckpoint(data: {
+  employeeId: string;
+  checkpointId: string;
+  evidence: string;
+}) {
+  const today = new Date().toISOString().split("T")[0];
+
+  // today's attendance
+  const attendance = await getAttendance();
+
+  const todayAttendance = attendance.find(
+    (a) =>
+      a.employeeId === data.employeeId &&
+      a.date === today
+  );
+
+  if (!todayAttendance) {
+    throw new Error(
+      "Please check in before visiting checkpoints."
+    );
+  }
+
+  const res = await sheets.spreadsheets.values.get({
+    spreadsheetId: SPREADSHEET_ID,
+    range: `${VISIT_SHEET}!A2:F`,
+  });
+
+  const rows = res.data.values ?? [];
+
+  const alreadyVisited = rows.find(
+    (row) =>
+      row[2] === data.employeeId &&
+      row[3] === data.checkpointId
+  );
+
+  if (alreadyVisited) {
+    throw new Error(
+      "Checkpoint already visited."
+    );
+  }
+
+  await sheets.spreadsheets.values.append({
+    spreadsheetId: SPREADSHEET_ID,
+    range: `${VISIT_SHEET}!A:F`,
+    valueInputOption: "USER_ENTERED",
+    requestBody: {
+      values: [
+        [
+          crypto.randomUUID(),
+          todayAttendance.id,
+          data.employeeId,
+          data.checkpointId,
+          new Date().toLocaleTimeString(),
+          data.evidence,
+        ],
+      ],
+    },
+  });
+
+  return true;
+}
+
+export async function getVisits() {
+  const res = await sheets.spreadsheets.values.get({
+    spreadsheetId: SPREADSHEET_ID,
+    range: `${VISIT_SHEET}!A2:F`,
+  });
+
+  const rows = res.data.values ?? [];
+
+  return rows.map((row) => ({
+    id: row[0] ?? "",
+    attendanceId: row[1] ?? "",
+    employeeId: row[2] ?? "",
+    checkpointId: row[3] ?? "",
+    visitTime: row[4] ?? "",
+    evidence: row[5] ?? "",
+  }));
+}
+

@@ -36,7 +36,7 @@ export default function Home() {
         setLoading(true);
 
         try {
-            const res = await axios.get("/api/attendance");
+            const res = await axios.get("/api/attendance/members");
             setEmployees(res.data);
         } catch {
             message.error("Failed to load employees");
@@ -63,7 +63,7 @@ export default function Home() {
 
     const onDelete = async (id: string) => {
         try {
-            await axios.delete(`/api/attendance?id=${id}`);
+            await axios.delete(`/api/attendance/members?id=${id}`);
 
             message.success("Employee deleted");
             loadEmployees();
@@ -82,7 +82,7 @@ export default function Home() {
 
                 message.success("Employee updated");
             } else {
-                await axios.post("/api/attendance", values);
+                await axios.post("/api/attendance/members", values);
 
                 message.success("Employee added");
             }

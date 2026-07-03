@@ -130,9 +130,9 @@ export const MenuItems: MenuItemType[] = [
         children: [
             {
                 key: "attend1",
-                label: "Coordinators",
+                label: "Timestamps",
                 icon: <IdcardOutlined />,
-                path: "/public/attendance/coordinators",
+                path: "/public/attendance/timestamps",
             },
             {
                 key: "attend2",
