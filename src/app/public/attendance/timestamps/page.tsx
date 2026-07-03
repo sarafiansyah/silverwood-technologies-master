@@ -225,6 +225,7 @@ export default function AttendancePage() {
             return;
         }
 
+        
         try {
             const formData = new FormData();
 
