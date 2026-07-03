@@ -206,19 +206,6 @@ export default function AttendancePage() {
         fileRef.current?.click();
     }
 
-    async function onPhotoSelected(e: React.ChangeEvent<HTMLInputElement>) {
-        const file = e.target.files?.[0];
-
-        if (!file || !selectedCheckpoint || !employeeId) {
-            return;
-        }
-
-        await uploadVisit(file);
-
-        // Allow selecting the same file again later
-        e.target.value = "";
-    }
-
     async function uploadVisit(checkpointId: string, file?: File) {
         if (!employeeId) {
             Modal.warning({
