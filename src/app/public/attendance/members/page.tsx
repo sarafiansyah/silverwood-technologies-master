@@ -135,8 +135,8 @@ export default function Home() {
         <div
             style={{
                 maxWidth: 1200,
-                margin: "40px auto",
-                padding: 20,
+                margin: "20px auto",
+                padding: 0,
             }}
         >
             <Space
@@ -146,8 +146,6 @@ export default function Home() {
                     marginBottom: 20,
                 }}
             >
-                <Title level={2}>Attendance Employee</Title>
-
                 <Button type="primary" onClick={onAdd}>
                     Add Employee
                 </Button>

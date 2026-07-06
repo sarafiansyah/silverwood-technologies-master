@@ -11,11 +11,14 @@ import {
     message,
     Modal,
     Upload,
+    Input,
+    Spin,
 } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import { UploadOutlined, CameraOutlined } from "@ant-design/icons";
+import { BrowserMultiFormatReader } from "@zxing/browser";
 import axios from "axios";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 interface Employee {
     id: string;
@@ -58,6 +61,18 @@ export default function AttendancePage() {
     const [checkpointPhotos, setCheckpointPhotos] = useState<
         Record<string, File>
     >({});
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const codeReaderRef = useRef<BrowserMultiFormatReader | null>(null);
+    const scanSubscriptionRef = useRef<any>(null);
+
+    const [scanning, setScanning] = useState(false);
+    const [cameraOn, setCameraOn] = useState(false);
+    const [result, setResult] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [hasScanned, setHasScanned] = useState(false);
+    const [scannedCheckpoint, setScannedCheckpoint] =
+        useState<Checkpoint | null>(null);
+    const [checkpointPhoto, setCheckpointPhoto] = useState<File>();
 
     async function loadEmployees() {
         const res = await axios.get("/api/attendance/members");
@@ -225,7 +240,6 @@ export default function AttendancePage() {
             return;
         }
 
-        
         try {
             const formData = new FormData();
 
@@ -276,12 +290,104 @@ export default function AttendancePage() {
         setVisits(res.data);
     }
 
-    return (
-        <div style={{ padding: 40 }}>
-            {/* <Title>Attendance</Title> */}
+    const startScan = async () => {
+        if (!videoRef.current) return;
 
-            <Card style={{ marginBottom: 20 }}>
-                <Space direction="vertical" style={{ width: "100%" }}>
+        setLoading(true);
+        setScanning(true);
+        setHasScanned(false);
+        setResult("");
+
+        const codeReader = new BrowserMultiFormatReader();
+        codeReaderRef.current = codeReader;
+
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: "environment" },
+            });
+            if (videoRef.current) {
+                videoRef.current.srcObject = stream;
+                await videoRef.current.play();
+            }
+
+            setCameraOn(true);
+
+            // Save subscription so we can stop later
+            scanSubscriptionRef.current = codeReader.decodeFromVideoDevice(
+                undefined,
+                videoRef.current,
+                (result, err) => {
+                    if (result && !hasScanned) {
+                        setHasScanned(true);
+
+                        const scannedId = result.getText().trim();
+
+                        const checkpoint = checkpoints.find(
+                            (c) => c.id === scannedId,
+                        );
+
+                        if (!checkpoint) {
+                            Modal.error({
+                                title: "Checkpoint not found",
+                                content: scannedId,
+                            });
+
+                            stopScan();
+                            return;
+                        }
+
+                        setResult(scannedId);
+                        setScannedCheckpoint(checkpoint);
+
+                        stopScan();
+                    }
+                },
+            );
+        } catch (err) {
+            console.error("Camera error:", err);
+            setCameraOn(false);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const stopScan = () => {
+        setScanning(false);
+        setCameraOn(false);
+
+        const video = videoRef.current;
+        if (video && video.srcObject) {
+            const tracks = (video.srcObject as MediaStream).getTracks();
+            tracks.forEach((track) => track.stop());
+            video.srcObject = null;
+        }
+
+        // Stop ZXing decoding properly
+        if (scanSubscriptionRef.current) {
+            scanSubscriptionRef.current.stop?.(); // some versions have stop()
+            scanSubscriptionRef.current = null;
+        }
+
+        codeReaderRef.current = null;
+    };
+
+    return (
+        <div style={{ padding: 0 }}>
+            {/* <Title>Attendance</Title> */}
+            <Card
+                title={
+                    <span
+                        style={{
+                            fontSize: "14px",
+                            fontWeight: 600,
+                        }}
+                    >
+                        Check In
+                    </span>
+                }
+                style={{ marginBottom: 20 }}
+            >
+                <Space orientation="vertical" style={{ width: "100%" }}>
                     <Select
                         placeholder="Select Employee"
                         options={employees.map((e) => ({
@@ -301,56 +407,237 @@ export default function AttendancePage() {
                         </Button>
                     </Space>
                     <input
+                        id="photo-upload"
                         type="file"
                         accept="image/*"
+                        hidden
                         onChange={(e) => {
                             const file = e.target.files?.[0];
-
-                            if (file) {
-                                setPhoto(file);
-                            }
+                            if (file) setPhoto(file);
                         }}
                     />
+
+                    <label
+                        htmlFor="photo-upload"
+                        style={{
+                            display: "inline-block",
+                            width: "100%",
+                            padding: "6px",
+                            border: "2px solid #1677ff",
+                            borderRadius: "8px",
+                            backgroundColor: "#1677ff",
+                            color: "#fff",
+                            textAlign: "center",
+                            cursor: "pointer",
+                            fontWeight: 500,
+                        }}
+                    >
+                        {photo ? photo.name : "Choose Photo"}
+                    </label>
                 </Space>
             </Card>
-            <Card title="Today's Checkpoints">
-                {checkpoints.map((checkpoint: Checkpoint) => (
-                    <Card key={checkpoint.id} style={{ marginBottom: 16 }}>
-                        <h3>{checkpoint.name}</h3>
-
-                        <p>{checkpoint.location}</p>
-
-                        <Upload
-                            beforeUpload={(file) => {
-                                setCheckpointPhotos((prev) => ({
-                                    ...prev,
-                                    [checkpoint.id]: file,
-                                }));
-
-                                return false; // Prevent auto upload
+            <Card   title={
+                    <span
+                        style={{
+                            fontSize: "14px",
+                            fontWeight: 600,
+                        }}
+                    >
+                        Checkpoints
+                    </span>
+                }>
+                <div style={{ padding: 16 }}>
+                    <div
+                        style={{
+                            maxWidth: 600,
+                            textAlign: "center",
+                        }}
+                    >
+                        <div
+                            style={{
+                                position: "relative",
+                                width: "100%",
+                                maxWidth: 480,
+                                margin: "0 auto",
                             }}
-                            maxCount={1}
-                            showUploadList
                         >
-                            <Button icon={<UploadOutlined />}>
-                                Select Photo
-                            </Button>
-                        </Upload>
+                            <video
+                                ref={videoRef}
+                                style={{
+                                    width: "100%",
+                                    borderRadius: 8,
+                                    backgroundColor: cameraOn ? "#000" : "#555",
+                                    filter: cameraOn
+                                        ? "none"
+                                        : "brightness(0.5)",
+                                }}
+                                autoPlay
+                                muted
+                            />
+
+                            {/* Scan area overlay */}
+                            {cameraOn && (
+                                <div
+                                    style={{
+                                        position: "absolute",
+                                        top: "35%",
+                                        left: "20%",
+                                        width: "60%",
+                                        height: "30%",
+                                        border: "2px dashed #00ff00",
+                                        borderRadius: 8,
+                                        pointerEvents: "none",
+                                    }}
+                                />
+                            )}
+
+                            {/* Camera off message */}
+                            {!cameraOn && (
+                                <div
+                                    style={{
+                                        position: "absolute",
+                                        top: 0,
+                                        left: 0,
+                                        width: "100%",
+                                        height: "100%",
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        color: "#fff",
+                                        fontSize: 14,
+                                        textAlign: "center",
+                                        pointerEvents: "none",
+                                        gap: 6,
+                                    }}
+                                >
+                                    <CameraOutlined
+                                        style={{ fontSize: 44, color: "#fff" }}
+                                    />
+                                    Please turn on your camera
+                                </div>
+                            )}
+                        </div>
+
+                        {loading && <Spin size="large" />}
+
+                        <div
+                            style={{
+                                margin: "20px 0",
+                                display: "flex",
+                                justifyContent: "center",
+                                gap: 12,
+                            }}
+                        >
+                            {!scanning ? (
+                                <Button type="primary" onClick={startScan}>
+                                    Start Scanning
+                                </Button>
+                            ) : (
+                                <Button danger onClick={stopScan}>
+                                    Stop Scanning
+                                </Button>
+                            )}
+                        </div>
+
+                        <div style={{ marginTop: 16 }}>
+                            <Text strong>Result:</Text>
+                            <Input.TextArea
+                                value={result}
+                                rows={6}
+                                placeholder="Scanned code will appear here..."
+                                style={{ marginTop: 8 }}
+                                readOnly
+                            />
+                        </div>
+                    </div>
+                </div>
+                {scannedCheckpoint && (
+                    <Card title="Scanned Checkpoint" style={{ marginTop: 24 }}>
+                        <Input
+                            addonBefore="ID"
+                            value={scannedCheckpoint.id}
+                            disabled
+                        />
+
+                        <Input
+                            addonBefore="Name"
+                            value={scannedCheckpoint.name}
+                            disabled
+                            style={{ marginTop: 12 }}
+                        />
+
+                        <Input
+                            addonBefore="Location"
+                            value={scannedCheckpoint.location}
+                            disabled
+                            style={{ marginTop: 12 }}
+                        />
+
+                        <Select
+                            style={{ width: "100%", marginTop: 12 }}
+                            placeholder="Select Employee"
+                            value={employeeId}
+                            options={employees.map((e) => ({
+                                label: e.name,
+                                value: e.id,
+                            }))}
+                            onChange={setEmployeeId}
+                        />
+
+                        <input
+                            id="checkpoint-photo"
+                            type="file"
+                            accept="image/*"
+                            hidden
+                            onChange={(e) => {
+                                const file = e.target.files?.[0];
+
+                                if (file) {
+                                    setCheckpointPhoto(file);
+                                }
+                            }}
+                        />
+
+                        <label
+                            htmlFor="checkpoint-photo"
+                            style={{
+                                display: "inline-block",
+                                width: "100%",
+                                marginTop: "12px",
+                                padding: "10px",
+                                border: "2px solid #1677ff",
+                                borderRadius: "8px",
+                                backgroundColor: "#1677ff",
+                                color: "#fff",
+                                textAlign: "center",
+                                cursor: "pointer",
+                                fontWeight: 500,
+                                boxSizing: "border-box",
+                            }}
+                        >
+                            {checkpointPhoto
+                                ? checkpointPhoto.name
+                                : "Select Evidence Photo"}
+                        </label>
 
                         <Button
                             type="primary"
-                            style={{ marginTop: 12 }}
+                            style={{
+                                marginTop: 12,
+                                width: "100%",
+                            }}
                             onClick={() =>
                                 uploadVisit(
-                                    checkpoint.id,
-                                    checkpointPhotos[checkpoint.id],
+                                    scannedCheckpoint.id,
+                                    checkpointPhoto,
                                 )
                             }
                         >
-                            Visit
+                            Submit Visit
                         </Button>
                     </Card>
-                ))}
+                )}
             </Card>
             <Table
                 rowKey="id"
@@ -380,11 +667,20 @@ export default function AttendancePage() {
                 ]}
                 dataSource={attendance}
             />
-            <Card title="Visit History" style={{ marginTop: 24 }}>
+            <Card   title={
+                    <span
+                        style={{
+                            fontSize: "14px",
+                            fontWeight: 600,
+                        }}
+                    >
+                        Visit History
+                    </span>
+                } style={{ marginTop: 24 }}>
                 <Table
                     rowKey="id"
                     dataSource={visits}
-                    pagination={{ pageSize: 5 }}
+                    pagination={{ pageSize: 10 }}
                     columns={[
                         {
                             title: "Employee",
