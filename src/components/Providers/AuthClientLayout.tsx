@@ -10,18 +10,25 @@ import { ConfigProvider, App as AntdApp, theme } from "antd";
 import type { ThemeConfig } from "antd";
 import { motion, AnimatePresence } from "framer-motion";
 import { SILVERWOOD_EXCLUDED_LAYOUT_ROUTES } from "@/constants/silverwood-excluded-routes";
+import { clearUser } from "@/store/redux/slices/userSlice";
+import { useEffect } from "react";
 
 export default function ClientConditionalLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    const user = useSelector((state: RootState) => state.user);
     const { data: session, status } = useSession();
     const pathname = usePathname();
     const dispatch = useDispatch();
     const isDark = useSelector((state: RootState) => state.theme.isDark);
-    const isLoggedIn = user.isAuthenticated || session?.user;
+    const isLoggedIn = status === "authenticated";
+
+    useEffect(() => {
+        if (status === "unauthenticated") {
+            dispatch(clearUser());
+        }
+    }, [status, dispatch]);
 
     const currentTheme: ThemeConfig = {
         algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
@@ -36,15 +43,13 @@ export default function ClientConditionalLayout({
     );
 
     if (status === "loading") return null;
-    
-    if (isExcluded || !isLoggedIn) {
-        return <>{children}</>;
-    }
 
-    if (isLoggedIn) {
-        return (
-            <ConfigProvider theme={currentTheme}>
-                <AntdApp>
+    return (
+        <ConfigProvider theme={currentTheme}>
+            <AntdApp>
+                {isExcluded || !isLoggedIn ? (
+                    children
+                ) : (
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={isDark ? "dark" : "light"}
@@ -62,10 +67,10 @@ export default function ClientConditionalLayout({
                             </MainLayout>
                         </motion.div>
                     </AnimatePresence>
-                </AntdApp>
-            </ConfigProvider>
-        );
-    }
+                )}
+            </AntdApp>
+        </ConfigProvider>
+    );
 
     return <>{children}</>;
 }
