@@ -1,14 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button, Input, Typography, message, Grid } from "antd";
 import { useForm, Controller } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "@/store/redux/slices/userSlice";
-import type { RootState } from "@/store/redux/store";
 import Image from "next/image";
 
 const { Title } = Typography;
@@ -22,20 +19,16 @@ type LoginForm = {
 export default function LoginPage() {
     const { control, handleSubmit } = useForm<LoginForm>();
     const router = useRouter();
-    const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const [showForm, setShowForm] = useState(false);
     const screens = useBreakpoint();
-
-    const isAuthenticated = useSelector(
-        (state: RootState) => state.user.isAuthenticated,
-    );
+    const { status } = useSession();
 
     useEffect(() => {
-        if (isAuthenticated) {
+        if (status === "authenticated") {
             router.replace("/dashboard");
         }
-    }, [isAuthenticated, router]);
+    }, [status, router]);
 
     // flip to form after 1.5s
     useEffect(() => {
@@ -46,11 +39,15 @@ export default function LoginPage() {
     const onSubmit = async (data: LoginForm) => {
         setLoading(true);
 
-        await signIn("credentials", {
-            email: data.email,
-            password: data.password,
-            callbackUrl: "/auth/loading",
-        });
+        try {
+            await signIn("credentials", {
+                email: data.email,
+                password: data.password,
+                callbackUrl: "/auth/loading",
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (

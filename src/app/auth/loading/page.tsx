@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setUser } from "@/store/redux/slices/userSlice";
+import { clearUser, setUser } from "@/store/redux/slices/userSlice";
 import { useRouter } from "next/navigation";
 
 export default function AuthLoading() {
@@ -18,6 +18,7 @@ export default function AuthLoading() {
                 dispatch(setUser(sessionData.user));
                 router.replace("/"); // clean transition
             } else {
+                dispatch(clearUser());
                 router.replace("/auth/login"); // fallback
             }
         };
