@@ -455,7 +455,7 @@ export default function AttendancePage() {
                     </label>
                 </Space>
             </Card>
-            <Card
+            {/* <Card
                 title={
                     <span
                         style={{
@@ -492,7 +492,7 @@ export default function AttendancePage() {
                         View Google Drive
                     </Button>
                 </Space>
-            </Card>
+            </Card> */}
             <Card
                 title={
                     <span
