@@ -382,7 +382,6 @@ export default function AttendancePage() {
 
     return (
         <div style={{ padding: 0 }}>
-            {/* <Title>Attendance</Title> */}
             <Card
                 title={
                     <span
@@ -394,10 +393,16 @@ export default function AttendancePage() {
                         Check In
                     </span>
                 }
+                styles={{
+                    body: {
+                        padding: 10,
+                    },
+                }}
                 style={{ marginBottom: 20 }}
             >
                 <Space orientation="vertical" style={{ width: "100%" }}>
                     <Select
+                        style={{ width: "100%" }}
                         placeholder="Select Employee"
                         options={employees.map((e) => ({
                             label: e.name,
@@ -406,9 +411,16 @@ export default function AttendancePage() {
                         onChange={setEmployeeId}
                     />
 
-                    <Space>
+                    <div
+                        style={{
+                            display: "flex",
+                            gap: 8,
+                            width: "100%",
+                        }}
+                    >
                         <Button
                             type="primary"
+                            style={{ flex: 1 }}
                             onClick={checkIn}
                             loading={loading}
                             disabled={loading}
@@ -417,13 +429,15 @@ export default function AttendancePage() {
                         </Button>
 
                         <Button
+                            style={{ flex: 1 }}
                             onClick={checkOut}
                             loading={loading}
                             disabled={loading}
                         >
                             Check Out
                         </Button>
-                    </Space>
+                    </div>
+
                     <input
                         id="photo-upload"
                         type="file"
@@ -449,6 +463,7 @@ export default function AttendancePage() {
                             textAlign: "center",
                             cursor: "pointer",
                             fontWeight: 500,
+                            boxSizing: "border-box",
                         }}
                     >
                         {photo ? photo.name : "Choose Photo"}
@@ -506,7 +521,7 @@ export default function AttendancePage() {
                 }
                 styles={{
                     body: {
-                        padding: 10, // Reduce from the default 24px
+                        padding: 10,
                     },
                 }}
             >
@@ -617,7 +632,15 @@ export default function AttendancePage() {
                     </div>
                 </div>
                 {scannedCheckpoint && (
-                    <Card title="Scanned Checkpoint" style={{ marginTop: 24 }}>
+                    <Card
+                        title="Scanned Checkpoint"
+                        styles={{
+                            body: {
+                                padding: 10,
+                            },
+                        }}
+                        style={{ marginTop: 24 }}
+                    >
                         <Input
                             addonBefore="ID"
                             value={scannedCheckpoint.id}
@@ -706,34 +729,55 @@ export default function AttendancePage() {
                     </Card>
                 )}
             </Card>
-            <Table
-                rowKey="id"
-                columns={[
-                    {
-                        title: "Employee",
-                        render: (_, row) =>
-                            employees.find((e) => e.id === row.employeeId)
-                                ?.name,
+
+            <Card
+                title={
+                    <span
+                        style={{
+                            fontSize: "14px",
+                            fontWeight: 600,
+                        }}
+                    >
+                        Attendance History
+                    </span>
+                }
+                styles={{
+                    body: {
+                        padding: 10,
                     },
-                    {
-                        title: "Date",
-                        dataIndex: "date",
-                    },
-                    {
-                        title: "Check In",
-                        dataIndex: "checkIn",
-                    },
-                    {
-                        title: "Check Out",
-                        dataIndex: "checkOut",
-                    },
-                    {
-                        title: "Status",
-                        dataIndex: "status",
-                    },
-                ]}
-                dataSource={attendance}
-            />
+                }}
+                style={{ marginTop: 24 }}
+            >
+                <Table
+                    rowKey="id"
+                    scroll={{ x: "max-content" }}
+                    columns={[
+                        {
+                            title: "Employee",
+                            render: (_, row) =>
+                                employees.find((e) => e.id === row.employeeId)
+                                    ?.name,
+                        },
+                        {
+                            title: "Date",
+                            dataIndex: "date",
+                        },
+                        {
+                            title: "Check In",
+                            dataIndex: "checkIn",
+                        },
+                        {
+                            title: "Check Out",
+                            dataIndex: "checkOut",
+                        },
+                        {
+                            title: "Status",
+                            dataIndex: "status",
+                        },
+                    ]}
+                    dataSource={attendance}
+                />
+            </Card>
             <Card
                 title={
                     <span
@@ -745,10 +789,16 @@ export default function AttendancePage() {
                         Visit History
                     </span>
                 }
+                styles={{
+                    body: {
+                        padding: 10,
+                    },
+                }}
                 style={{ marginTop: 24 }}
             >
                 <Table
                     rowKey="id"
+                    scroll={{ x: "max-content" }}
                     dataSource={visits}
                     pagination={{ pageSize: 10 }}
                     columns={[
