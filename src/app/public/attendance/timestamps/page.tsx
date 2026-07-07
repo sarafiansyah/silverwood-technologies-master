@@ -133,6 +133,8 @@ export default function AttendancePage() {
             return;
         }
 
+        setLoading(true);
+
         try {
             // Step 1: Upload photo
             const formData = new FormData();
@@ -164,7 +166,6 @@ export default function AttendancePage() {
             });
 
             setPhoto(null);
-
             loadAttendance();
         } catch (error: any) {
             Modal.error({
@@ -172,6 +173,8 @@ export default function AttendancePage() {
                 content:
                     error.response?.data?.message ?? "Something went wrong.",
             });
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -180,6 +183,8 @@ export default function AttendancePage() {
             message.warning("Select employee");
             return;
         }
+
+        setLoading(true);
 
         try {
             await axios.post("/api/attendance/timestamps", {
@@ -197,6 +202,8 @@ export default function AttendancePage() {
                 okText: "OK",
                 centered: true,
             });
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -227,7 +234,6 @@ export default function AttendancePage() {
                 title: "Employee Required",
                 content: "Please select an employee.",
             });
-
             return;
         }
 
@@ -236,9 +242,10 @@ export default function AttendancePage() {
                 title: "Photo Required",
                 content: "Please select a photo.",
             });
-
             return;
         }
+
+        setLoading(true);
 
         try {
             const formData = new FormData();
@@ -281,6 +288,8 @@ export default function AttendancePage() {
                 content:
                     error.response?.data?.message ?? "Something went wrong.",
             });
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -398,11 +407,20 @@ export default function AttendancePage() {
                     />
 
                     <Space>
-                        <Button type="primary" onClick={checkIn}>
+                        <Button
+                            type="primary"
+                            onClick={checkIn}
+                            loading={loading}
+                            disabled={loading}
+                        >
                             Check In
                         </Button>
 
-                        <Button danger onClick={checkOut}>
+                        <Button
+                            onClick={checkOut}
+                            loading={loading}
+                            disabled={loading}
+                        >
                             Check Out
                         </Button>
                     </Space>
@@ -410,6 +428,7 @@ export default function AttendancePage() {
                         id="photo-upload"
                         type="file"
                         accept="image/*"
+                        capture="environment"
                         hidden
                         onChange={(e) => {
                             const file = e.target.files?.[0];
@@ -436,7 +455,46 @@ export default function AttendancePage() {
                     </label>
                 </Space>
             </Card>
-            <Card   title={
+            <Card
+                title={
+                    <span
+                        style={{
+                            fontSize: "14px",
+                            fontWeight: 600,
+                        }}
+                    >
+                        View Complete Data
+                    </span>
+                }
+                style={{ marginBottom: 20 }}
+            >
+                <Space orientation="vertical" style={{ width: "100%" }}>
+                    <Button
+                        type="primary"
+                        onClick={() =>
+                            window.open(
+                                "https://docs.google.com/spreadsheets/u/1/d/1ANnxDkVygxcquCL2PIsYiKpQ7Fl0WLLtMabHlNHia8s/edit?gid=2018031072#gid=2018031072",
+                                "_blank",
+                            )
+                        }
+                    >
+                        View Google Sheets
+                    </Button>
+                    <Button
+                        type="primary"
+                        onClick={() =>
+                            window.open(
+                                "https://drive.google.com/drive/u/1/folders/1LRHDJM2NFcyvgNwket7Dcj0umDk6_3o7",
+                                "_blank",
+                            )
+                        }
+                    >
+                        View Google Drive
+                    </Button>
+                </Space>
+            </Card>
+            <Card
+                title={
                     <span
                         style={{
                             fontSize: "14px",
@@ -445,8 +503,14 @@ export default function AttendancePage() {
                     >
                         Checkpoints
                     </span>
-                }>
-                <div style={{ padding: 16 }}>
+                }
+                styles={{
+                    body: {
+                        padding: 10, // Reduce from the default 24px
+                    },
+                }}
+            >
+                <div style={{ padding: 0 }}>
                     <div
                         style={{
                             maxWidth: 600,
@@ -519,7 +583,7 @@ export default function AttendancePage() {
                             )}
                         </div>
 
-                        {loading && <Spin size="large" />}
+                        {/* {loading && <Spin size="large" />} */}
 
                         <div
                             style={{
@@ -540,7 +604,7 @@ export default function AttendancePage() {
                             )}
                         </div>
 
-                        <div style={{ marginTop: 16 }}>
+                        {/* <div style={{ marginTop: 16 }}>
                             <Text strong>Result:</Text>
                             <Input.TextArea
                                 value={result}
@@ -549,7 +613,7 @@ export default function AttendancePage() {
                                 style={{ marginTop: 8 }}
                                 readOnly
                             />
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 {scannedCheckpoint && (
@@ -589,6 +653,7 @@ export default function AttendancePage() {
                             id="checkpoint-photo"
                             type="file"
                             accept="image/*"
+                            capture="environment"
                             hidden
                             onChange={(e) => {
                                 const file = e.target.files?.[0];
@@ -623,6 +688,8 @@ export default function AttendancePage() {
 
                         <Button
                             type="primary"
+                            loading={loading}
+                            disabled={loading}
                             style={{
                                 marginTop: 12,
                                 width: "100%",
@@ -667,7 +734,8 @@ export default function AttendancePage() {
                 ]}
                 dataSource={attendance}
             />
-            <Card   title={
+            <Card
+                title={
                     <span
                         style={{
                             fontSize: "14px",
@@ -676,7 +744,9 @@ export default function AttendancePage() {
                     >
                         Visit History
                     </span>
-                } style={{ marginTop: 24 }}>
+                }
+                style={{ marginTop: 24 }}
+            >
                 <Table
                     rowKey="id"
                     dataSource={visits}
