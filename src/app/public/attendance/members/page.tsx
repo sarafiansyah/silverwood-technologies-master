@@ -9,12 +9,14 @@ import {
     Popconfirm,
     Space,
     Table,
+    Grid,
     Typography,
     message,
 } from "antd";
 import axios from "axios";
 
 const { Title } = Typography;
+const { useBreakpoint } = Grid;
 
 interface Employee {
     id: string;
@@ -31,6 +33,7 @@ export default function Home() {
     const [editing, setEditing] = useState<Employee | null>(null);
 
     const [form] = Form.useForm();
+    const screens = useBreakpoint();
 
     const loadEmployees = async () => {
         setLoading(true);
@@ -75,7 +78,7 @@ export default function Home() {
     const onFinish = async (values: Employee) => {
         try {
             if (editing) {
-                await axios.put("/api/employees", {
+                await axios.put("/api/attendance/members", {
                     ...values,
                     id: editing.id,
                 });
@@ -96,6 +99,12 @@ export default function Home() {
     };
 
     const columns = [
+        {
+            title: "No",
+            key: "no",
+            align: "center" as const,
+            render: (_: any, __: any, index: number) => index + 1,
+        },
         {
             title: "ID",
             dataIndex: "id",
@@ -132,30 +141,58 @@ export default function Home() {
     ];
 
     return (
-        <div
-            style={{
-                maxWidth: 1200,
-                margin: "20px auto",
-                padding: 0,
-            }}
-        >
+        <div>
             <Space
                 style={{
                     width: "100%",
                     justifyContent: "space-between",
                     marginBottom: 20,
+                    marginTop: 10,
                 }}
             >
                 <Button type="primary" onClick={onAdd}>
                     Add Employee
                 </Button>
             </Space>
-
             <Table
-                rowKey="id"
+                size="small"
                 loading={loading}
                 columns={columns}
                 dataSource={employees}
+                pagination={{ pageSize: 10 }}
+                scroll={{ x: 600 }}
+                bordered
+                components={
+                    screens.xs
+                        ? {
+                              header: {
+                                  cell: (props: any) => (
+                                      <th
+                                          {...props}
+                                          style={{
+                                              padding: "4px 6px",
+                                              fontSize: "10px",
+                                              fontWeight: 600,
+                                              borderColor: "#e8e8e8",
+                                          }}
+                                      />
+                                  ),
+                              },
+                              body: {
+                                  cell: (props: any) => (
+                                      <td
+                                          {...props}
+                                          style={{
+                                              padding: "2px 6px",
+                                              fontSize: "10px",
+                                              borderColor: "#e8e8e8",
+                                          }}
+                                      />
+                                  ),
+                              },
+                          }
+                        : undefined
+                }
             />
 
             <Modal
