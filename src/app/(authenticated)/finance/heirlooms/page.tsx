@@ -470,7 +470,7 @@ export default function Page() {
                                 <Title
                                     level={5}
                                     style={{
-                                        fontSize: "16px",
+                                        fontSize: screens.xs ? "12px" : "14px",
                                         margin: 0,
                                         fontWeight: "bold",
                                     }}
@@ -514,27 +514,31 @@ export default function Page() {
                                         </span>
                                     </Tooltip>
                                 </Title>
-                                <Space>
+                                <Space size={4}>
                                     <Button
                                         type="primary"
+                                        size="small"
+                                        style={{ fontSize: 12 }}
                                         icon={<DownloadOutlined />}
                                         onClick={() => openModal()}
-                                    >
-                                        Download
-                                    </Button>
+                                    ></Button>
                                     <Button
                                         type="primary"
+                                        size="small"
+                                        style={{ fontSize: 12 }}
+                                        icon={<PlusOutlined />}
+                                        onClick={() => openModal()}
+                                    ></Button>
+                                    <Button
+                                        type="primary"
+                                        size="small"
+                                              color="green"
+                                              variant="solid"
+                                        style={{ fontSize: 12 }}
                                         icon={<PlusOutlined />}
                                         onClick={() => openModal()}
                                     >
-                                        Refresh
-                                    </Button>
-                                    <Button
-                                        type="primary"
-                                        icon={<PlusOutlined />}
-                                        onClick={() => openModal()}
-                                    >
-                                        Add New
+                                        Add
                                     </Button>
                                 </Space>
                             </div>
@@ -546,6 +550,11 @@ export default function Page() {
                             scrollbarWidth: "none", // Firefox
                             msOverflowStyle: "none", // IE/Edge
                         }}
+                        styles={{
+                            body: {
+                                padding: 8,
+                            },
+                        }}
                     >
                         {/* Add new heirloom */}
                         <Table<Heirloom>
@@ -554,8 +563,42 @@ export default function Page() {
                             dataSource={heirlooms}
                             pagination={{ pageSize: 5 }}
                             scroll={{ x: 800 }}
+                            bordered
+                            components={
+                                screens.xs
+                                    ? {
+                                          header: {
+                                              cell: (props: any) => (
+                                                  <th
+                                                      {...props}
+                                                      style={{
+                                                          padding: "4px 6px",
+                                                          fontSize: "10px",
+                                                          fontWeight: 600,
+                                                          borderColor:
+                                                              "#e8e8e8",
+                                                      }}
+                                                  />
+                                              ),
+                                          },
+                                          body: {
+                                              cell: (props: any) => (
+                                                  <td
+                                                      {...props}
+                                                      style={{
+                                                          padding: "2px 6px",
+                                                          fontSize: "10px",
+                                                          borderColor:
+                                                              "#e8e8e8",
+                                                      }}
+                                                  />
+                                              ),
+                                          },
+                                      }
+                                    : undefined
+                            }
                         />
-                        <Text strong>
+                        <Text style={{ fontSize: screens.xs ? 10 : 14 }} strong>
                             Total Price: Rp.
                             {new Intl.NumberFormat("id-ID").format(totalPrice)}
                         </Text>

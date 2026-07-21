@@ -1,8 +1,10 @@
 // components/BankTable.tsx
 import React from "react";
-import { Table, Space, Button, Popconfirm, Typography } from "antd";
+import { Table, Space, Button, Popconfirm, Typography, Grid } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { Bank } from "@/types/bank";
+
+const { useBreakpoint } = Grid;
 
 type Props = {
     banks: Bank[];
@@ -96,6 +98,8 @@ export default function BankTable({ banks, onAdd10k, onDelete }: Props) {
         },
     ];
 
+    const screens = useBreakpoint();
+
     return (
         <Table
             rowKey="id"
@@ -103,6 +107,37 @@ export default function BankTable({ banks, onAdd10k, onDelete }: Props) {
             columns={columns}
             size="small"
             pagination={false}
+            components={
+                screens.xs
+                    ? {
+                          header: {
+                              cell: (props: any) => (
+                                  <th
+                                      {...props}
+                                      style={{
+                                          padding: "4px 6px",
+                                          fontSize: "10px",
+                                          fontWeight: 600,
+                                          borderColor: "#e8e8e8",
+                                      }}
+                                  />
+                              ),
+                          },
+                          body: {
+                              cell: (props: any) => (
+                                  <td
+                                      {...props}
+                                      style={{
+                                          padding: "2px 6px",
+                                          fontSize: "10px",
+                                          borderColor: "#e8e8e8",
+                                      }}
+                                  />
+                              ),
+                          },
+                      }
+                    : undefined
+            }
         />
     );
 }

@@ -382,15 +382,46 @@ export default function BalanceTracker() {
                 {/* ⚙️ Controls */}
                 <Col xs={24} md={8}>
                     <Card
-                        title="Manage Balance"
+                        title={
+                            <div
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                    width: "100%",
+                                    padding: 0,
+                                    fontSize: screens.xs ? 10 : 16,
+                                }}
+                            >
+                                <span>Manage Balance</span>
+                            </div>
+                        }
                         style={{
                             marginBottom: 24,
                             borderRadius: 12,
                             boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
                         }}
+                        styles={{
+                            body: { padding: screens.xs ? 10 : 24 },
+                        }}
                     >
                         <Form layout="vertical">
-                            <Form.Item label="Amount">
+                            <Form.Item
+                                label={
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            width: "100%",
+                                            padding: 0,
+                                            fontSize: screens.xs ? 12 : 16,
+                                        }}
+                                    >
+                                        <span>Amount</span>
+                                    </div>
+                                }
+                            >
                                 <InputNumber
                                     min={0}
                                     value={amount}
@@ -423,15 +454,44 @@ export default function BalanceTracker() {
                     </Card>
 
                     <Card
-                        title="Add Limit"
+                        title={
+                            <div
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                    width: "100%",
+                                    padding: 0,
+                                    fontSize: screens.xs ? 10 : 16,
+                                }}
+                            >
+                                <span>Add Limit</span>
+                            </div>
+                        }
                         style={{
                             borderRadius: 12,
                             boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
                         }}
+                        styles={{
+                            body: { padding: screens.xs ? 10 : 24 },
+                        }}
                     >
                         <Form layout="vertical">
                             <Form.Item
-                                label="Title"
+                                label={
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            width: "100%",
+                                            padding: 0,
+                                            fontSize: screens.xs ? 12 : 16,
+                                        }}
+                                    >
+                                        <span>Title</span>
+                                    </div>
+                                }
                                 style={{ marginBottom: 8, marginTop: -8 }}
                             >
                                 <Input
@@ -444,7 +504,20 @@ export default function BalanceTracker() {
                             </Form.Item>
 
                             <Form.Item
-                                label="Amount"
+                                label={
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            width: "100%",
+                                            padding: 0,
+                                            fontSize: screens.xs ? 12 : 16,
+                                        }}
+                                    >
+                                        <span>Amount</span>
+                                    </div>
+                                }
                                 style={{ marginBottom: 16 }}
                             >
                                 <InputNumber

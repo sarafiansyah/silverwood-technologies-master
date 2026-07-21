@@ -226,7 +226,7 @@ export default function Page() {
             dataIndex: "no",
             key: "no",
             align: "center",
-            width: 20,
+            width: 28,
             render: (_: any, __: any, index: number) => {
                 const currentPage = tablePagination.current || 1; // get current page
                 const pageSize = tablePagination.pageSize || 50; // get current page size
@@ -259,7 +259,7 @@ export default function Page() {
             title: "Price",
             dataIndex: "price",
             key: "price",
-            width: 70,
+            width: 80,
             align: "center",
             sorter: (a, b) => a.price - b.price,
             render: (val: number) => (
@@ -294,7 +294,7 @@ export default function Page() {
             title: "Date",
             dataIndex: "date",
             key: "date",
-            width: 60,
+            width: 80,
             align: "center",
             sorter: (a, b) =>
                 new Date(a.date).getTime() - new Date(b.date).getTime(),
@@ -614,18 +614,22 @@ export default function Page() {
                             >
                                 <Title
                                     level={5}
-                                    style={{
-                                        fontSize: "16px",
-                                        margin: 0,
-                                        // fontWeight: "bold",
-                                    }}
+                                     style={{
+                                                fontSize: screens.xs
+                                                    ? "12px"
+                                                    : "14px",
+                                                margin: 0,
+                                                fontWeight: "bold",
+                                            }}
                                 >
                                     Transaction History
                                 </Title>
-                                <Space>
+                                <Space size={4}>
                                     <Tooltip title="Upload">
                                         <Button
                                             type="primary"
+                                                 size="small"
+                                                     style={{fontSize:12}}
                                             icon={<UploadOutlined />}
                                             onClick={showModalUpload}
                                         ></Button>
@@ -636,6 +640,8 @@ export default function Page() {
                                     <Tooltip title="Download Excel">
                                         <Button
                                             type="primary"
+                                                 size="small"
+                                                     style={{fontSize:12}}
                                             icon={<DownloadOutlined />}
                                             onClick={downloadExcel}
                                         ></Button>
@@ -643,6 +649,8 @@ export default function Page() {
                                     <Tooltip title="Clear Data">
                                         <Button
                                             type="primary"
+                                                 size="small"
+                                                     style={{fontSize:12}}
                                             danger
                                             icon={<DeleteOutlined />}
                                             onClick={handleClearData}
@@ -658,6 +666,11 @@ export default function Page() {
                             overflowX: "auto",
                             scrollbarWidth: "none", // Firefox
                             msOverflowStyle: "none", // IE/Edge
+                        }}
+                         styles={{
+                            body: {
+                                padding: 8,
+                            },
                         }}
                     >
                         <Table<RewardHistoryRow>
@@ -676,42 +689,39 @@ export default function Page() {
                                 overflow: "hidden",
                             }}
                             rowClassName={() => "reward-history-row"}
-                            components={{
-                                header: {
-                                    cell: (props: any) => (
-                                        <th
-                                            {...props}
-                                            style={{
-                                                padding: "4px 6px",
-                                                fontSize: "14px",
-                                                fontWeight: 600,
-                                                borderColor: "#e8e8e8",
-                                                textAlign: "center",
-                                            }}
-                                        />
-                                    ),
-                                },
-                                body: {
-                                    cell: (props: any) => (
-                                        <td
-                                            {...props}
-                                            style={{
-                                                padding: "4px 6px",
-                                                fontSize: "14px",
-                                                borderColor: "#e8e8e8",
-                                                textAlign:
-                                                    props.children &&
-                                                    typeof props.children ===
-                                                        "object" &&
-                                                    props.children?.props
-                                                        ?.children === 1
-                                                        ? "center"
-                                                        : "left",
-                                            }}
-                                        />
-                                    ),
-                                },
-                            }}
+                           components={
+                                screens.xs
+                                    ? {
+                                          header: {
+                                              cell: (props: any) => (
+                                                  <th
+                                                      {...props}
+                                                      style={{
+                                                          padding: "4px 6px",
+                                                          fontSize: "10px",
+                                                          fontWeight: 600,
+                                                          borderColor:
+                                                              "#e8e8e8",
+                                                      }}
+                                                  />
+                                              ),
+                                          },
+                                          body: {
+                                              cell: (props: any) => (
+                                                  <td
+                                                      {...props}
+                                                      style={{
+                                                          padding: "2px 6px",
+                                                          fontSize: "10px",
+                                                          borderColor:
+                                                              "#e8e8e8",
+                                                      }}
+                                                  />
+                                              ),
+                                          },
+                                      }
+                                    : undefined
+                            }
                         />
                         <div
                             style={{
