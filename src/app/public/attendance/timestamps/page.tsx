@@ -14,12 +14,14 @@ import {
     Input,
     Spin,
     Tabs,
+    Grid,
 } from "antd";
 import { UploadOutlined, CameraOutlined } from "@ant-design/icons";
 import { BrowserMultiFormatReader } from "@zxing/browser";
 import axios from "axios";
 
 const { Title, Text } = Typography;
+const { useBreakpoint } = Grid;
 
 interface Employee {
     id: string;
@@ -53,6 +55,15 @@ interface Visit {
 }
 
 export default function AttendancePage() {
+    const screens = useBreakpoint();
+    const [tablePaginationAttendance, setTablePaginationAttendance] = useState({
+        current: 1,
+        pageSize: 10,
+    });
+    const [tablePaginationVisit, setTablePaginationVisit] = useState({
+        current: 1,
+        pageSize: 10,
+    });
     const [employees, setEmployees] = useState<Employee[]>([]);
     const [employeesSelect, setEmployeesSelect] = useState<Employee[]>([]);
     const [attendance, setAttendance] = useState<Attendance[]>([]);
@@ -796,8 +807,109 @@ export default function AttendancePage() {
                                 >
                                     <Table
                                         rowKey="id"
+                                        bordered
                                         scroll={{ x: "max-content" }}
+                                        pagination={{
+                                            current:
+                                                tablePaginationAttendance.current,
+                                            pageSize:
+                                                tablePaginationAttendance.pageSize,
+                                            onChange: (page, pageSize) =>
+                                                setTablePaginationAttendance({
+                                                    current: page,
+                                                    pageSize,
+                                                }),
+                                            showSizeChanger: true,
+                                            pageSizeOptions: [
+                                                "10",
+                                                "50",
+                                                "100",
+                                                "200",
+                                            ],
+                                        }}
+                                        components={
+                                            screens.xs
+                                                ? {
+                                                      header: {
+                                                          cell: (
+                                                              props: any,
+                                                          ) => (
+                                                              <th
+                                                                  {...props}
+                                                                  style={{
+                                                                      padding:
+                                                                          "4px 6px",
+                                                                      fontSize:
+                                                                          "12px",
+                                                                      fontWeight: 600,
+                                                                      borderColor:
+                                                                          "#e8e8e8",
+                                                                  }}
+                                                              />
+                                                          ),
+                                                      },
+                                                      body: {
+                                                          cell: (
+                                                              props: any,
+                                                          ) => (
+                                                              <td
+                                                                  {...props}
+                                                                  style={{
+                                                                      padding:
+                                                                          "2px 6px",
+                                                                      fontSize:
+                                                                          "12px",
+                                                                      borderColor:
+                                                                          "#e8e8e8",
+                                                                  }}
+                                                              />
+                                                          ),
+                                                      },
+                                                  }
+                                                : undefined
+                                        }
                                         columns={[
+                                            {
+                                                title: "No",
+                                                dataIndex: "no",
+                                                key: "no",
+                                                align: "center",
+                                                width: 10,
+                                                render: (
+                                                    _: any,
+                                                    __: any,
+                                                    index: number,
+                                                ) => {
+                                                    const currentPage =
+                                                        tablePaginationAttendance.current ||
+                                                        1;
+                                                    const pageSize =
+                                                        tablePaginationAttendance.pageSize ||
+                                                        50;
+                                                    const number =
+                                                        (currentPage - 1) *
+                                                            pageSize +
+                                                        index +
+                                                        1;
+
+                                                    return (
+                                                        <div
+                                                            style={{
+                                                                display: "flex",
+                                                                justifyContent:
+                                                                    "center",
+                                                                alignItems:
+                                                                    "center",
+                                                                textAlign:
+                                                                    "center",
+                                                                width: "100%",
+                                                            }}
+                                                        >
+                                                            {number}
+                                                        </div>
+                                                    );
+                                                },
+                                            },
                                             {
                                                 title: "Employee",
                                                 render: (_, row) =>
@@ -847,10 +959,111 @@ export default function AttendancePage() {
                                 >
                                     <Table
                                         rowKey="id"
+                                        size="small"
+                                        bordered
                                         scroll={{ x: "max-content" }}
                                         dataSource={visits}
-                                        pagination={{ pageSize: 10 }}
+                                        pagination={{
+                                            current:
+                                                tablePaginationVisit.current,
+                                            pageSize:
+                                                tablePaginationVisit.pageSize,
+                                            onChange: (page, pageSize) =>
+                                                setTablePaginationVisit({
+                                                    current: page,
+                                                    pageSize,
+                                                }),
+                                            showSizeChanger: true,
+                                            pageSizeOptions: [
+                                                "10",
+                                                "50",
+                                                "100",
+                                                "200",
+                                            ],
+                                        }}
+                                        components={
+                                            screens.xs
+                                                ? {
+                                                      header: {
+                                                          cell: (
+                                                              props: any,
+                                                          ) => (
+                                                              <th
+                                                                  {...props}
+                                                                  style={{
+                                                                      padding:
+                                                                          "4px 6px",
+                                                                      fontSize:
+                                                                          "12px",
+                                                                      fontWeight: 600,
+                                                                      borderColor:
+                                                                          "#e8e8e8",
+                                                                  }}
+                                                              />
+                                                          ),
+                                                      },
+                                                      body: {
+                                                          cell: (
+                                                              props: any,
+                                                          ) => (
+                                                              <td
+                                                                  {...props}
+                                                                  style={{
+                                                                      padding:
+                                                                          "2px 6px",
+                                                                      fontSize:
+                                                                          "12px",
+                                                                      borderColor:
+                                                                          "#e8e8e8",
+                                                                  }}
+                                                              />
+                                                          ),
+                                                      },
+                                                  }
+                                                : undefined
+                                        }
                                         columns={[
+                                            {
+                                                title: "No",
+                                                dataIndex: "no",
+                                                key: "no",
+                                                align: "center",
+                                                width: 10,
+                                                render: (
+                                                    _: any,
+                                                    __: any,
+                                                    index: number,
+                                                ) => {
+                                                    const currentPage =
+                                                        tablePaginationVisit.current ||
+                                                        1;
+                                                    const pageSize =
+                                                        tablePaginationVisit.pageSize ||
+                                                        50;
+                                                    const number =
+                                                        (currentPage - 1) *
+                                                            pageSize +
+                                                        index +
+                                                        1;
+
+                                                    return (
+                                                        <div
+                                                            style={{
+                                                                display: "flex",
+                                                                justifyContent:
+                                                                    "center",
+                                                                alignItems:
+                                                                    "center",
+                                                                textAlign:
+                                                                    "center",
+                                                                width: "100%",
+                                                            }}
+                                                        >
+                                                            {number}
+                                                        </div>
+                                                    );
+                                                },
+                                            },
                                             {
                                                 title: "Employee",
                                                 render: (_, row) =>
