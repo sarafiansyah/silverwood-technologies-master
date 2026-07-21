@@ -532,8 +532,8 @@ export default function Page() {
                                     <Button
                                         type="primary"
                                         size="small"
-                                              color="green"
-                                              variant="solid"
+                                        color="green"
+                                        variant="solid"
                                         style={{ fontSize: 12 }}
                                         icon={<PlusOutlined />}
                                         onClick={() => openModal()}

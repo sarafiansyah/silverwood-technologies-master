@@ -228,9 +228,23 @@ export default function Page() {
             align: "center",
             width: 28,
             render: (_: any, __: any, index: number) => {
-                const currentPage = tablePagination.current || 1; // get current page
-                const pageSize = tablePagination.pageSize || 50; // get current page size
-                return (currentPage - 1) * pageSize + index + 1;
+                const currentPage = tablePagination.current || 1;
+                const pageSize = tablePagination.pageSize || 50;
+                const number = (currentPage - 1) * pageSize + index + 1;
+
+                return (
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            textAlign: "center",
+                            width: "100%",
+                        }}
+                    >
+                        {number}
+                    </div>
+                );
             },
         },
         {
@@ -614,13 +628,11 @@ export default function Page() {
                             >
                                 <Title
                                     level={5}
-                                     style={{
-                                                fontSize: screens.xs
-                                                    ? "12px"
-                                                    : "14px",
-                                                margin: 0,
-                                                fontWeight: "bold",
-                                            }}
+                                    style={{
+                                        fontSize: screens.xs ? "12px" : "14px",
+                                        margin: 0,
+                                        fontWeight: "bold",
+                                    }}
                                 >
                                     Transaction History
                                 </Title>
@@ -628,8 +640,8 @@ export default function Page() {
                                     <Tooltip title="Upload">
                                         <Button
                                             type="primary"
-                                                 size="small"
-                                                     style={{fontSize:12}}
+                                            size="small"
+                                            style={{ fontSize: 12 }}
                                             icon={<UploadOutlined />}
                                             onClick={showModalUpload}
                                         ></Button>
@@ -640,8 +652,8 @@ export default function Page() {
                                     <Tooltip title="Download Excel">
                                         <Button
                                             type="primary"
-                                                 size="small"
-                                                     style={{fontSize:12}}
+                                            size="small"
+                                            style={{ fontSize: 12 }}
                                             icon={<DownloadOutlined />}
                                             onClick={downloadExcel}
                                         ></Button>
@@ -649,8 +661,8 @@ export default function Page() {
                                     <Tooltip title="Clear Data">
                                         <Button
                                             type="primary"
-                                                 size="small"
-                                                     style={{fontSize:12}}
+                                            size="small"
+                                            style={{ fontSize: 12 }}
                                             danger
                                             icon={<DeleteOutlined />}
                                             onClick={handleClearData}
@@ -667,7 +679,7 @@ export default function Page() {
                             scrollbarWidth: "none", // Firefox
                             msOverflowStyle: "none", // IE/Edge
                         }}
-                         styles={{
+                        styles={{
                             body: {
                                 padding: 8,
                             },
@@ -676,8 +688,18 @@ export default function Page() {
                         <Table<RewardHistoryRow>
                             size="small"
                             columns={columnsRewardHistory}
-                            dataSource={pagedData}
-                            pagination={false}
+                            dataSource={rewardHistoryData}
+                            pagination={{
+                                current: tablePagination.current,
+                                pageSize: tablePagination.pageSize,
+                                onChange: (page, pageSize) =>
+                                    setTablePagination({
+                                        current: page,
+                                        pageSize,
+                                    }),
+                                showSizeChanger: true,
+                                pageSizeOptions: ["10", "50", "100", "200"],
+                            }}
                             scroll={{ x: 0, y: "calc(100vh - 355px)" }}
                             locale={{
                                 emptyText: "No rewards uploaded yet",
@@ -689,7 +711,7 @@ export default function Page() {
                                 overflow: "hidden",
                             }}
                             rowClassName={() => "reward-history-row"}
-                           components={
+                            components={
                                 screens.xs
                                     ? {
                                           header: {
@@ -722,42 +744,59 @@ export default function Page() {
                                       }
                                     : undefined
                             }
-                        />
-                        <div
-                            style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                padding: "8px 12px",
+                            summary={(pageData) => {
+                                return (
+                                    <Table.Summary.Row
+                                        style={{
+                                            backgroundColor: "#FAFAFA",
+                                        }}
+                                    >
+                                        <Table.Summary.Cell
+                                            index={1}
+                                            colSpan={
+                                                columnsRewardHistory.length
+                                            }
+                                        >
+                                            <div
+                                                style={{
+                                                    display: "flex",
+                                                    justifyContent:
+                                                        "space-between",
+                                                    alignItems: "center",
+                                                    padding: "0px 0px",
+                                                }}
+                                            >
+                                                <div
+                                                    style={{
+                                                        fontWeight: "bold",
+                                                        marginTop: 0,
+                                                        fontSize: screens.xs
+                                                            ? 10
+                                                            : 14,
+                                                    }}
+                                                >
+                                                    Total:{" "}
+                                                    {new Intl.NumberFormat(
+                                                        "id-ID",
+                                                        {
+                                                            style: "currency",
+                                                            currency: "IDR",
+                                                            maximumFractionDigits: 0,
+                                                        },
+                                                    ).format(
+                                                        rewardHistoryData.reduce(
+                                                            (sum, row) =>
+                                                                sum + row.price,
+                                                            0,
+                                                        ),
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </Table.Summary.Cell>
+                                    </Table.Summary.Row>
+                                );
                             }}
-                        >
-                            <div style={{ fontWeight: "bold", marginTop: 10 }}>
-                                Total:{" "}
-                                {new Intl.NumberFormat("id-ID", {
-                                    style: "currency",
-                                    currency: "IDR",
-                                    maximumFractionDigits: 0,
-                                }).format(
-                                    rewardHistoryData.reduce(
-                                        (sum, row) => sum + row.price,
-                                        0,
-                                    ),
-                                )}
-                            </div>
-                            <Pagination
-                                current={tablePagination.current}
-                                pageSize={tablePagination.pageSize}
-                                total={rewardHistoryData.length}
-                                showSizeChanger
-                                pageSizeOptions={["10", "50", "100"]}
-                                onChange={(page, pageSize) =>
-                                    setTablePagination({
-                                        current: page,
-                                        pageSize,
-                                    })
-                                }
-                            />
-                        </div>
+                        />
                     </Card>
                 </Col>
                 <Modal
